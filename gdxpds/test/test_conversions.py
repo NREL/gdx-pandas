@@ -1,12 +1,13 @@
 
-from nose.tools import nottest
-import subprocess as subp
+
+import pandas as pds
 
 import gdxpds.test
 import gdxpds.tools
 
 import os
 import shutil
+import subprocess as subp
 
 def base_dir():
     return os.path.dirname(__file__)

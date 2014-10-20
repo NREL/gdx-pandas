@@ -1,3 +1,4 @@
+import os
 
 # if True, test products will be deleted on tear down
 clean_up = False

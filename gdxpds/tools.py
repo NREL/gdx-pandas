@@ -75,7 +75,7 @@ class GamsDirFinder:
                             ret = os.path.join(cur_dir, dirs[0])
                     elif len(dirs) > 0:
                         ret = os.path.join(cur_dir, dirs[0])
-                break
+                    break
         else:
             # posix systems
             try:
@@ -88,7 +88,7 @@ class GamsDirFinder:
             
         return ret
         
-class NeedsGamsDir:
+class NeedsGamsDir(object):
     def __init__(self, gams_dir = None):
         self.gams_dir = gams_dir
         
@@ -96,14 +96,14 @@ class NeedsGamsDir:
     def gams_dir(self):
         return self._gams_dir
         
-    @gams_dir.setter:
-    def gams_dir(self, value)
-        self._gams_dir = gdxpds.tools.GamsDirFinder(value).gams_dir    
+    @gams_dir.setter
+    def gams_dir(self, value):
+        self._gams_dir = GamsDirFinder(value).gams_dir    
 
 class GdxLoader(NeedsGamsDir):
     def __init__(self, gdx_file, gams_dir = None):
         self.gdx_file = gdx_file
-        super(GxdLoader, self).__init__(gams_dir)
+        super(GdxLoader, self).__init__(gams_dir)
         
     @property 
     def gdx_file(self):
@@ -140,7 +140,7 @@ class GdxWriter(NeedsGamsDir):
         self._gdx = value
         
     @property
-    def path(self)
+    def path(self):
         return self._path
         
     @path.setter

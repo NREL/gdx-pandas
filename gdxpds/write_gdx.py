@@ -1,6 +1,8 @@
 import gdxdict
 import pandas as pds
 
+import gdxpds.tools
+
 class Translator:
     def __init__(self, dataframes):
         self.dataframes = dataframes
@@ -29,7 +31,7 @@ class Translator:
                 self._add_symbol_to_gdx(symbol_name, df)
         return self._gdx
         
-    def save_gdx(path, gams_dir = None):
+    def save_gdx(self, path, gams_dir = None):
         gdxpds.tools.GdxWriter(self.gdx, path, gams_dir).save()
         
     def _add_symbol_to_gdx(symbol_name, df):
