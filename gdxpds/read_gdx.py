@@ -1,10 +1,7 @@
-
 import gdxdict
 import pandas as pds
 
 import gdxpds.tools
-
-import os
 
 class Translator:
     def __init__(self, gdx_file, gams_dir = None):
@@ -61,12 +58,14 @@ class Translator:
 
 def to_dataframes(gdx_file, gams_dir = None):
     """
+    Primary interface for converting a GAMS GDX file to pandas DataFrames.
+    
     Parameters:
-      - gdxfile (string): path to a gdx file
-      - gamsdir (string): path to GAMS directory
+      - gdxfile (string): path to a GDX file
+      - gamsdir (string): optional path to GAMS directory
       
     Returns a dict of Pandas DataFrames, one item for each symbol in the GDX 
     file, keyed with the symbol name.
     """
-    return gdxpds.read_gdx.Translator(gdx_file, gams_dir).dataframes
+    return Translator(gdx_file, gams_dir).dataframes
     

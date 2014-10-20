@@ -1,3 +1,5 @@
+import gdxdict
+
 import os
 import subprocess as subp
 import re
@@ -86,12 +88,22 @@ class GamsDirFinder:
             
         return ret
         
-gdxpds.tools.GdxLoader(self._gdx_filepath).gdxdict
+class NeedsGamsDir:
+    def __init__(self, gams_dir = None):
+        self.gams_dir = gams_dir
+        
+    @property
+    def gams_dir(self):
+        return self._gams_dir
+        
+    @gams_dir.setter:
+    def gams_dir(self, value)
+        self._gams_dir = gdxpds.tools.GamsDirFinder(value).gams_dir    
 
-class GdxLoader:
+class GdxLoader(NeedsGamsDir):
     def __init__(self, gdx_file, gams_dir = None):
         self.gdx_file = gdx_file
-        self.gams_dir = gams_dir
+        super(GxdLoader, self).__init__(gams_dir)
         
     @property 
     def gdx_file(self):
@@ -105,18 +117,41 @@ class GdxLoader:
         self._gdx = None
         
     @property
-    def gams_dir(self):
-        return self._gams_dir
-        
-    @gams_dir.setter:
-    def gams_dir(self, value)
-        self._gams_dir = gdxpds.tools.GamsDirFinder(value).gams_dir
-        
-    @property
     def gdx(self):
         if self._gdx is None:
             self._gdx = gdxdict.gdxdict()
             self._gdx.read(self.gdx_file, self.gams_dir)
         return self._gdx
         
+class GdxWriter(NeedsGamsDir):
+    def __init__(self, gdx, path, gams_dir = None):
+        self.gdx = gdx
+        self.path = path
+        super(GxdWriter, self).__init__(gams_dir)
         
+    @property
+    def gdx(self):
+        return self._gdx
+        
+    @gdx.setter
+    def gdx(self, value):
+        if not isinstance(value, gdxdict.gdxdict):
+            raise RuntimeError("Expected GDX file loaded as a gdxdict.gdxdict.")
+        self._gdx = value
+        
+    @property
+    def path(self)
+        return self._path
+        
+    @path.setter
+    def path(self, value):
+        if not os.path.exists(os.path.dirname(path)):
+            raise RuntimeError("Parent directory of '{}' does not exist. Please create before trying to save a gdx file there.".format(path))
+        if os.path.exists(path) and os.path.isdir(path):
+            raise RuntimeError("Cannot save a GDX file to '{}', as it is a directory.".format(path))
+        self._path = value
+        
+    def save(self):
+        if os.path.isfile(self.path):
+            os.remove(self.path)
+        self.gdx.write(self.path, self.gams_dir)
