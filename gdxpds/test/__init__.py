@@ -1,7 +1,7 @@
 import os
 
 # if True, test products will be deleted on tear down
-clean_up = False
+clean_up = True
 
 bin_prefix = ''
 candidate = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'bin')

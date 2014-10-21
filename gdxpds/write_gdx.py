@@ -3,7 +3,7 @@ import pandas as pds
 
 import gdxpds.tools
 
-class Translator:
+class Translator(object):
     def __init__(self, dataframes):
         self.dataframes = dataframes
     
@@ -15,7 +15,7 @@ class Translator:
     def dataframes(self, value):
         if not isinstance(value, dict):
             RuntimeError("Expecting dict of name, pandas.DataFrame pairs.")
-        for symbol_name, df in value:
+        for symbol_name, df in value.items():
             if not isinstance(symbol_name, str):
                 RuntimeError("Expecting dict of name, pandas.DataFrame pairs.")
             if not isinstance(df, pds.DataFrame):
@@ -27,14 +27,14 @@ class Translator:
     def gdx(self):
         if self._gdx is None:
             self._gdx = gdxdict.gdxdict()
-            for symbol_name, df in self.dataframes:
+            for symbol_name, df in self.dataframes.items():
                 self._add_symbol_to_gdx(symbol_name, df)
         return self._gdx
         
     def save_gdx(self, path, gams_dir = None):
         gdxpds.tools.GdxWriter(self.gdx, path, gams_dir).save()
         
-    def _add_symbol_to_gdx(symbol_name, df):
+    def _add_symbol_to_gdx(self, symbol_name, df):
         symbol_info = {}
         symbol_info['name'] = symbol_name
         symbol_info['typename'] = 'Parameter'
@@ -94,10 +94,11 @@ class Translator:
                     else:
                         # make a new level of the tree by creating a node for prev_value
                         # that points down to the next dimension
-                        new_dim = gdxdict.gdxdim(cur_dim)
+                        new_dim = gdxdict.gdxdim(self._gdx)
                         new_dim.info['name'] = i
                         cur_dim[prev_value] = new_dim
-                    prev_value = value
+                    # prev_value will be used as a label, so make sure it is a string
+                    prev_value = str(value)
                     cur_dim = new_dim
     
         # add each row to the gdx symbol

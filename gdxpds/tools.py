@@ -4,7 +4,7 @@ import os
 import subprocess as subp
 import re
 
-class GamsDirFinder:
+class GamsDirFinder(object):
     """
     Class for finding and accessing the system's GAMS directory. 
     
@@ -20,6 +20,7 @@ class GamsDirFinder:
         
     @property
     def gams_dir(self):
+        """The GAMS directory on this system."""
         if self._gams_dir is None:
             raise RuntimeError("Unable to locate your GAMS directory.")
         return self._gams_dir
@@ -127,7 +128,7 @@ class GdxWriter(NeedsGamsDir):
     def __init__(self, gdx, path, gams_dir = None):
         self.gdx = gdx
         self.path = path
-        super(GxdWriter, self).__init__(gams_dir)
+        super(GdxWriter, self).__init__(gams_dir)
         
     @property
     def gdx(self):
@@ -145,10 +146,10 @@ class GdxWriter(NeedsGamsDir):
         
     @path.setter
     def path(self, value):
-        if not os.path.exists(os.path.dirname(path)):
-            raise RuntimeError("Parent directory of '{}' does not exist. Please create before trying to save a gdx file there.".format(path))
-        if os.path.exists(path) and os.path.isdir(path):
-            raise RuntimeError("Cannot save a GDX file to '{}', as it is a directory.".format(path))
+        if not os.path.exists(os.path.dirname(value)):
+            raise RuntimeError("Parent directory of '{}' does not exist. Please create before trying to save a gdx file there.".format(value))
+        if os.path.exists(value) and os.path.isdir(value):
+            raise RuntimeError("Cannot save a GDX file to '{}', as it is a directory.".format(value))
         self._path = value
         
     def save(self):

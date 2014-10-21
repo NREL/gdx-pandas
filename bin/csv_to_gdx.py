@@ -23,8 +23,8 @@ def convert_csv_to_gdx(input_files, output_file, gams_dir=None):
             f = open(ifile, 'r')
             for line in f:
                 if not line == '':
-                    if os.path.splitext(line)[1] == '.csv':
-                        ifiles.append(line)
+                    if os.path.splitext(line.strip())[1] == '.csv':
+                        ifiles.append(line.strip())
                     else:
                         print("Skipping '{}' found in '{}'.".format(line,ifile))
             f.close()

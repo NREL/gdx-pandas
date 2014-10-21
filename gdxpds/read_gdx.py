@@ -3,9 +3,10 @@ import pandas as pds
 
 import gdxpds.tools
 
-class Translator:
+class Translator(object):
     def __init__(self, gdx_file, gams_dir = None):
         self._gdx_loader = gdxpds.tools.GdxLoader(gdx_file, gams_dir)
+        self._dataframes = None
         
     @property
     def gams_dir(self):
@@ -48,7 +49,7 @@ class Translator:
         assert self._dataframes is None
         self._dataframes = {}
         for symbol_name in self.gdx:
-            symbol_info = gdx.getinfo(symbol_name)
+            symbol_info = self.gdx.getinfo(symbol_name)
             if symbol_info['records'] > 0:
                 cols = [d['key'] for d in symbol_info["domain"]]
                 cols.append('value')

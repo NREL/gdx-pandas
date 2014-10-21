@@ -20,7 +20,7 @@ def setup_module():
         shutil.rmtree(run_dir())
     os.mkdir(run_dir())
     
-def tesrdown_module():
+def teardown_module():
     if gdxpds.test.clean_up:
         shutil.rmtree(run_dir())
         
@@ -31,7 +31,7 @@ def test_gdx_roundtrip():
     num_records = {}
     total_records = 0
     for symbol_name in loader.gdx:
-        num_records[symbol_name] = loader.gdx.get_info(symbol_name)['records']
+        num_records[symbol_name] = loader.gdx.getinfo(symbol_name)['records']
         total_records += num_records[symbol_name]
     assert total_records > 0
     
@@ -59,10 +59,10 @@ def test_gdx_roundtrip():
     
     # load gdx and check symbols and records against original map
     loader = gdxpds.tools.GdxLoader(roundtripped_gdx)
-    for symbol_name, records in num_records:
+    for symbol_name, records in num_records.items():
         if records > 0:
             assert symbol_name in loader.gdx
-            assert loader.gdx.get_info(symbol_name)['records'] == records
+            assert loader.gdx.getinfo(symbol_name)['records'] == records
     
 def test_csv_roundtrip():
     # load csvs into pandas and make map of filenames to number of rows
@@ -79,6 +79,7 @@ def test_csv_roundtrip():
     
     # call command-line interface to transform csv to gdx
     out_dir = os.path.join(run_dir(), 'csv_roundtrip')
+    os.mkdir(out_dir)
     gdx_file = os.path.join(out_dir, 'intermediate.gdx')
     cmds = ['python', os.path.join(gdxpds.test.bin_prefix,'csv_to_gdx.py'),
             '-i', csvs[0], csvs[1],
@@ -92,7 +93,7 @@ def test_csv_roundtrip():
     subp.call(cmds)
     
     # load csvs into pandas and check filenames and number of rows against original map
-    for csv_name, records in num_records:
+    for csv_name, records in num_records.items():
         csv_file = os.path.join(out_dir, csv_name + '.csv')
         assert os.path.isfile(csv_file)
         df = pds.DataFrame.from_csv(csv_file, index_col = None)

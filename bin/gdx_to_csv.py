@@ -15,7 +15,7 @@ def convert_gdx_to_csv(in_gdx, out_dir, gams_dir=None):
     if not os.path.exists(out_dir):
         os.mkdir(out_dir)
     
-    for symbol_name, df in dataframes:
+    for symbol_name, df in dataframes.items():
         csv_path = os.path.join(out_dir, symbol_name + ".csv")
         if os.path.exists(csv_path):
             print("Overwriting '{}'".format(csv_path))
