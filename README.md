@@ -5,7 +5,7 @@ Python package to translate between gdx (GAMS data) and pandas.
 
 ## Usage
 
-[Install](Install) first.
+[Install](#Install) first.
 
 To work in memory between GDX and pandas DataFrames, note that the two primary points 
 of reference are GDX files on disk and python dicts of {symbol_name: pandas.DataFrame}. 
@@ -21,8 +21,10 @@ gdx_file = 'C:\path_to_my_gdx\data.gdx'
 dataframes = gdxpds.to_dataframes(gdx_file)
 for symbol_name, df in dataframes.items():
     print("Doing work with {}.".format(symbol_name))
-    # df is a pandas.DataFrame with unhelpful column names (#1) except for 'value'
 ```
+
+And within the loop, df is a pandas.DataFrame with unhelpful column names (#1) except 
+for 'value'.
 
 And vice-versa:
 
@@ -33,9 +35,10 @@ import gdxpds
 
 gdx_file = 'C:\path_to_my_output_gdx\data_to_send_to_gams.gdx'
 gdx = gdxpds(dataframes, gdx_file)
-# providing a gdx_file is optional
-# the returned gdx is an object of type [gdxdict.gdxdict](https://github.com/geoffleyland/py-gdx/blob/master/gdxdict.py).
 ```
+
+Note that providing a gdx_file is optional, and the returned gdx is an object of type [gdxdict.gdxdict](https://github.com/geoffleyland/py-gdx/blob/master/gdxdict.py).
+
 
 The package also includes command line utilities for converting between GDX and CSV, see
 
