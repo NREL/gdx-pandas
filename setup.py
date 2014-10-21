@@ -11,9 +11,9 @@ setup(
     scripts = ['bin/csv_to_gdx.py', 'bin/gdx_to_csv.py'],
     url = 'https://github.nrel.gov/ehale/gdx-pandas',
     description = 'Python package to translate between gdx (GAMS data) and pandas.',
+    long_description=open('README.md').read(),
     package_data={
-        'gdxpds.test': ['gdxpds/test/*.csv',
-                        'gdxpds/test/*.gdx']
+        'gdxpds.test': ['*.csv','*.gdx']
     },
     install_requires=open('requirements.txt').read()
 )
