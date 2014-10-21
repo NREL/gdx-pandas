@@ -58,31 +58,37 @@ python csv_to_gdx.py --help
     - See GAMS/win64/XX.X/apifiles/readme.txt
     - See GAMS/win64/XX.X/apifiles/Python/api/setup.py, in particular, run
         
-        ```
+        ```bash
         python setup.py install
         ```
         
 - geoffleyland/py-gdx
 
-    ```
+    ```bash
     pip install git+https://github.com/geoffleyland/py-gdx.git@master
     ```
 
 ### Get the Latest Package
 
-```
+```bash
 pip install git+ssh://git@github.nrel.gov/ehale/gdx-pandas.git@master
 ```
 
 or 
 
-```
+```bash
 pip install git+ssh://git@github.nrel.gov/ehale/gdx-pandas.git@v0.1.0
 ```
 
 Versions are listed at https://github.nrel.gov/ehale/gdx-pandas/releases.
 
-Unfortunately on Windows, while this command nominally works (after running it, `pip list` will show cpest as installed), it [exits with errors](http://stackoverflow.com/q/23938896/1470262).
+Unfortunately on Windows, while this command nominally works (after running it, `pip list` will show cpest as installed), it may [exit with errors](http://stackoverflow.com/q/23938896/1470262).
+
+After installation, you can test the package using nose:
+
+```bash
+nosetests gdxpds
+```
 
 ## Uninstall
 
