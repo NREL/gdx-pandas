@@ -1,4 +1,3 @@
 pandas
 py-gdx
 gdxcc
-gdxx
