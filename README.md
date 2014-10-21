@@ -5,7 +5,7 @@ Python package to translate between gdx (GAMS data) and pandas.
 
 ## Usage
 
-[Install](#Install) first.
+[Install][] first.
 
 To work in memory between GDX and pandas DataFrames, note that the two primary points 
 of reference are GDX files on disk and python dicts of {symbol_name: pandas.DataFrame}. 
