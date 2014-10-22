@@ -17,7 +17,7 @@ if os.path.isdir(candidate) and os.path.isfile(os.path.join(candidate, 'gdx_to_c
     bin_prefix = candidate
 
 # install location for Windows
-candidate = os.path.join(apply_dirname(__file__,4), 'Scripts')
+candidate = os.path.join(apply_dirname(__file__,5), 'Scripts')
 if bin_prefix == '' and os.path.isdir(candidate) and os.path.isfile(os.path.join(candidate, 'gdx_to_csv.py')):
     bin_prefix = candidate
 
