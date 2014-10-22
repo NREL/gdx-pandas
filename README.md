@@ -43,9 +43,11 @@ Note that providing a gdx_file is optional, and the returned gdx is an object of
 The package also includes command line utilities for converting between GDX and CSV, see
 
 ```bash
-python gdx_to_csv.py --help
-python csv_to_gdx.py --help
+python C:\your_python_path\Scripts\gdx_to_csv.py --help
+python C:\your_python_path\Scripts\csv_to_gdx.py --help
 ```
+
+(Ideally, after installing gdxpds you should be able to simply call `python gdx_to_csv.py`, but for some reason python does not use either PATH or PYTHONPATH when looking for scripts, see [stackoverflow question](http://stackoverflow.com/q/26497032/1470262).)
 
 ## Install
 
