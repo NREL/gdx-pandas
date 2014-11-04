@@ -34,7 +34,7 @@ import gdxpds
 # assume we already have a dataframes object in memory
 
 gdx_file = 'C:\path_to_my_output_gdx\data_to_send_to_gams.gdx'
-gdx = gdxpds(dataframes, gdx_file)
+gdx = gdxpds.to_gdx(dataframes, gdx_file)
 ```
 
 Note that providing a gdx_file is optional, and the returned gdx is an object of type [gdxdict.gdxdict](https://github.com/geoffleyland/py-gdx/blob/master/gdxdict.py).
