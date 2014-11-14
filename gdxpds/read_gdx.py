@@ -40,10 +40,11 @@ class Translator(object):
         def collect_data(data, entry, dim):
             assert isinstance(dim, gdxdict.gdxdim)
             for key, value in dim.items.items():
+                key_name = self.gdx.order[self.gdx.universal[key]]
                 if isinstance(value,gdxdict.gdxdim):
-                    collect_data(data,entry + [key],value)
+                    collect_data(data,entry + [key_name],value)
                 else:
-                    data.append(entry + [key, value])
+                    data.append(entry + [key_name, value])
         
         # main body        
         assert self.__dataframes is None
