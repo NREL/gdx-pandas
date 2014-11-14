@@ -9,7 +9,7 @@ class Translator(object):
     
     @property
     def dataframes(self):
-        return self._dataframes
+        return self.__dataframes
         
     @dataframes.setter
     def dataframes(self, value):
@@ -20,21 +20,21 @@ class Translator(object):
                 RuntimeError("Expecting dict of name, pandas.DataFrame pairs.")
             if not isinstance(df, pds.DataFrame):
                 RuntimeError("Expecting dict of name, pandas.DataFrame pairs.")
-        self._dataframes = value
-        self._gdx = None
+        self.__dataframes = value
+        self.__gdx = None
     
     @property
     def gdx(self):
-        if self._gdx is None:
-            self._gdx = gdxdict.gdxdict()
+        if self.__gdx is None:
+            self.__gdx = gdxdict.gdxdict()
             for symbol_name, df in self.dataframes.items():
-                self._add_symbol_to_gdx(symbol_name, df)
-        return self._gdx
+                self.__add_symbol_to_gdx(symbol_name, df)
+        return self.__gdx
         
     def save_gdx(self, path, gams_dir = None):
         gdxpds.tools.GdxWriter(self.gdx, path, gams_dir).save()
         
-    def _add_symbol_to_gdx(self, symbol_name, df):
+    def __add_symbol_to_gdx(self, symbol_name, df):
         symbol_info = {}
         symbol_info['name'] = symbol_name
         symbol_info['typename'] = 'Parameter'
@@ -48,8 +48,8 @@ class Translator(object):
                 # to explicitly create a Set symbol for each domain. (Something that
                 # can be done as an enhancement.)
                 # symbol_info['domain'].append({'key': col})
-        self._gdx.add_symbol(symbol_info)
-        top_dim = self._gdx[symbol_name]
+        self.__gdx.add_symbol(symbol_info)
+        top_dim = self.__gdx[symbol_name]
         
         def add_data(dim, data):
             """
@@ -94,7 +94,7 @@ class Translator(object):
                     else:
                         # make a new level of the tree by creating a node for prev_value
                         # that points down to the next dimension
-                        new_dim = gdxdict.gdxdim(self._gdx)
+                        new_dim = gdxdict.gdxdim(self.__gdx)
                         new_dim.info['name'] = i
                         cur_dim[prev_value] = new_dim
                     # prev_value will be used as a label, so make sure it is a string

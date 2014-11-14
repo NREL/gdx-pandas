@@ -21,19 +21,19 @@ class GamsDirFinder(object):
     @property
     def gams_dir(self):
         """The GAMS directory on this system."""
-        if self._gams_dir is None:
+        if self.__gams_dir is None:
             raise RuntimeError("Unable to locate your GAMS directory.")
-        return self._gams_dir
+        return self.__gams_dir
         
     @gams_dir.setter
     def gams_dir(self, value):
-        self._gams_dir = None
+        self.__gams_dir = None
         if isinstance(value,str):
-            self._gams_dir = self._clean_gams_dir(value)
-        if self._gams_dir is None:
-            self._gams_dir = self._find_gams()
+            self.__gams_dir = self.__clean_gams_dir(value)
+        if self.__gams_dir is None:
+            self.__gams_dir = self.__find_gams()
             
-    def _clean_gams_dir(self,value):
+    def __clean_gams_dir(self,value):
         assert(isinstance(value,str))
         ret = os.path.realpath(value)
         if not os.path.exists(ret):
@@ -41,7 +41,7 @@ class GamsDirFinder(object):
         ret = re.sub('\\\\','/',ret)
         return ret
         
-    def _find_gams(self):
+    def __find_gams(self):
         """
         For Windows, looks for the GAMS directory based on the default install location
         (C:\GAMS). 
@@ -85,7 +85,7 @@ class GamsDirFinder(object):
                 ret = None
                 
         if ret is not None:
-            ret = self._clean_gams_dir(ret)
+            ret = self.__clean_gams_dir(ret)
             
         return ret
         
@@ -95,11 +95,11 @@ class NeedsGamsDir(object):
         
     @property
     def gams_dir(self):
-        return self._gams_dir
+        return self.__gams_dir
         
     @gams_dir.setter
     def gams_dir(self, value):
-        self._gams_dir = GamsDirFinder(value).gams_dir    
+        self.__gams_dir = GamsDirFinder(value).gams_dir    
 
 class GdxLoader(NeedsGamsDir):
     def __init__(self, gdx_file, gams_dir = None):
@@ -108,21 +108,21 @@ class GdxLoader(NeedsGamsDir):
         
     @property 
     def gdx_file(self):
-        return self._gdx_file
+        return self.__gdx_file
 
     @gdx_file.setter
     def gdx_file(self, value):
         if not os.path.exists(value):
             raise RuntimeError("The GDX file '{}' does not exist.".format(value))
-        self._gdx_file = value
-        self._gdx = None
+        self.__gdx_file = value
+        self.__gdx = None
         
     @property
     def gdx(self):
-        if self._gdx is None:
-            self._gdx = gdxdict.gdxdict()
-            self._gdx.read(self.gdx_file, self.gams_dir)
-        return self._gdx
+        if self.__gdx is None:
+            self.__gdx = gdxdict.gdxdict()
+            self.__gdx.read(self.gdx_file, self.gams_dir)
+        return self.__gdx
         
 class GdxWriter(NeedsGamsDir):
     def __init__(self, gdx, path, gams_dir = None):
@@ -132,17 +132,17 @@ class GdxWriter(NeedsGamsDir):
         
     @property
     def gdx(self):
-        return self._gdx
+        return self.__gdx
         
     @gdx.setter
     def gdx(self, value):
         if not isinstance(value, gdxdict.gdxdict):
             raise RuntimeError("Expected GDX file loaded as a gdxdict.gdxdict.")
-        self._gdx = value
+        self.__gdx = value
         
     @property
     def path(self):
-        return self._path
+        return self.__path
         
     @path.setter
     def path(self, value):
@@ -150,7 +150,7 @@ class GdxWriter(NeedsGamsDir):
             raise RuntimeError("Parent directory of '{}' does not exist. Please create before trying to save a gdx file there.".format(value))
         if os.path.exists(value) and os.path.isdir(value):
             raise RuntimeError("Cannot save a GDX file to '{}', as it is a directory.".format(value))
-        self._path = value
+        self.__path = value
         
     def save(self):
         if os.path.isfile(self.path):

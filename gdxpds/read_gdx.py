@@ -5,37 +5,37 @@ import gdxpds.tools
 
 class Translator(object):
     def __init__(self, gdx_file, gams_dir = None):
-        self._gdx_loader = gdxpds.tools.GdxLoader(gdx_file, gams_dir)
-        self._dataframes = None
+        self.__gdx_loader = gdxpds.tools.GdxLoader(gdx_file, gams_dir)
+        self.__dataframes = None
         
     @property
     def gams_dir(self):
-        return self._gdx_loader.gams_dir
+        return self.__gdx_loader.gams_dir
         
     @gams_dir.setter
     def gams_dir(self, value):
-        self._gdx_loader.gams_dir = value
+        self.__gdx_loader.gams_dir = value
         
     @property 
     def gdx_file(self):
-        return self._gdx_loader.gdx_file
+        return self.__gdx_loader.gdx_file
         
     @gdx_file.setter
     def gdx_file(self, value):
-        self._gdx_loader.gdx_file = value
-        self._dataframes = None
+        self.__gdx_loader.gdx_file = value
+        self.__dataframes = None
         
     @property
     def gdx(self):
-        return self._gdx_loader.gdx
+        return self.__gdx_loader.gdx
         
     @property
     def dataframes(self):
-        if self._dataframes is None:
-            self._translate()
-        return self._dataframes
+        if self.__dataframes is None:
+            self.__translate()
+        return self.__dataframes
                 
-    def _translate(self):    
+    def __translate(self):    
         # recursive helper function
         def collect_data(data, entry, dim):
             assert isinstance(dim, gdxdict.gdxdim)
@@ -46,8 +46,8 @@ class Translator(object):
                     data.append(entry + [key, value])
         
         # main body        
-        assert self._dataframes is None
-        self._dataframes = {}
+        assert self.__dataframes is None
+        self.__dataframes = {}
         for symbol_name in self.gdx:
             symbol_info = self.gdx.getinfo(symbol_name)
             if symbol_info['records'] > 0:
@@ -55,7 +55,7 @@ class Translator(object):
                 cols.append('value')
                 data = []; entry = []
                 collect_data(data,entry,self.gdx[symbol_name])
-                self._dataframes[symbol_name] = pds.DataFrame(data = data, columns = cols)
+                self.__dataframes[symbol_name] = pds.DataFrame(data = data, columns = cols)
 
 def to_dataframes(gdx_file, gams_dir = None):
     """
