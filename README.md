@@ -8,9 +8,10 @@ Python package to translate between gdx (GAMS data) and pandas.
 ## Use
 
 To work in memory between GDX and pandas DataFrames, note that the two primary points 
-of reference are GDX files on disk and python dicts of {symbol_name: pandas.DataFrame}. 
-(Alternatively for GDX files, you can directly access the intermediate gdxdict.gdxdict 
-objects in memory.)
+of reference are GDX files on disk and python dicts of {symbol_name: pandas.DataFrame}, 
+where each pandas.DataFrame contains data for a single parameter whose value is in
+the last column, and that column is labeled 'value' (case insensitive). Alternatively 
+for GDX files, you can directly access the intermediate gdxdict.gdxdict objects in memory.
 
 Then, to convert from GDX to DataFrames:
 

@@ -76,7 +76,7 @@ class Translator(object):
                     else:
                         assert cur_dim.info['name'] == i
                     prev_value = value
-                elif i == 'value':
+                elif i.lower().strip() == 'value':
                     # finalize, that is
                     # register the value at the current level
                     assert prev_value not in cur_dim
@@ -109,7 +109,9 @@ def to_gdx(dataframes, path = None, gams_dir = None):
     """
     Parameters:
       - dataframes (map of pandas.DataFrame): symbol name to pandas.DataFrame 
-        dict to be compiled into a single gdx file
+        dict to be compiled into a single gdx file. Each DataFrame is assumed to 
+        represent a single parameter. The last column must be the parameter's value,
+        and must be labeled as (case insensitive) 'value'. 
       - path (optional string): if provided, the gdx file will be written
         to this path
         
