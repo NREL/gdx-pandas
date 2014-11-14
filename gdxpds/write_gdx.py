@@ -14,12 +14,12 @@ class Translator(object):
     @dataframes.setter
     def dataframes(self, value):
         if not isinstance(value, dict):
-            RuntimeError("Expecting dict of name, pandas.DataFrame pairs.")
+            raise RuntimeError("Expecting dict of name, pandas.DataFrame pairs.")
         for symbol_name, df in value.items():
             if not isinstance(symbol_name, str):
-                RuntimeError("Expecting dict of name, pandas.DataFrame pairs.")
+                raise RuntimeError("Expecting dict of name, pandas.DataFrame pairs.")
             if not isinstance(df, pds.DataFrame):
-                RuntimeError("Expecting dict of name, pandas.DataFrame pairs.")
+                raise RuntimeError("Expecting dict of name, pandas.DataFrame pairs.")
         self.__dataframes = value
         self.__gdx = None
     
