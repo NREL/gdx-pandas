@@ -76,7 +76,7 @@ class Translator(object):
                     else:
                         assert cur_dim.info['name'] == i
                     prev_value = value
-                elif i.lower().strip() == 'value':
+                elif isinstance(i,basestring) and (i.lower().strip() == 'value'):
                     # finalize, that is
                     # register the value at the current level
                     assert prev_value not in cur_dim

@@ -80,7 +80,7 @@ pip install git+ssh://git@github.nrel.gov/ehale/gdx-pandas.git@master
 or 
 
 ```bash
-pip install git+ssh://git@github.nrel.gov/ehale/gdx-pandas.git@v0.1.0
+pip install git+ssh://git@github.nrel.gov/ehale/gdx-pandas.git@v0.2.0
 ```
 
 Versions are listed at https://github.nrel.gov/ehale/gdx-pandas/releases.

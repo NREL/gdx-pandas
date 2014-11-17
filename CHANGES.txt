@@ -1,1 +1,5 @@
+v0.2.0, 11/17/14 -- preserve case sensitivity in data labels
+                    document DataFrames assumptions - #3
+                    make 'value' label check more lenient
+                    some RuntimeErrors were constructed without being raised - #2
 v0.1.0, 10/21/14 -- initial release
