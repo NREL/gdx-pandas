@@ -51,13 +51,20 @@ class Translator(object):
         def collect_data(data, entry, dim):
             assert isinstance(dim, gdxdict.gdxdim)
             # cannot use dim.items.items() here, because skips the lazy_load feature
+            has_limits = False
             for key in dim:
                 key_name = self.gdx.universal[key.lower()]['name']
                 value = dim[key]
                 if isinstance(value,gdxdict.gdxdim):
-                    collect_data(data,entry + [key_name],value)
+                    has_limits = collect_data(data,entry + [key_name],value)
                 else:
-                    data.append(entry + [key_name, value])
+                    row = entry + [key_name, value]
+                    if 'limits' in dim.getinfo(key_name):
+                        for limit_name, limit_value in dim.getinfo(key_name)['limits'].items():
+                            row += [limit_value]
+                        has_limits = True
+                    data.append(row)
+            return has_limits
         
         # main body   
         if self.__dataframes is None:
@@ -73,9 +80,11 @@ class Translator(object):
             symbol_info = self.gdx.getinfo(symbol_name)
             if symbol_info['records'] > 0:
                 data = []; entry = []
-                collect_data(data,entry,self.gdx[symbol_name])
+                has_limits = collect_data(data,entry,self.gdx[symbol_name])
                 cols = [d['key'] for d in symbol_info["domain"]]
                 cols.append('value')
+                if has_limits:
+                    cols = cols + gdxdict.level_names
                 self.__dataframes[symbol_name] = pds.DataFrame(data = data, columns = cols)
 
 def to_dataframes(gdx_file, gams_dir = None):
