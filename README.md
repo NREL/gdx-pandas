@@ -38,8 +38,12 @@ gdx_file = 'C:\path_to_my_output_gdx\data_to_send_to_gams.gdx'
 gdx = gdxpds.to_gdx(dataframes, gdx_file)
 ```
 
-Note that providing a gdx_file is optional, and the returned gdx is an object of type [gdxdict.gdxdict](https://github.com/geoffleyland/py-gdx/blob/master/gdxdict.py).
+Note that providing a gdx_file is optional, and the returned gdx is an object of type gdxpds.gdxdict.gdxdict.
 
+Additional functions include:
+
+- `gdxpds.list_symbols`
+- `gdxpds.to_dataframe`
 
 The package also includes command line utilities for converting between GDX and CSV, see
 
@@ -64,12 +68,6 @@ python C:\your_python_path\Scripts\csv_to_gdx.py --help
         ```bash
         python setup.py install
         ```
-        
-- geoffleyland/py-gdx
-
-    ```bash
-    pip install git+https://github.com/geoffleyland/py-gdx.git@master
-    ```
 
 ### Get the Latest Package
 

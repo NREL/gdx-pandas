@@ -1,4 +1,4 @@
-import gdxdict
+import gdxpds.gdxdict as gdxdict
 import pandas as pds
 
 import gdxpds.tools

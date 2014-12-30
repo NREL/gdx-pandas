@@ -1,4 +1,4 @@
-import gdxdict
+import gdxpds.gdxdict as gdxdict
 
 import os
 import subprocess as subp
