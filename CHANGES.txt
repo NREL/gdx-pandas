@@ -1,3 +1,6 @@
+v0.3.0, 12/30/14 -- add improved version of gdxdict.py to package
+                    add lazy_load to read_gdx.Translator (uses gdxdict.gdxdict's new lazy_load)
+                    add list_symbols and to_dataframe read methods
 v0.2.0, 11/17/14 -- preserve case sensitivity in data labels
                     document DataFrames assumptions - #3
                     make 'value' label check more lenient

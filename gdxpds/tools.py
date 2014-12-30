@@ -1,4 +1,4 @@
-import gdxdict
+import gdxpds.gdxdict as gdxdict
 
 import os
 import subprocess as subp
@@ -102,8 +102,9 @@ class NeedsGamsDir(object):
         self.__gams_dir = GamsDirFinder(value).gams_dir    
 
 class GdxLoader(NeedsGamsDir):
-    def __init__(self, gdx_file, gams_dir = None):
+    def __init__(self, gdx_file, gams_dir = None, lazy_load = False):
         self.gdx_file = gdx_file
+        self.lazy_load = lazy_load
         super(GdxLoader, self).__init__(gams_dir)
         
     @property 
@@ -120,7 +121,7 @@ class GdxLoader(NeedsGamsDir):
     @property
     def gdx(self):
         if self.__gdx is None:
-            self.__gdx = gdxdict.gdxdict()
+            self.__gdx = gdxdict.gdxdict(self.lazy_load)
             self.__gdx.read(self.gdx_file, self.gams_dir)
         return self.__gdx
         
