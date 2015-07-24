@@ -1,7 +1,7 @@
 gdx-pandas
 ==========
 
-Python package to translate between gdx (GAMS data) and pandas.
+Python package to translate between gdx (GAMS data) and pandas. 
 
 [Install](#install) | [Use](#use) | [Uninstall](#uninstall)
 
@@ -32,10 +32,11 @@ And vice-versa:
 ```python
 import gdxpds
 
-# assume we already have a dataframes object in memory
+# assume we have a DataFrame df with last column 'value'
+data_ready_for_GAMS = { 'symbol_name': df }
 
 gdx_file = 'C:\path_to_my_output_gdx\data_to_send_to_gams.gdx'
-gdx = gdxpds.to_gdx(dataframes, gdx_file)
+gdx = gdxpds.to_gdx(data_ready_for_GAMS, gdx_file)
 ```
 
 Note that providing a gdx_file is optional, and the returned gdx is an object of type gdxpds.gdxdict.gdxdict.
