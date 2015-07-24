@@ -24,7 +24,7 @@ for symbol_name, df in dataframes.items():
     print("Doing work with {}.".format(symbol_name))
 ```
 
-And within the loop, df is a pandas.DataFrame with unhelpful column names (#1) except 
+And within the loop, df is a pandas.DataFrame with unhelpful column names except 
 for 'value'.
 
 And vice-versa:
@@ -73,18 +73,18 @@ python C:\your_python_path\Scripts\csv_to_gdx.py --help
 ### Get the Latest Package
 
 ```bash
-pip install git+ssh://git@github.nrel.gov/ehale/gdx-pandas.git@master
+pip install git+https://github.com/NREL/gdx-pandas.git@master
 ```
 
 or 
 
 ```bash
-pip install git+ssh://git@github.nrel.gov/ehale/gdx-pandas.git@v0.3.0
+pip install git+https://github.com/NREL/gdx-pandas.git@v0.4.0
 ```
 
-Versions are listed at https://github.nrel.gov/ehale/gdx-pandas/releases.
+Versions are listed at https://github.com/NREL/gdx-pandas/releases.
 
-Unfortunately on Windows, while this command nominally works (after running it, `pip list` will show cpest as installed), it may [exit with errors](http://stackoverflow.com/q/23938896/1470262).
+Unfortunately on Windows, while this command nominally works (after running it, `pip list` will show gdxpds as installed), it may [exit with errors](http://stackoverflow.com/q/23938896/1470262).
 
 After installation, you can test the package using nose:
 
