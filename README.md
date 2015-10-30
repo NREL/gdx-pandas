@@ -79,7 +79,7 @@ pip install git+https://github.com/NREL/gdx-pandas.git@master
 or 
 
 ```bash
-pip install git+https://github.com/NREL/gdx-pandas.git@v0.4.0
+pip install git+https://github.com/NREL/gdx-pandas.git@v0.4.1
 ```
 
 Versions are listed at https://github.com/NREL/gdx-pandas/releases.

@@ -37,7 +37,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 [/LICENSE]
 '''
 
-__version__ = '0.4.0'
+__version__ = '0.4.1'
 
 from gdxpds.read_gdx import to_dataframes
 from gdxpds.read_gdx import list_symbols
