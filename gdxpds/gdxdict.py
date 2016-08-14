@@ -43,13 +43,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #     - lazy_load
 #     - caching, etc.
 
-import gdxcc
-import gdxpds.gdxx as gdxx
-import sys
-import string
-from collections import OrderedDict
-import time
-
+from collections import OrderedDictimport logging
+import stringimport sys
+import timeimport gdxccimport gdxpds.gdxx as gdxximport gdxpdslogger = logging.getLogger(__name__)
 
 #- Errors ----------------------------------------------------------------------
 
@@ -427,19 +423,19 @@ class gdxdict:
             self.gams_dir = gams_dir
     
         H = gdxx.open(gams_dir)
-        assert gdxcc.gdxOpenRead(H, filename)[0], "Couldn't open %s" % filename
+        assert gdxcc.gdxOpenRead(H, filename)[0], "Couldn't open %s" % filename                logger.debug("Opened the file. " + gdxpds.memory_use_str())
 
         info = gdxx.file_info(H)
         for k in info:
             if not k in self.file_info:
-                self.file_info[k] = info[k]
+                self.file_info[k] = info[k]                        logger.debug("Retrieved the file info. " + gdxpds.memory_use_str())
 
         # read the universal set
         uinfo = gdxx.symbol_info(H, 0)
         for k in uinfo:
             if not k in self.universal_info: 
                 self.universal_info[k] = uinfo[k]
-
+        logger.debug("Read the universal set. " + gdxpds.memory_use_str())                
         ok, records = gdxcc.gdxDataReadStrStart(H, 0)        
         for i in range(records):
             ok, elements, values, afdim = gdxcc.gdxDataReadStr(H)
@@ -482,14 +478,14 @@ class gdxdict:
             self.add_symbol(sinfo)
             if self.lazy_load and sinfo["dims"] > 0:
                 continue
-                
-            self.__read_one_symbol(H, sinfo, all_keys)
+                            logger.debug("Reading {}. ".format(sinfo['name']) + gdxpds.memory_use_str())
+            self.__read_one_symbol(H, sinfo, all_keys)            logger.debug("Read {}. ".format(sinfo['name']) + gdxpds.memory_use_str())
 
         gdxcc.gdxClose(H)
-        gdxcc.gdxFree(H)
+        gdxcc.gdxFree(H)                logger.debug("Closed the gdx file. " + gdxpds.memory_use_str())
 
         guess_domains(self, set_map, all_keys)
-        guess_ancestor_domains(self)
+        guess_ancestor_domains(self)                logger.debug("Finished guessing domains. " + gdxpds.memory_use_str())
         if self.lazy_load:
             self.set_map = set_map
             self.all_keys = all_keys
@@ -516,7 +512,7 @@ class gdxdict:
         guess_domains(self, set_map, all_keys)
         guess_ancestor_domains(self)
         self.set_map = set_map
-        self.set_map = all_keys
+        self.all_keys = all_keys
         
     def __read_one_symbol(self, H, sinfo, all_keys):
         symbol_name = sinfo["name"]

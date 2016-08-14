@@ -35,11 +35,11 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 [/LICENSE]
-'''
-import gdxpds.gdxdict as gdxdict
-import pandas as pds
+'''import copyimport logging
 
-import gdxpds.tools
+import pandas as pds
+import gdxpds.gdxdict as gdxdict
+import gdxpds.toolslogger = logging.getLogger(__name__)
 
 class Translator(object):
     def __init__(self, gdx_file, gams_dir = None, lazy_load = False):
@@ -84,7 +84,7 @@ class Translator(object):
             self.__translate(symbol_name)
         return { symbol_name: self.__dataframes[symbol_name] }
                 
-    def __translate(self, symbol_name = None):    
+    def __translate(self, symbol_name = None):            logger.debug("Starting loading process. " + gdxpds.memory_use_str())        
         # recursive helper function
         def collect_data(data, entry, dim):
             assert isinstance(dim, gdxdict.gdxdim)
@@ -112,18 +112,18 @@ class Translator(object):
         if symbol_name is None:
             symbol_names = self.symbols
         else:
-            symbol_names = [symbol_name]
+            symbol_names = [symbol_name]                    logger.debug("Located {} symbol names. ".format(len(symbol_names)) +             gdxpds.memory_use_str())
             
         for symbol_name in symbol_names:
             symbol_info = self.gdx.getinfo(symbol_name)
-            if symbol_info['records'] > 0:
+            if symbol_info['records'] > 0:                logger.debug('Processing symbol {} with {} records. '.format(symbol_name, symbol_info['records']) +                     gdxpds.memory_use_str())
                 data = []; entry = []
                 has_limits = collect_data(data,entry,self.gdx[symbol_name])
                 cols = [d['key'] for d in symbol_info["domain"]]
                 cols.append('value')
                 if has_limits:
                     cols = cols + gdxdict.level_names
-                self.__dataframes[symbol_name] = pds.DataFrame(data = data, columns = cols)
+                self.__dataframes[symbol_name] = pds.DataFrame(data = data, columns = cols)                logger.debug('Complete. ' + gdxpds.memory_use_str())
 
 def to_dataframes(gdx_file, gams_dir = None):
     """
@@ -135,8 +135,8 @@ def to_dataframes(gdx_file, gams_dir = None):
       
     Returns a dict of Pandas DataFrames, one item for each symbol in the GDX 
     file, keyed with the symbol name.
-    """
-    return Translator(gdx_file, gams_dir).dataframes
+    """    dfs = Translator(gdx_file, gams_dir).dataframes    result = copy.deepcopy(dfs)
+    return result
     
 def list_symbols(gdx_file, gams_dir = None):
     """
@@ -145,8 +145,8 @@ def list_symbols(gdx_file, gams_dir = None):
     Parameters:
       - gdx_file (string): path to a GDX file
       - gams_dir (string): optional path to GAMS directory      
-    """
-    return Translator(gdx_file, gams_dir, lazy_load = True).symbols
+    """    symbols = Translator(gdx_file, gams_dir, lazy_load = True).symbols    result = copy.deepcopy(symbols)
+    return symbols
     
 def to_dataframe(gdx_file, symbol_name, gams_dir = None):
     """
@@ -160,6 +160,6 @@ def to_dataframe(gdx_file, symbol_name, gams_dir = None):
       
     Returns a dict with a single entry, where the key is symbol_name and the
     value is the corresponding pandas.DataFrame.
-    """
-    return Translator(gdx_file, gams_dir, lazy_load = True).dataframe(symbol_name)
+    """    df = copy.deepcopy(Translator(gdx_file, gams_dir, lazy_load = True).dataframe(symbol_name))    result = copy.deepcopy(df)
+    return result
     
