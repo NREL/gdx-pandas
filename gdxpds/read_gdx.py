@@ -35,7 +35,7 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 [/LICENSE]
-'''import copyimport logging
+'''import copyimport gcimport logging
 
 import pandas as pds
 import gdxpds.gdxdict as gdxdict
@@ -135,7 +135,7 @@ def to_dataframes(gdx_file, gams_dir = None):
       
     Returns a dict of Pandas DataFrames, one item for each symbol in the GDX 
     file, keyed with the symbol name.
-    """    dfs = Translator(gdx_file, gams_dir).dataframes    result = copy.deepcopy(dfs)
+    """    dfs = Translator(gdx_file, gams_dir).dataframes    result = copy.deepcopy(dfs)    gc.collect()
     return result
     
 def list_symbols(gdx_file, gams_dir = None):
@@ -145,7 +145,7 @@ def list_symbols(gdx_file, gams_dir = None):
     Parameters:
       - gdx_file (string): path to a GDX file
       - gams_dir (string): optional path to GAMS directory      
-    """    symbols = Translator(gdx_file, gams_dir, lazy_load = True).symbols    result = copy.deepcopy(symbols)
+    """    symbols = Translator(gdx_file, gams_dir, lazy_load = True).symbols    result = copy.deepcopy(symbols)    gc.collect()
     return symbols
     
 def to_dataframe(gdx_file, symbol_name, gams_dir = None):
@@ -160,6 +160,6 @@ def to_dataframe(gdx_file, symbol_name, gams_dir = None):
       
     Returns a dict with a single entry, where the key is symbol_name and the
     value is the corresponding pandas.DataFrame.
-    """    df = copy.deepcopy(Translator(gdx_file, gams_dir, lazy_load = True).dataframe(symbol_name))    result = copy.deepcopy(df)
+    """    df = copy.deepcopy(Translator(gdx_file, gams_dir, lazy_load = True).dataframe(symbol_name))    result = copy.deepcopy(df)    gc.collect()
     return result
     
