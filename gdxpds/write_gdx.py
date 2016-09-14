@@ -36,9 +36,9 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 [/LICENSE]
 '''
-import gdxpds.gdxdict as gdxdict
+import gdxpds.gdxdict as gdxdictimport loggingimport numpy as np
 import pandas as pds
-
+logger = logging.getLogger(__name__)
 import gdxpds.tools
 
 class Translator(object):
@@ -73,14 +73,13 @@ class Translator(object):
         gdxpds.tools.GdxWriter(self.gdx, path, gams_dir).save()
         
     def __add_symbol_to_gdx(self, symbol_name, df):
-        symbol_info = {}
-        symbol_info['name'] = symbol_name
-        symbol_info['typename'] = 'Parameter'
+        symbol_info = {}        if not df.columns[-1].lower().strip() == 'value':            raise RuntimeError("The last column must be labeled 'value' (case insensitive).")        is_set = True if isinstance(df.loc[0,df.columns[-1]], (bool, np.bool_)) else False
+        symbol_info['name'] = symbol_name        symbol_info['typename'] = 'Set' if is_set else 'Parameter'
         symbol_info['dims'] = len(df.columns) - 1
         symbol_info['records'] = len(df.index)
         symbol_info['domain'] = []
         for col in df.columns:
-            if not col == 'value':
+            if not col.lower().strip() == 'value':
                 symbol_info['domain'].append({'key': '*'})
                 # If we register the domain names, it seems that gdxdict expects us
                 # to explicitly create a Set symbol for each domain. (Something that
@@ -148,8 +147,7 @@ def to_gdx(dataframes, path = None, gams_dir = None):
     Parameters:
       - dataframes (map of pandas.DataFrame): symbol name to pandas.DataFrame 
         dict to be compiled into a single gdx file. Each DataFrame is assumed to 
-        represent a single parameter. The last column must be the parameter's value,
-        and must be labeled as (case insensitive) 'value'. 
+        represent a single set or parameter. The last column must be the parameter's         value, or the set's listing of True/False, and must be labeled as (case         insensitive) 'value'. 
       - path (optional string): if provided, the gdx file will be written
         to this path
         
