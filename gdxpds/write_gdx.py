@@ -1,5 +1,7 @@
-'''
-[LICENSE]
+'''
+
+[LICENSE]
+
 Copyright (c) 2015, Alliance for Sustainable Energy.
 All rights reserved.
 
@@ -33,12 +35,19 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-[/LICENSE]
-'''
-import gdxpds.gdxdict as gdxdictimport loggingimport numpy as np
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+[/LICENSE]
+
+'''
+
+import gdxpds.gdxdict as gdxdict
+import logging
+import numpy as np
 import pandas as pds
-logger = logging.getLogger(__name__)
+
+logger = logging.getLogger(__name__)
+
 import gdxpds.tools
 
 class Translator(object):
@@ -66,15 +75,23 @@ class Translator(object):
         if self.__gdx is None:
             self.__gdx = gdxdict.gdxdict()
             for symbol_name, df in self.dataframes.items():
-                self.__add_symbol_to_gdx(symbol_name, df)
+                try:
+                    self.__add_symbol_to_gdx(symbol_name, df)
+                except:
+                    logger.error("Unable to add symbol {} to gdx with dataframe {}.".format(symbol_name, df))
+                    raise
         return self.__gdx
         
     def save_gdx(self, path, gams_dir = None):
         gdxpds.tools.GdxWriter(self.gdx, path, gams_dir).save()
         
     def __add_symbol_to_gdx(self, symbol_name, df):
-        symbol_info = {}        if not df.columns[-1].lower().strip() == 'value':            raise RuntimeError("The last column must be labeled 'value' (case insensitive).")        is_set = True if isinstance(df.loc[0,df.columns[-1]], (bool, np.bool_)) else False
-        symbol_info['name'] = symbol_name        symbol_info['typename'] = 'Set' if is_set else 'Parameter'
+        symbol_info = {}
+        if not df.columns[-1].lower().strip() == 'value':
+            raise RuntimeError("The last column must be labeled 'value' (case insensitive).")
+        is_set = True if isinstance(df.loc[0,df.columns[-1]], (bool, np.bool_)) else False
+        symbol_info['name'] = symbol_name
+        symbol_info['typename'] = 'Set' if is_set else 'Parameter'
         symbol_info['dims'] = len(df.columns) - 1
         symbol_info['records'] = len(df.index)
         symbol_info['domain'] = []
@@ -87,6 +104,11 @@ class Translator(object):
                 # symbol_info['domain'].append({'key': col})
         self.__gdx.add_symbol(symbol_info)
         top_dim = self.__gdx[symbol_name]
+
+        if symbol_info['dims'] == 0:
+            assert top_dim is None
+            self.__gdx[symbol_name] = df.loc[0,df.columns[-1]]
+            return
         
         def add_data(dim, data):
             """
@@ -147,7 +169,9 @@ def to_gdx(dataframes, path = None, gams_dir = None):
     Parameters:
       - dataframes (map of pandas.DataFrame): symbol name to pandas.DataFrame 
         dict to be compiled into a single gdx file. Each DataFrame is assumed to 
-        represent a single set or parameter. The last column must be the parameter's         value, or the set's listing of True/False, and must be labeled as (case         insensitive) 'value'. 
+        represent a single set or parameter. The last column must be the parameter's 
+        value, or the set's listing of True/False, and must be labeled as (case 
+        insensitive) 'value'. 
       - path (optional string): if provided, the gdx file will be written
         to this path
         
