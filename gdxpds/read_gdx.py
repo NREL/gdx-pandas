@@ -123,7 +123,7 @@ class Translator(object):
                 cols.append('value')
                 if has_limits:
                     cols = cols + gdxdict.level_names
-                self.__dataframes[symbol_name] = pds.DataFrame(data = data, columns = cols)                logger.debug('Complete. ' + gdxpds.memory_use_str())
+                self.__dataframes[symbol_name] = pds.DataFrame(data = data, columns = cols)                if len(self.__dataframes[symbol_name].index) != symbol_info['records']:                    logger.error("Dataframe containing {} contains {} records when expected {}".format(                        symbol_name, len(self.__dataframes[symbol_name].index), symbol_info['records']))                logger.debug('Complete. ' + gdxpds.memory_use_str())
 
 def to_dataframes(gdx_file, gams_dir = None):
     """

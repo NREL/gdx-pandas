@@ -362,7 +362,6 @@ class gdxdict:
             if not kl in self.universal:
                 self.universal[kl] = { 'name': key, 'description': description }
                 self.key_map[kl] = kl
-                self.__universal_map = None
         return kl
 
     def add_symbol(self, info):
@@ -526,7 +525,7 @@ class gdxdict:
         if isinstance(symbol, gdxdim):
             symbol._gdxdim__read_in = True
             
-        current_list = [(symbol_name, symbol)]
+        current_list = [(symbol_name, symbol)]        num_dims_created = 0
         for i in range(records):
             ok, elements, values, afdim = gdxcc.gdxDataReadStr(H)
             if not ok: raise gdxx.GDX_error(H, "Error in gdxDataReadStr")
@@ -538,13 +537,12 @@ class gdxdict:
                     keys[d][key] = True
                     if (len(current_list) < d+2) or (current_list[d+1][0] != key):
                         current_list = current_list[0:d+1]
-                        if not key in current_list[d][1]:
+                        if not key in current_list[d][1]:                            num_dims_created += 1
                             current_list[d][1][key] = gdxdim(self)
-                        current_list = current_list + [(key, current_list[d][1][key])]
-                d = sinfo["dims"]-1
+                        current_list = current_list + [(key, current_list[d][1][key])]                d = sinfo["dims"]-1
                 key = elements[d]
                 keys[d][key] = True
-                read_symbol(H, current_list[d][1], key, sinfo["typename"], values)
+                read_symbol(H, current_list[d][1], key, sinfo["typename"], values)        logger.debug("Created {} gdxdims for {} records (ratio = {}). len(current_list) = {}".format(            num_dims_created, records, float(num_dims_created)/float(records), len(current_list)))
 
 #- Write a GDX file ------------------------------------------------------------
 
