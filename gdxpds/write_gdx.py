@@ -89,7 +89,7 @@ class Translator(object):
         symbol_info = {}
         if not df.columns[-1].lower().strip() == 'value':
             raise RuntimeError("The last column must be labeled 'value' (case insensitive).")
-        is_set = True if isinstance(df.loc[0,df.columns[-1]], (bool, np.bool_)) else False
+        is_set = True if isinstance(df.loc[df.index[0],df.columns[-1]], (bool, np.bool_)) else False
         symbol_info['name'] = symbol_name
         symbol_info['typename'] = 'Set' if is_set else 'Parameter'
         symbol_info['dims'] = len(df.columns) - 1
