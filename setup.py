@@ -1,6 +1,5 @@
 
 from distutils.core import setup
-import gdxpds
 
 setup(
     name = 'gdxpds',
