@@ -1,3 +1,5 @@
+v0.5.1, 01/10/17 -- fixing bug with writing dataframes without 0 in the index
+                    fixing up dependency issues #4 and #5
 v0.5.0, 09/23/16 -- can save sets and scalars to gdx
                     debug statements and post-load garbage collection related to #1
 v0.4.1, 10/30/15 -- enable GamsDirFinder to work on posix systems (#2)

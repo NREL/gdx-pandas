@@ -1,5 +1,7 @@
-'''
-[LICENSE]
+'''
+
+[LICENSE]
+
 Copyright (c) 2015, Alliance for Sustainable Energy.
 All rights reserved.
 
@@ -33,13 +35,24 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-[/LICENSE]
-'''
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-__version__ = '0.5.0'
-import osimport psutil
+[/LICENSE]
+
+'''
+
+
+__version__ = '0.5.1'
+
+import os
+import psutil
+
 from gdxpds.read_gdx import to_dataframes
 from gdxpds.read_gdx import list_symbols
 from gdxpds.read_gdx import to_dataframe
-from gdxpds.write_gdx import to_gdxdef memory_use_str(pid = None):    pid = os.getpid() if pid is None else pid    rss = psutil.Process(pid).memory_info().rss    return 'Process {} using {:.2f} GB of memory.'.format(pid, float(rss) / (1024.0**3))
+from gdxpds.write_gdx import to_gdx
+
+def memory_use_str(pid = None):
+    pid = os.getpid() if pid is None else pid
+    rss = psutil.Process(pid).memory_info().rss
+    return 'Process {} using {:.2f} GB of memory.'.format(pid, float(rss) / (1024.0**3))
