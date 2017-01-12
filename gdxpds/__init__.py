@@ -42,7 +42,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '''
 
 
-__version__ = '0.5.1'
+__version__ = '0.5.2'
 
 import os
 import psutil
