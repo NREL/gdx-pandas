@@ -1,5 +1,7 @@
-'''
-[LICENSE]
+'''
+
+[LICENSE]
+
 Copyright (c) 2015, Alliance for Sustainable Energy.
 All rights reserved.
 
@@ -33,9 +35,12 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-[/LICENSE]
-'''
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+[/LICENSE]
+
+'''
+
 # Copyright (c) 2011 Incremental IP Limited
 # see LICENSE for license information
 
@@ -43,9 +48,19 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #     - lazy_load
 #     - caching, etc.
 
-from collections import OrderedDictimport logging
-import stringimport sys
-import timeimport gdxccimport gdxpds.gdxx as gdxximport gdxpdslogger = logging.getLogger(__name__)
+
+from collections import OrderedDict
+import logging
+import string
+import sys
+import time
+
+import gdxcc
+
+import gdxpds.gdxx as gdxx
+import gdxpds
+
+logger = logging.getLogger(__name__)
 
 #- Errors ----------------------------------------------------------------------
 
@@ -422,19 +437,25 @@ class gdxdict:
             self.gams_dir = gams_dir
     
         H = gdxx.open(gams_dir)
-        assert gdxcc.gdxOpenRead(H, filename)[0], "Couldn't open %s" % filename                logger.debug("Opened the file. " + gdxpds.memory_use_str())
+        assert gdxcc.gdxOpenRead(H, filename)[0], "Couldn't open %s" % filename
+        
+        logger.debug("Opened the file. " + gdxpds.memory_use_str())
 
         info = gdxx.file_info(H)
         for k in info:
             if not k in self.file_info:
-                self.file_info[k] = info[k]                        logger.debug("Retrieved the file info. " + gdxpds.memory_use_str())
+                self.file_info[k] = info[k]
+                
+        logger.debug("Retrieved the file info. " + gdxpds.memory_use_str())
 
         # read the universal set
         uinfo = gdxx.symbol_info(H, 0)
         for k in uinfo:
             if not k in self.universal_info: 
                 self.universal_info[k] = uinfo[k]
-        logger.debug("Read the universal set. " + gdxpds.memory_use_str())                
+
+        logger.debug("Read the universal set. " + gdxpds.memory_use_str())
+                
         ok, records = gdxcc.gdxDataReadStrStart(H, 0)        
         for i in range(records):
             ok, elements, values, afdim = gdxcc.gdxDataReadStr(H)
@@ -477,14 +498,20 @@ class gdxdict:
             self.add_symbol(sinfo)
             if self.lazy_load and sinfo["dims"] > 0:
                 continue
-                            logger.debug("Reading {}. ".format(sinfo['name']) + gdxpds.memory_use_str())
-            self.__read_one_symbol(H, sinfo, all_keys)            logger.debug("Read {}. ".format(sinfo['name']) + gdxpds.memory_use_str())
+                
+            logger.debug("Reading {}. ".format(sinfo['name']) + gdxpds.memory_use_str())
+            self.__read_one_symbol(H, sinfo, all_keys)
+            logger.debug("Read {}. ".format(sinfo['name']) + gdxpds.memory_use_str())
 
         gdxcc.gdxClose(H)
-        gdxcc.gdxFree(H)                logger.debug("Closed the gdx file. " + gdxpds.memory_use_str())
+        gdxcc.gdxFree(H)
+        
+        logger.debug("Closed the gdx file. " + gdxpds.memory_use_str())
 
         guess_domains(self, set_map, all_keys)
-        guess_ancestor_domains(self)                logger.debug("Finished guessing domains. " + gdxpds.memory_use_str())
+        guess_ancestor_domains(self)
+        
+        logger.debug("Finished guessing domains. " + gdxpds.memory_use_str())
         if self.lazy_load:
             self.set_map = set_map
             self.all_keys = all_keys
@@ -525,7 +552,8 @@ class gdxdict:
         if isinstance(symbol, gdxdim):
             symbol._gdxdim__read_in = True
             
-        current_list = [(symbol_name, symbol)]        num_dims_created = 0
+        current_list = [(symbol_name, symbol)]
+        num_dims_created = 0
         for i in range(records):
             ok, elements, values, afdim = gdxcc.gdxDataReadStr(H)
             if not ok: raise gdxx.GDX_error(H, "Error in gdxDataReadStr")
@@ -537,12 +565,16 @@ class gdxdict:
                     keys[d][key] = True
                     if (len(current_list) < d+2) or (current_list[d+1][0] != key):
                         current_list = current_list[0:d+1]
-                        if not key in current_list[d][1]:                            num_dims_created += 1
+                        if not key in current_list[d][1]:
+                            num_dims_created += 1
                             current_list[d][1][key] = gdxdim(self)
-                        current_list = current_list + [(key, current_list[d][1][key])]                d = sinfo["dims"]-1
+                        current_list = current_list + [(key, current_list[d][1][key])]
+                d = sinfo["dims"]-1
                 key = elements[d]
                 keys[d][key] = True
-                read_symbol(H, current_list[d][1], key, sinfo["typename"], values)        logger.debug("Created {} gdxdims for {} records (ratio = {}). len(current_list) = {}".format(            num_dims_created, records, float(num_dims_created)/float(records), len(current_list)))
+                read_symbol(H, current_list[d][1], key, sinfo["typename"], values)
+        logger.debug("Created {} gdxdims for {} records (ratio = {}). len(current_list) = {}".format(
+            num_dims_created, records, float(num_dims_created)/float(records) if records else 0, len(current_list)))
 
 #- Write a GDX file ------------------------------------------------------------
 
