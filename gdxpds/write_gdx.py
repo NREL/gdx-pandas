@@ -107,7 +107,7 @@ class Translator(object):
 
         if symbol_info['dims'] == 0:
             assert top_dim is None
-            self.__gdx[symbol_name] = df.loc[0,df.columns[-1]]
+            self.__gdx[symbol_name] = df.loc[df.index[0],df.columns[-1]]
             return
         
         def add_data(dim, data):
