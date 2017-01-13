@@ -5,35 +5,35 @@
 Copyright (c) 2015, Alliance for Sustainable Energy.
 All rights reserved.
 
-Redistribution and use in source and binary forms, 
-with or without modification, are permitted provided 
+Redistribution and use in source and binary forms,
+with or without modification, are permitted provided
 that the following conditions are met:
 
-1. Redistributions of source code must retain the above 
-copyright notice, this list of conditions and the 
+1. Redistributions of source code must retain the above
+copyright notice, this list of conditions and the
 following disclaimer.
 
-2. Redistributions in binary form must reproduce the 
-above copyright notice, this list of conditions and the 
-following disclaimer in the documentation and/or other 
+2. Redistributions in binary form must reproduce the
+above copyright notice, this list of conditions and the
+following disclaimer in the documentation and/or other
 materials provided with the distribution.
 
-3. Neither the name of the copyright holder nor the 
-names of its contributors may be used to endorse or 
-promote products derived from this software without 
+3. Neither the name of the copyright holder nor the
+names of its contributors may be used to endorse or
+promote products derived from this software without
 specific prior written permission.
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
-CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
-INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
-MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
-CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR 
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
-HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
-CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
@@ -53,11 +53,11 @@ import gdxpds.tools
 class Translator(object):
     def __init__(self, dataframes):
         self.dataframes = dataframes
-    
+
     @property
     def dataframes(self):
         return self.__dataframes
-        
+
     @dataframes.setter
     def dataframes(self, value):
         if not isinstance(value, dict):
@@ -69,7 +69,7 @@ class Translator(object):
                 raise RuntimeError("Expecting dict of name, pandas.DataFrame pairs.")
         self.__dataframes = value
         self.__gdx = None
-    
+
     @property
     def gdx(self):
         if self.__gdx is None:
@@ -81,10 +81,10 @@ class Translator(object):
                     logger.error("Unable to add symbol {} to gdx with dataframe {}.".format(symbol_name, df))
                     raise
         return self.__gdx
-        
+
     def save_gdx(self, path, gams_dir = None):
         gdxpds.tools.GdxWriter(self.gdx, path, gams_dir).save()
-        
+
     def __add_symbol_to_gdx(self, symbol_name, df):
         symbol_info = {}
         if not df.columns[-1].lower().strip() == 'value':
@@ -109,16 +109,16 @@ class Translator(object):
             assert top_dim is None
             self.__gdx[symbol_name] = df.loc[df.index[0],df.columns[-1]]
             return
-        
+
         def add_data(dim, data):
             """
             Appends data, the row of a csv file, to dim, the data structure holding
             a gdx symbol.
-            
+
             Parameters:
                 - dim (gdxdict.gdxdim): top-level container for symbol data
                 - data (pds.Series): row of csv data, with index being the dimension
-                  name or 'value', and the corresponding value being the dimension's 
+                  name or 'value', and the corresponding value being the dimension's
                   set element or the parameter value, respectively.
             """
             cur_dim = dim
@@ -159,7 +159,7 @@ class Translator(object):
                     # prev_value will be used as a label, so make sure it is a string
                     prev_value = str(value)
                     cur_dim = new_dim
-    
+
         # add each row to the gdx symbol
         for i, row in df.iterrows():
             add_data(top_dim, row)
@@ -167,18 +167,18 @@ class Translator(object):
 def to_gdx(dataframes, path = None, gams_dir = None):
     """
     Parameters:
-      - dataframes (map of pandas.DataFrame): symbol name to pandas.DataFrame 
-        dict to be compiled into a single gdx file. Each DataFrame is assumed to 
-        represent a single set or parameter. The last column must be the parameter's 
-        value, or the set's listing of True/False, and must be labeled as (case 
-        insensitive) 'value'. 
+      - dataframes (map of pandas.DataFrame): symbol name to pandas.DataFrame
+        dict to be compiled into a single gdx file. Each DataFrame is assumed to
+        represent a single set or parameter. The last column must be the parameter's
+        value, or the set's listing of True/False, and must be labeled as (case
+        insensitive) 'value'.
       - path (optional string): if provided, the gdx file will be written
         to this path
-        
+
     Returns a gdxdict.gdxdict, which is defined in [py-gdx](https://github.com/geoffleyland/py-gdx).
     """
     translator = Translator(dataframes)
     if path is not None:
         translator.save_gdx(path, gams_dir)
     return translator.gdx
-    
+
