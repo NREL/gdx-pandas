@@ -45,6 +45,7 @@ import gdxpds.gdxdict as gdxdict
 import logging
 import numpy as np
 import pandas as pds
+from six import string_types
 
 logger = logging.getLogger(__name__)
 
@@ -78,7 +79,7 @@ class Translator(object):
                 try:
                     self.__add_symbol_to_gdx(symbol_name, df)
                 except:
-                    logger.error("Unable to add symbol {} to gdx with dataframe {}.".format(symbol_name, df))
+                    logger.error("Unable to add symbol {} to gdx with dataframe\n {}.".format(symbol_name, df))
                     raise
         return self.__gdx
 
@@ -135,7 +136,7 @@ class Translator(object):
                     else:
                         assert cur_dim.info['name'] == i
                     prev_value = value
-                elif isinstance(i,basestring) and (i.lower().strip() == 'value'):
+                elif isinstance(i,string_types) and (i.lower().strip() == 'value'):
                     # finalize, that is
                     # register the value at the current level
                     assert prev_value not in cur_dim
