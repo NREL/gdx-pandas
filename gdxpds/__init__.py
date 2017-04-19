@@ -42,17 +42,30 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '''
 
 
-__version__ = '0.5.3'
+__version__ = '0.6.0'
 
+import logging
 import os
-import psutil
+
+logger = logging.getLogger(__name__)
+
+HAVE_PSUTIL = False
+try:
+    import psutil
+    HAVE_PSUTIL = True
+except ImportError:
+    logger.info("Optional package psutil not found. pip install psutil if " + \
+                "you would like to monitor memory usage.")
 
 from gdxpds.read_gdx import to_dataframes
 from gdxpds.read_gdx import list_symbols
 from gdxpds.read_gdx import to_dataframe
 from gdxpds.write_gdx import to_gdx
 
-def memory_use_str(pid = None):
-    pid = os.getpid() if pid is None else pid
-    rss = psutil.Process(pid).memory_info().rss
-    return 'Process {} using {:.2f} GB of memory.'.format(pid, float(rss) / (1024.0**3))
+def memory_use_str(pid=None):
+    if HAVE_PSUTIL:
+        pid = os.getpid() if pid is None else pid
+        rss = psutil.Process(pid).memory_info().rss
+        return "Process {} using {:.2f} GB of memory.".format(pid, float(rss) / (1024.0**3))
+    return "Feature unavailable."
+    

@@ -59,16 +59,22 @@ python C:\your_python_path\Scripts\csv_to_gdx.py --help
 
 ### Preliminaries
 
-- Python 2.7
+- Python 2.6 or higher 2.X; Python 3.4 or higher 3.X
 - pandas (In general you will want the SciPy stack. Anaconda comes with it, or see [my notes for Windows](http://elainethale.wordpress.com/programming-notes/python-environment-set-up/).)
-- nose
+- psutil (optional--for monitoring memory use)
+- nose (optional--for running tests)
 - GAMS Python bindings
     - See GAMS/win64/XX.X/apifiles/readme.txt
-    - See GAMS/win64/XX.X/apifiles/Python/api/setup.py, in particular, run
+    - Run the following for the correct version of the Python bindings
         
         ```bash
         python setup.py install
         ```
+
+    - GAMS/win64/XX.X/apifiles/Python/api/setup.py works for Python 2.X
+    - For Python 3.X, use GAMS/win64/XX.X/apifiles/Python/api_3X/setup.py, for
+      which you will need GAMS version >= 24.5.1 (Python 3.4, Windows and Linux),
+      24.7.4 (Python 3.4, Mac OS X), or >= 24.8.4 (Python 3.6)
 
 ### Get the Latest Package
 
@@ -79,7 +85,7 @@ pip install git+https://github.com/NREL/gdx-pandas.git@master
 or 
 
 ```bash
-pip install git+https://github.com/NREL/gdx-pandas.git@v0.5.3
+pip install git+https://github.com/NREL/gdx-pandas.git@v0.6.0
 ```
 
 Versions are listed at https://github.com/NREL/gdx-pandas/releases.
