@@ -51,7 +51,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from collections import OrderedDict
 import logging
-import string
 import sys
 import time
 
@@ -83,7 +82,7 @@ type_codes = {
 }
 
 def get_type_code(typename):
-    return type_codes[string.lower(typename)]
+    return type_codes[typename.lower()]
 
 
 GMS_SV_PINF = 3e300
