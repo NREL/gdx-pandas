@@ -41,8 +41,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 '''
 
-import os
 import logging
+import os
 import subprocess as subp
 import re
 from six import PY2, string_types, text_type
@@ -50,6 +50,12 @@ from six import PY2, string_types, text_type
 import gdxpds.gdxdict as gdxdict
 
 logger = logging.getLogger(__name__)
+
+
+class Error(Exception): 
+    """
+    Base class for all Exceptions raised by this package.
+    """
 
 class GamsDirFinder(object):
     """
@@ -139,7 +145,7 @@ class GamsDirFinder(object):
         return ret
         
 class NeedsGamsDir(object):
-    def __init__(self, gams_dir = None):
+    def __init__(self,gams_dir=None):
         self.gams_dir = gams_dir
         
     @property
@@ -151,7 +157,22 @@ class NeedsGamsDir(object):
         self.__gams_dir = GamsDirFinder(value).gams_dir    
 
 class GdxLoader(NeedsGamsDir):
-    def __init__(self, gdx_file, gams_dir = None, lazy_load = False):
+    """
+    The GdxLoader class provides an interface for loading .gdx files from disk.
+    This functionality NeedsGamsDir.
+    """
+
+    def __init__(self,gdx_file,gams_dir=None,lazy_load=False):
+        """
+        Positional Argumnets
+            - gdx_file (str) - Path to the gdx file to load
+
+        Keyword Arguments
+            - gams_dir (str) - Path to the GAMS directory. If None, will use the
+                  NeedsGamsDir finder.
+            - lazy_load (bool) - Wheather to load gdx data one symbol at a 
+                  time (True) or all at once (False). Default is False.
+        """
         self.gdx_file = gdx_file
         self.lazy_load = lazy_load
         super(GdxLoader, self).__init__(gams_dir)
