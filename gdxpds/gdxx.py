@@ -9,7 +9,7 @@ import re
 
 #- Errors ----------------------------------------------------------------------
 
-class GDX_error(Exception):
+class GDXError(Exception):
      def __init__(self, H, msg):
          self.msg = msg
          if H:
@@ -58,17 +58,17 @@ def open(system_dir=None):
         if type(system_dir) != str:
             system_dir = system_dir()
     if not system_dir:
-        raise GDX_error(None, "Couldn't find the GAMS system directory")
+        raise GDXError(None, "Couldn't find the GAMS system directory")
     rc = gdxcc.gdxCreateD(H, system_dir, gdxcc.GMS_SSSIZE)
-    if not rc[0]: raise GDX_error(H, rc[1])
+    if not rc[0]: raise GDXError(H, rc[1])
     return H
 
 
 def file_info(H):
     ret, version, producer = gdxcc.gdxFileVersion(H)
-    if ret != 1: raise GDX_error("Couldn't get file version")
+    if ret != 1: raise GDXError("Couldn't get file version")
     ret, symbol_count, element_count = gdxcc.gdxSystemInfo(H)
-    if ret != 1: raise GDX_error(H, "Couldn't get file info")
+    if ret != 1: raise GDXError(H, "Couldn't get file info")
     return {
       "version": version,
       "producer": producer,
@@ -81,9 +81,9 @@ symbol_type_text = [ "Set", "Parameter", "Variable", "Equation", "Alias" ]
 variable_type_text = [ "Unknown", "Binary", "Integer", "Positive", "Negative", "Free", "Sos1", "Sos2", "Semicont", "Semiint" ]
 def symbol_info(H, num):
     ret, name, dims, type = gdxcc.gdxSymbolInfo(H, num)
-    if ret != 1: raise GDX_error(H, "Couldn't get symbol info")
+    if ret != 1: raise GDXError(H, "Couldn't get symbol info")
     ret, records, userinfo, description = gdxcc.gdxSymbolInfoX(H, num)
-    if ret != 1: raise GDX_error(H, "Couldn't get extended symbol info")
+    if ret != 1: raise GDXError(H, "Couldn't get extended symbol info")
 
     if type == gdxcc.GMS_DT_PAR and dims == 0:
         typename = "Scalar"
@@ -98,7 +98,7 @@ def symbol_info(H, num):
     domain = [None] * dims
     if dims > 0 and num > 0:
         ret, gdx_domain = gdxcc.gdxSymbolGetDomain(H, num)
-        if ret != 1: raise GDX_error(H, "Couldn't get symbol domain")
+        if ret != 1: raise GDXError(H, "Couldn't get symbol domain")
         if len(gdx_domain) < dims: gdx_domain = None
         for i in range(dims):
             d = gdx_domain[i] if gdx_domain else 0

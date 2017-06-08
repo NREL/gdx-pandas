@@ -458,7 +458,7 @@ class gdxdict:
         ok, records = gdxcc.gdxDataReadStrStart(H, 0)        
         for i in range(records):
             ok, elements, values, afdim = gdxcc.gdxDataReadStr(H)
-            if not ok: raise gdxx.GDX_error(H, "Error in gdxDataReadStr")
+            if not ok: raise gdxx.GDXError(H, "Error in gdxDataReadStr")
             key = elements[0]
             ret, description, node = gdxcc.gdxGetElemText(H, int(values[gdxcc.GMS_VAL_LEVEL]))
             if ret == 0: description = None
@@ -482,7 +482,7 @@ class gdxdict:
                 ok, records = gdxcc.gdxDataReadStrStart(H, i)
                 for i in range(records):
                     ok, elements, values, afdim = gdxcc.gdxDataReadStr(H)
-                    if not ok: raise gdxx.GDX_error(H, "Error in gdxDataReadStr")
+                    if not ok: raise gdxx.GDXError(H, "Error in gdxDataReadStr")
                     e = elements[0]
                     read_symbol(H, symbol, e, sinfo["typename"], values)
                     if not e in set_map: set_map[e] = {}
@@ -555,7 +555,7 @@ class gdxdict:
         num_dims_created = 0
         for i in range(records):
             ok, elements, values, afdim = gdxcc.gdxDataReadStr(H)
-            if not ok: raise gdxx.GDX_error(H, "Error in gdxDataReadStr")
+            if not ok: raise gdxx.GDXError(H, "Error in gdxDataReadStr")
             if sinfo["dims"] == 0:
                 read_symbol(H, self, symbol_name, sinfo["typename"], values)
             else:
@@ -592,17 +592,17 @@ class gdxdict:
             info = self.getinfo(k)
             if info["dims"] == 0:
                 if not gdxcc.gdxDataWriteStrStart(H, k, info["description"], 0, get_type_code(info["typename"]), info["userinfo"]):
-                    raise gdxx.GDX_error(H, "couldn't start writing data")
+                    raise gdxx.GDXError(H, "couldn't start writing data")
                 set_symbol(H, self, k, info["typename"], info["userinfo"], values, [])
                 gdxcc.gdxDataWriteDone(H)
             else:
                 if not gdxcc.gdxDataWriteStrStart(H, k, info["description"], info["dims"], get_type_code(info["typename"]), info["userinfo"]):
-                    raise gdxx.GDX_error(H, "couldn't start writing data")
+                    raise gdxx.GDXError(H, "couldn't start writing data")
                 domain = []
                 for d in info["domain"]:
                     domain.append(d["key"])
                 if gdxcc.gdxSymbolSetDomain(H, domain) != 1:
-                    raise gdxx.GDX_error(H, "couldn't set domain for symbol %s to %s" % (k, domain))
+                    raise gdxx.GDXError(H, "couldn't set domain for symbol %s to %s" % (k, domain))
                 write_symbol(H, info["typename"], info["userinfo"], symbol, [])
                 gdxcc.gdxDataWriteDone(H)
 
