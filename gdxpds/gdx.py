@@ -2,6 +2,7 @@ from __future__ import absolute_import, print_function
 from builtins import super
 
 from collections import defaultdict, OrderedDict
+from collections.abc import MutableSequence
 from enum import Enum
 import logging
 from six import string_types
@@ -38,7 +39,7 @@ class GdxError(Error):
         super().__init__(self.msg)
 
 
-class GdxFile(NeedsGamsDir):
+class GdxFile(MutableSequence, NeedsGamsDir):
 
     def __init__(self,gams_dir=None,lazy_load=True):
         """
@@ -48,20 +49,19 @@ class GdxFile(NeedsGamsDir):
         """
         self.lazy_load = lazy_load
         self._version = None
-        self._producer = None
         self._filename = None
         self.universal_set = None
-        self.symbols = OrderedDict()
+        self._symbols = OrderedDict()
 
-        super().__init__(gams_dir=gams_dir)
+        NeedsGamsDir.__init__(self,gams_dir=gams_dir)
         self._H = self._create_gdx_object()
 
     @property
     def empty(self):
         """
-        Returns True if this GdxFile object contains any data.
+        Returns True if this GdxFile object contains any symbols.
         """
-        return (self.num_symbols == 0)
+        return len(self) == 0
 
     @property
     def H(self):
@@ -82,23 +82,8 @@ class GdxFile(NeedsGamsDir):
         return self._version
 
     @property
-    def producer(self):
-        """
-        Also a GDX file version string
-        """
-        return self._producer
-
-    @property
-    def num_symbols(self):
-        return len(self.symbols)
-
-    @property
     def num_elements(self):
-        return sum([symbol.num_records for symbol_name, symbol in self.symbols.items()])
-
-    @property
-    def dataframes(self):
-        return OrderedDict([(symbol_name, symbol.dataframe) for symbol_name, symbol in self.symbols.items()])
+        return sum([symbol.num_records for symbol in self])
 
     def read(self,filename):
         """
@@ -120,7 +105,7 @@ class GdxFile(NeedsGamsDir):
 
         # read in meta-data ...
         # ... for the file
-        ret, self._version, self._producer = gdxcc.gdxFileVersion(self.H)
+        ret, self._version, producer = gdxcc.gdxFileVersion(self.H)
         if ret != 1: 
             raise GDXError(self.H,"Could not get file version")
         ret, symbol_count, element_count = gdxcc.gdxSystemInfo(self.H)
@@ -135,20 +120,76 @@ class GdxFile(NeedsGamsDir):
             ret, name, dims, data_type = gdxcc.gdxSymbolInfo(self.H,index)
             if ret != 1:
                 raise GdxError(self.H,"Could not get symbol info for symbol {}".format(index))
-            self.symbols[name] = GdxSymbol(name,data_type,dims=dims,file=self,index=index)
+            self.append(GdxSymbol(name,data_type,dims=dims,file=self,index=index))
 
         # read all symbols if not lazy_load
         if not self.lazy_load:
-            for symbol_name, symbol in self.symbols.items():
+            for symbol in self:
                 symbol.load()
 
+    def __repr__(self):
+        return "GdxFile(self,gams_dir={},lazy_laod={})".format(
+                   repr(self.gams_dir),
+                   repr(self.lazy_load))
+
     def __str__(self):
-        s = "GdxFile containing {} symbols and {} elements.".format(self.num_symbols,self.num_elements)
+        s = "GdxFile containing {} symbols and {} elements.".format(len(self),self.num_elements)
         sep =  " Symbols:\n  "
-        for symbol_name, symbol in self.symbols.items():
+        for symbol in self:
             s += sep + str(symbol)
             sep = "\n  "
         return s
+
+    def __getitem__(self,key):
+        """
+        Supports list-like indexing and symbol-based indexing
+        """
+        return self._symbols[self._name_key(key)]
+
+    def __setitem__(self,key,value):
+        self._check_insert_setitem(key, value)
+        value._file = self
+        if key < len(self):
+            self._symbols[self._name_key(key)] = value
+            self._fixup_name_keys()
+            return
+        assert key == len(self)
+        self._symbols[value.name] = value
+        return
+
+    def __delitem__(self,key):
+        del self._symbols[self._name_key(key)]
+        return
+
+    def __len__(self):
+        return len(self._symbols)
+
+    def insert(self,key,value):
+        self._check_insert_setitem(key, value)
+        value._file = self
+        data = [(symbol.name, symbol) for symbol in self]
+        data.insert(key,(value.name,value))
+        self._symbols = OrderedDict(data)
+        return
+
+    def _name_key(self,key):
+        name_key = key
+        if isinstance(key,int):
+            name_key = list(self._symbols.keys())[key]
+        return name_key
+
+    def _check_insert_setitem(self,key,value):
+        if not isinstance(value,GdxSymbol):
+            raise Error("GdxFiles only contain GdxSymbols. GdxFile was given a {}.".format(type(value)))
+        if not isinstance(key,int):
+            raise Error("When adding or replacing GdxSymbols in GdxFiles, only integer, not name indices, may be used.")
+        if key > len(self):
+            raise Error("Invalid key, {}".format(key))
+        return
+
+    def _fixup_name_keys(self):
+        self._symbols = OrderedDict([(symbol.name, symbol) for cur_key, symbol in self._symbols])
+        return        
 
     def _create_gdx_object(self):
         H = gdxcc.new_gdxHandle_tp()
@@ -191,18 +232,23 @@ GAMS_VALUE_COLS_MAP = defaultdict(lambda : [('Value',GamsValueType.Level.value)]
 GAMS_VALUE_COLS_MAP[GamsDataType.Variable] = [(value_type.name, value_type.value) for value_type in GamsValueType]
 GAMS_VALUE_COLS_MAP[GamsDataType.Equation] = GAMS_VALUE_COLS_MAP[GamsDataType.Variable]
 
+
 class GdxSymbol(object): 
-    def __init__(self,name,data_type,dims=0,file=None,index=None): 
-        self.name = name
-        self.data_type = GamsDataType(data_type)
+    def __init__(self,name,data_type,dims=0,file=None,index=None,
+                 description='',variable_type=None): 
+        self._name = name
+        self.description = description
+        self._loaded = False
+        self._data_type = GamsDataType(data_type)
+        self._variable_type = None; self.variable_type = variable_type
         self._dataframe = None
         self.dims = dims       
+        assert self._dataframe is not None
         self._file = file
         self._index = index        
 
         if self.file:
-            # loading
-            self._loaded = False
+            # reading from file
             # get additional meta-data
             ret, records, userinfo, description = gdxcc.gdxSymbolInfoX(self.file.H,self.index)
             if ret != 1:
@@ -217,12 +263,63 @@ class GdxSymbol(object):
                     raise GdxError(self.file.H,"Unable to get domain information for {}".format(self.name))
                 assert len(gdx_domain) == len(self.dims), "Dimensional information read in from GDX should be consistent."
                 self.dims = gdx_domain
-        else:
-            # writing
-            self._loaded = True
-            if self.data_type == GamsDataType.Variable:
-                self.variable_type = GamsVariableType("Free")
-            self._num_records = 0
+            return
+        
+        # writing new symbol
+        self._loaded = True
+
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self,value):
+        self._name = value
+        if self.file:
+            self.file._fixup_name_keys()
+        return
+
+    @property
+    def data_type(self):
+        return self._data_type
+
+    @data_type.setter
+    def data_type(self, value):
+        if not self.loaded or self.num_records > 0:
+            raise Error("Cannot change the data_type of a GdxSymbol that is yet to be read for file or contains records.")
+        self._data_type = GamsDataType(value)
+        self.variable_type = None
+        self._init_dataframe()
+        return
+
+    @property
+    def variable_type(self):
+        return self._variable_type
+
+    @variable_type.setter
+    def variable_type(self,value):
+        if self.data_type == GamsDataType.Variable:
+            try:
+                self._variable_type = GamsVariableType(value)
+            except:
+                if isinstance(self._variable_type,GamsVariableType):
+                    logger.debug("Ignoring invalid GamsVariableType request.")
+                    return
+                logger.debug("Setting variable_type to {}.".format(GamsVariableType.Free))
+                self._variable_type = GamsVariableType.Free
+            return
+        assert self.data_type != GamsDataType.Variable
+        if value is not None:
+            logger.warn("GdxSymbol is not a Variable, so setting variable_type to None")
+        self._variable_type = None
+
+    @property
+    def value_cols(self):
+        return GAMS_VALUE_COLS_MAP[self.data_type]
+
+    @property
+    def value_col_names(self):
+        return [col_name for col_name, col_ind in self.value_cols]            
 
     @property
     def file(self):
@@ -241,7 +338,7 @@ class GdxSymbol(object):
         if self.data_type == GamsDataType.Parameter and self.dims == 0:
             return 'Scalar'
         elif self.data_type == GamsDataType.Variable:
-            return self.variable_type + " " + self.data_type.name
+            return self.variable_type.name + " " + self.data_type.name
         return self.data_type.name
 
     @property
@@ -250,11 +347,12 @@ class GdxSymbol(object):
 
     @dims.setter
     def dims(self, value):
-        if self.dataframe is not None:
+        if self.loaded and self.num_records > 0:
             if not isinstance(value,list) or len(value) != self.num_dims:
-                logger.warn("Cannot set dims to {}, because dataframe is already set with dims {}.".format(value,self.dims))
+                logger.warn("Cannot set dims to {}, because dataframe with dims {} already contains data.".format(value,self.dims))
         if isinstance(value,int):
             self._dims = ['*'] * value
+            self._init_dataframe()
             return
         if not isinstance(value, list):
             raise Error('dims must be an int or a list. Was passed {} of type {}.'.format(value, type(value)))
@@ -264,18 +362,14 @@ class GdxSymbol(object):
         if self.num_dims > 0 and self.num_dims != len(value):
             logger.warn("{}'s number of dimensions is changing from {} to {}.".format(self.name,self.num_dims,len(value)))
         self._dims = value
+        if self.loaded and self.num_records > 0:
+            self._dataframe.columns = self.dims + self.value_col_names
+            return
+        self._init_dataframe()
 
     @property
     def num_dims(self):
         return len(self.dims)        
-
-    @property
-    def value_cols(self):
-        return GAMS_VALUE_COLS_MAP[self.data_type]
-
-    @property
-    def value_col_names(self):
-        return [col_name for col_name, col_ind in self.value_cols]
 
     @property
     def dataframe(self):
@@ -300,20 +394,27 @@ class GdxSymbol(object):
             self._dataframe.columns = self.dims + self.value_col_names
         else:
             self._dataframe = pds.DataFrame(data,columns=self.dims + self.value_col_names)
-        self._num_records = len(self._dataframe.index)
+        return
+
+    def _init_dataframe(self):
+        self._dataframe = pds.DataFrame([],columns=self.dims + self.value_col_names)
         return
 
     @property
     def num_records(self):
+        if self.loaded:
+            return len(self.dataframe.index)
         return self._num_records
 
     def __repr__(self):
-        return "GdxSymbol({:s},{:d},{:s},file={:s},index={:s})".format(
-                   self.name,
-                   self.data_type,
-                   self.dims,
-                   self.file,
-                   self.index)
+        return "GdxSymbol({},{},{},file={},index={},description={},variable_type={})".format(
+                   repr(self.name),
+                   repr(self.data_type),
+                   repr(self.dims),
+                   repr(self.file),
+                   repr(self.index),
+                   repr(self.description),
+                   repr(self.variable_type))
 
     def __str__(self):
         s = self.name
@@ -347,5 +448,6 @@ class GdxSymbol(object):
                 data[-1][-1] = True
                 # gdxdict called gdxGetElemText here, but I do not currently see value in doing that
         self.dataframe = data
+        self._loaded = True
         return
 
