@@ -49,12 +49,20 @@ class GdxFile(MutableSequence, NeedsGamsDir):
         """
         self.lazy_load = lazy_load
         self._version = None
+        self._producer = None
         self._filename = None
+        # HERE -- Replace with a Universal Set
         self.universal_set = None
         self._symbols = OrderedDict()
 
         NeedsGamsDir.__init__(self,gams_dir=gams_dir)
         self._H = self._create_gdx_object()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        gdxcc.gdxFree(self.H)
 
     @property
     def empty(self):
@@ -82,6 +90,13 @@ class GdxFile(MutableSequence, NeedsGamsDir):
         return self._version
 
     @property
+    def producer(self):
+        """
+        What program wrote the GDX file
+        """
+        return self._producer
+
+    @property
     def num_elements(self):
         return sum([symbol.num_records for symbol in self])
 
@@ -105,7 +120,7 @@ class GdxFile(MutableSequence, NeedsGamsDir):
 
         # read in meta-data ...
         # ... for the file
-        ret, self._version, producer = gdxcc.gdxFileVersion(self.H)
+        ret, self._version, self._producer = gdxcc.gdxFileVersion(self.H)
         if ret != 1: 
             raise GDXError(self.H,"Could not get file version")
         ret, symbol_count, element_count = gdxcc.gdxSystemInfo(self.H)
@@ -126,6 +141,26 @@ class GdxFile(MutableSequence, NeedsGamsDir):
         if not self.lazy_load:
             for symbol in self:
                 symbol.load()
+        return
+
+    def write(self,filename):
+        # only write if all symbols loaded
+        for symbol in self:
+            if not symbol.loaded:
+                raise Error("All symbols must be loaded before this file can be written.")
+
+        ret = gdxcc.gdxOpenWrite(self.H,filename,"gdxpds")
+        if not ret:
+            raise GdxError(self.H,"Could not open {} for writing.".format(repr(filename)))
+        self._filename = filename
+        
+        # write the universal set
+        self.universal_set.write()
+
+        for symbol in self:
+            symbol.write()
+
+        gdxcc.gdxClose(self.H)
 
     def __repr__(self):
         return "GdxFile(self,gams_dir={},lazy_laod={})".format(
@@ -450,4 +485,7 @@ class GdxSymbol(object):
         self.dataframe = data
         self._loaded = True
         return
+
+    def write(self):
+        # HERE
 
