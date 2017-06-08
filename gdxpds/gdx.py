@@ -1,6 +1,6 @@
 from __future__ import absolute_import, print_function
-
 from builtins import super
+
 from collections import defaultdict, OrderedDict
 from enum import Enum
 import logging
@@ -14,8 +14,10 @@ try:
 except ImportError: pass
 
 import gdxcc
+import pandas as pds
 
-from gdxpds.tools import Error, NeedsGamsDir
+from gdxpds import Error
+from gdxpds.tools import NeedsGamsDir
 
 logger = logging.getLogger(__name__)
 
@@ -164,9 +166,6 @@ class GamsDataType(Enum):
     Alias = gdxcc.GMS_DT_ALIAS
 
 
-GAMS_VALUE_COLS_MAP = defaultdict(lambda : ['Value'])
-
-
 class GamsVariableType(Enum):
     Unknown = gdxcc.GMS_VARTYPE_UNKNOWN
     Binary = gdxcc.GMS_VARTYPE_BINARY
@@ -179,6 +178,18 @@ class GamsVariableType(Enum):
     Semicont = gdxcc.GMS_VARTYPE_SEMICONT
     Semiint = gdxcc.GMS_VARTYPE_SEMIINT
 
+
+class GamsValueType(Enum):
+    Level = gdxcc.GMS_VAL_LEVEL       # .l
+    Marginal = gdxcc.GMS_VAL_MARGINAL # .m
+    Lower = gdxcc.GMS_VAL_LOWER       # .lo
+    Upper = gdxcc.GMS_VAL_UPPER       # .ub
+    Scale = gdxcc.GMS_VAL_SCALE       # .scale
+
+
+GAMS_VALUE_COLS_MAP = defaultdict(lambda : [('Value',GamsValueType.Level.value)])
+GAMS_VALUE_COLS_MAP[GamsDataType.Variable] = [(value_type.name, value_type.value) for value_type in GamsValueType]
+GAMS_VALUE_COLS_MAP[GamsDataType.Equation] = GAMS_VALUE_COLS_MAP[GamsDataType.Variable]
 
 class GdxSymbol(object): 
     def __init__(self,name,data_type,dims=0,file=None,index=None): 
@@ -250,6 +261,8 @@ class GdxSymbol(object):
         for dim in value:
             if not isinstance(dim,string_types):
                 raise Error('Individual dimensions must be denoted by strings. Was passed {} as element of {}.'.format(dim, value))
+        if self.num_dims > 0 and self.num_dims != len(value):
+            logger.warn("{}'s number of dimensions is changing from {} to {}.".format(self.name,self.num_dims,len(value)))
         self._dims = value
 
     @property
@@ -259,6 +272,10 @@ class GdxSymbol(object):
     @property
     def value_cols(self):
         return GAMS_VALUE_COLS_MAP[self.data_type]
+
+    @property
+    def value_col_names(self):
+        return [col_name for col_name, col_ind in self.value_cols]
 
     @property
     def dataframe(self):
@@ -280,9 +297,9 @@ class GdxSymbol(object):
             if num_dims != self.num_dims:
                 self.dims = num_dims
             self._dataframe = copy.deepcopy(data)
-            self._dataframe.columns = self.dims + self.value_cols
+            self._dataframe.columns = self.dims + self.value_col_names
         else:
-            self._dataframe = pds.DataFrame(data,columns=self.dims + self.value_cols)
+            self._dataframe = pds.DataFrame(data,columns=self.dims + self.value_col_names)
         self._num_records = len(self._dataframe.index)
         return
 
@@ -321,4 +338,14 @@ class GdxSymbol(object):
             self._loaded = True
             return
 
-        raise NotImplementedError()
+        data = []
+        ret, records = gdxcc.gdxDataReadStrStart(self.file.H,self.index)
+        for i in range(records):
+            ret, elements, values, afdim = gdxcc.gdxDataReadStr(self.file.H)
+            data.append(elements + [values[col_ind] for col_name, col_ind in self.value_cols])
+            if self.data_type == GamsDataType.Set:
+                data[-1][-1] = True
+                # gdxdict called gdxGetElemText here, but I do not currently see value in doing that
+        self.dataframe = data
+        return
+
