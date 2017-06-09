@@ -47,8 +47,6 @@ import subprocess as subp
 import re
 from six import PY2, string_types, text_type
 
-import gdxpds.gdxdict as gdxdict
-
 logger = logging.getLogger(__name__)
 
 
@@ -156,74 +154,3 @@ class NeedsGamsDir(object):
     def gams_dir(self, value):
         self.__gams_dir = GamsDirFinder(value).gams_dir    
 
-class GdxLoader(NeedsGamsDir):
-    """
-    The GdxLoader class provides an interface for loading .gdx files from disk.
-    This functionality NeedsGamsDir.
-    """
-
-    def __init__(self,gdx_file,gams_dir=None,lazy_load=False):
-        """
-        Positional Argumnets
-            - gdx_file (str) - Path to the gdx file to load
-
-        Keyword Arguments
-            - gams_dir (str) - Path to the GAMS directory. If None, will use the
-                  NeedsGamsDir finder.
-            - lazy_load (bool) - Wheather to load gdx data one symbol at a 
-                  time (True) or all at once (False). Default is False.
-        """
-        self.gdx_file = gdx_file
-        self.lazy_load = lazy_load
-        super(GdxLoader, self).__init__(gams_dir)
-        
-    @property 
-    def gdx_file(self):
-        return self.__gdx_file
-
-    @gdx_file.setter
-    def gdx_file(self, value):
-        if not os.path.exists(value):
-            raise RuntimeError("The GDX file '{}' does not exist.".format(value))
-        self.__gdx_file = value
-        self.__gdx = None
-        
-    @property
-    def gdx(self):
-        if self.__gdx is None:
-            self.__gdx = gdxdict.gdxdict(self.lazy_load)
-            self.__gdx.read(self.gdx_file, self.gams_dir)
-        return self.__gdx
-        
-class GdxWriter(NeedsGamsDir):
-    def __init__(self, gdx, path, gams_dir = None):
-        self.gdx = gdx
-        self.path = path
-        super(GdxWriter, self).__init__(gams_dir)
-        
-    @property
-    def gdx(self):
-        return self.__gdx
-        
-    @gdx.setter
-    def gdx(self, value):
-        if not isinstance(value, gdxdict.gdxdict):
-            raise RuntimeError("Expected GDX file loaded as a gdxdict.gdxdict.")
-        self.__gdx = value
-        
-    @property
-    def path(self):
-        return self.__path
-        
-    @path.setter
-    def path(self, value):
-        if not os.path.exists(os.path.dirname(os.path.abspath(value))):
-            raise RuntimeError("Parent directory of '{}' does not exist. Please create before trying to save a gdx file there.".format(value))
-        if os.path.exists(value) and os.path.isdir(value):
-            raise RuntimeError("Cannot save a GDX file to '{}', as it is a directory.".format(value))
-        self.__path = value
-        
-    def save(self):
-        if os.path.isfile(self.path):
-            os.remove(self.path)
-        self.gdx.write(self.path, self.gams_dir)

@@ -1,8 +1,57 @@
+'''
+
+[LICENSE]
+
+Copyright (c) 2015, Alliance for Sustainable Energy.
+All rights reserved.
+
+Redistribution and use in source and binary forms,
+with or without modification, are permitted provided
+that the following conditions are met:
+
+1. Redistributions of source code must retain the above
+copyright notice, this list of conditions and the
+following disclaimer.
+
+2. Redistributions in binary form must reproduce the
+above copyright notice, this list of conditions and the
+following disclaimer in the documentation and/or other
+materials provided with the distribution.
+
+3. Neither the name of the copyright holder nor the
+names of its contributors may be used to endorse or
+promote products derived from this software without
+specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+[/LICENSE]
+
+'''
+
 from __future__ import absolute_import, print_function
 from builtins import super
 
 from collections import defaultdict, OrderedDict
-from collections.abc import MutableSequence
+
+try:
+    from collections.abc import MutableSequence
+except ImportError:
+    from collections import MutableSequence
+
+import copy
 from enum import Enum
 import logging
 from six import string_types
@@ -51,9 +100,8 @@ class GdxFile(MutableSequence, NeedsGamsDir):
         self._version = None
         self._producer = None
         self._filename = None
-        # HERE -- Replace with a Universal Set
-        self.universal_set = None
         self._symbols = OrderedDict()
+        self.universal_set = GdxSymbol('*',GamsDataType.Set,dims=1,file=self,index=0)
 
         NeedsGamsDir.__init__(self,gams_dir=gams_dir)
         self._H = self._create_gdx_object()
@@ -157,8 +205,8 @@ class GdxFile(MutableSequence, NeedsGamsDir):
         # write the universal set
         self.universal_set.write()
 
-        for symbol in self:
-            symbol.write()
+        for i, symbol in enumerate(self,start=1):
+            symbol.write(index=i)
 
         gdxcc.gdxClose(self.H)
 
@@ -255,6 +303,14 @@ class GamsVariableType(Enum):
     Semiint = gdxcc.GMS_VARTYPE_SEMIINT
 
 
+class GamsEquationType(Enum):
+    Equality = gdxcc.GMS_EQUTYPE_E
+    GreaterThan = gdxcc.GMS_EQUTYPE_G
+    LessThan = gdxcc.GMS_EQUTYPE_L
+    NothingEnforced = gdxcc.GMS_EQUTYPE_N
+    External = gdxcc.GMS_EQUTYPE_X
+    Conic = gdxcc.GMS_EQUTYPE_C
+
 class GamsValueType(Enum):
     Level = gdxcc.GMS_VAL_LEVEL       # .l
     Marginal = gdxcc.GMS_VAL_MARGINAL # .m
@@ -270,12 +326,13 @@ GAMS_VALUE_COLS_MAP[GamsDataType.Equation] = GAMS_VALUE_COLS_MAP[GamsDataType.Va
 
 class GdxSymbol(object): 
     def __init__(self,name,data_type,dims=0,file=None,index=None,
-                 description='',variable_type=None): 
+                 description='',variable_type=None,equation_type=None): 
         self._name = name
         self.description = description
         self._loaded = False
         self._data_type = GamsDataType(data_type)
         self._variable_type = None; self.variable_type = variable_type
+        self._equation_type = None; self.equation_type = equation_type
         self._dataframe = None
         self.dims = dims       
         assert self._dataframe is not None
@@ -291,6 +348,8 @@ class GdxSymbol(object):
             self._num_records = records
             if self.data_type == GamsDataType.Variable:
                 self.variable_type = GamsVariableType(userinfo)
+            elif self.data_type == GamsDataType.Equation:
+                self.equation_type = GamsEquationType(userinfo)
             self.description = description
             if self.index > 0:
                 ret, gdx_domain = gdxcc.gdxSymbolGetDomainX(self.file.H,self.index)
@@ -324,6 +383,7 @@ class GdxSymbol(object):
             raise Error("Cannot change the data_type of a GdxSymbol that is yet to be read for file or contains records.")
         self._data_type = GamsDataType(value)
         self.variable_type = None
+        self.equation_type = None
         self._init_dataframe()
         return
 
@@ -347,6 +407,27 @@ class GdxSymbol(object):
         if value is not None:
             logger.warn("GdxSymbol is not a Variable, so setting variable_type to None")
         self._variable_type = None
+
+    @property
+    def equation_type(self):
+        return self._equation_type
+
+    @equation_type.setter
+    def equation_type(self,value):
+        if self.data_type == GamsDataType.Equation:
+            try:
+                self._equation_type = GamsEquationType(value)
+            except:
+                if isinstance(self._equation_type,GamsEquationType):
+                    logger.debug("Ignoring invalid GamsEquationType request.")
+                    return
+                logger.debug("Setting equation_type to {}.".format(GamsEquationType.Equality))
+                self._equation_type = GamsEquationType.Equality
+            return
+        assert self.data_type != GamsDataType.Equation
+        if value is not None:
+            logger.warn("GdxSymbol is not an Equation, so setting equation_type to None")
+        self._equation_type = None
 
     @property
     def value_cols(self):
@@ -415,7 +496,7 @@ class GdxSymbol(object):
         if isinstance(data, pds.DataFrame):
             # Fix up dimensions
             num_dims = len(data.columns) - len(self.value_cols)
-            dim_cols = data.columns[:num_dims]
+            dim_cols = list(data.columns[:num_dims])
             replace_dims = True
             for col in dim_cols:
                 if not isinstance(col,string_types):
@@ -442,14 +523,15 @@ class GdxSymbol(object):
         return self._num_records
 
     def __repr__(self):
-        return "GdxSymbol({},{},{},file={},index={},description={},variable_type={})".format(
+        return "GdxSymbol({},{},{},file={},index={},description={},variable_type={},equation_type={})".format(
                    repr(self.name),
                    repr(self.data_type),
                    repr(self.dims),
                    repr(self.file),
                    repr(self.index),
                    repr(self.description),
-                   repr(self.variable_type))
+                   repr(self.variable_type),
+                   repr(self.equation_type))
 
     def __str__(self):
         s = self.name
@@ -486,6 +568,49 @@ class GdxSymbol(object):
         self._loaded = True
         return
 
-    def write(self):
-        # HERE
+    def write(self,index=None): 
+        if not self.loaded:
+            raise Error("Cannot write an unloaded symbol.")
 
+        if index is not None:
+            self._index = index
+
+        if self.index == 0:
+            # universal set
+            gdxcc.gdxUELRegisterRawStart(self.file.H)
+            gdxcc.gdxUELRegisterRaw(self.file.H,self.name)
+            gdxcc.gdxUELRegisterDone(self.file.H)
+            return
+
+        # write the data
+        userinfo = 0
+        if self.variable_type is not None:
+            userinfo = self.variable_type.value
+        elif self.equation_type is not None:
+            userinfo = self.equation_type.value
+        if not gdxcc.gdxDataWriteStrStart(self.file.H,
+                                          self.name,
+                                          self.description,
+                                          self.num_dims,
+                                          self.data_type.value,
+                                          userinfo):
+            raise GdxError(self.file.H,"Could not start writing data for symbol {}".format(repr(self.name)))
+        # set domain information
+        if self.num_dims > 0:
+            if self.index:
+                if not gdxcc.gdxSymbolSetDomainX(self.file.H,self.index,self.dims):
+                    raise GdxError(self.file.H,"Could not set domain information for {}. Domains are {}".format(repr(self.name),repr(self.dims)))
+            else:
+                logger.info("Not writing domain information because symbol index is unknown.")
+        values = gdxcc.doubleArray(gdxcc.GMS_VAL_MAX)
+        for row in self.dataframe.itertuples(index=False,name=None):
+            dims = [str(x) for x in row[:self.num_dims]]
+            vals = row[self.num_dims:]
+            for col_name, col_ind in self.value_cols:
+                try:
+                    values[col_ind] = 1.0 if isinstance(vals[col_ind],bool) else vals[col_ind]
+                except:
+                    raise Error("Unable to set element {} from {}.".format(col_ind,vals))
+            gdxcc.gdxDataWriteStr(self.file.H,dims,values)
+        gdxcc.gdxDataWriteDone(self.file.H)
+        return
