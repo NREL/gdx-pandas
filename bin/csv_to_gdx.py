@@ -1,5 +1,7 @@
-'''
-[LICENSE]
+'''
+
+[LICENSE]
+
 Copyright (c) 2015, Alliance for Sustainable Energy.
 All rights reserved.
 
@@ -33,9 +35,12 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-[/LICENSE]
-'''
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+[/LICENSE]
+
+'''
+
 import pandas as pds
 import gdxpds
 
@@ -73,7 +78,7 @@ def convert_csv_to_gdx(input_files, output_file, gams_dir=None):
     dataframes = {}
     for ifile in ifiles:
         dataframes[os.path.splitext(os.path.basename(ifile))[0]] = \
-            pds.DataFrame.from_csv(ifile, index_col = None)
+            pds.DataFrame.from_csv(ifile,index_col=None)
             
     gdxpds.to_gdx(dataframes, output_file, gams_dir)
     

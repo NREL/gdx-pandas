@@ -81,7 +81,9 @@ def test_gdx_roundtrip():
         assert total_records > 0
     
         # call command-line interface to transform gdx to csv
-        out_dir = os.path.join(run_dir(), 'gdx_roundtrip')
+        out_dir = os.path.join(run_dir(), 'gdx_roundtrip', os.path.splitext(filename)[0])
+        if not os.path.exists(os.path.dirname(out_dir)):
+            os.mkdir(os.path.dirname(out_dir))
         cmds = ['python', os.path.join(gdxpds.test.bin_prefix,'gdx_to_csv.py'),
                 '-i', gdx_file,
                 '-o', out_dir]
@@ -102,13 +104,22 @@ def test_gdx_roundtrip():
                 '-o', roundtripped_gdx]
         subp.call(cmds)
     
-        # load gdx and check symbols and records against original map
-        gdx = gdxpds.gdx.GdxFile()
+        # load gdx and check symbols and records against original map...
+        # ... first without full load
+        gdx = gdxpds.gdx.GdxFile(lazy_load=True)
         gdx.read(roundtripped_gdx)
         for symbol_name, records in num_records.items():
             if records > 0:
-                assert symbol_name in gdx
-                assert gdx[symbol_name].num_records == records
+                assert symbol_name in gdx, "Expected {} in {}.".format(symbol_name,roundtripped_gdx)
+                assert gdx[symbol_name].num_records == records, "Expected {} in {} to have {} records, but has {}.".format(symbol_name,roundtripped_gdx,records,gdx[symbol_name].num_records)
+        # ... then with a full load
+        gdx = gdxpds.gdx.GdxFile(lazy_load=False)
+        gdx.read(roundtripped_gdx)
+        for symbol_name, records in num_records.items():
+            if records > 0:
+                assert symbol_name in gdx, "Expected {} in {}.".format(symbol_name,roundtripped_gdx)
+                assert gdx[symbol_name].num_records == records, "Expected {} in {} to have {} records, but has {}.".format(symbol_name,roundtripped_gdx,records,gdx[symbol_name].num_records)
+
 
     for filename in filenames:
         roundtrip_one_gdx(filename)

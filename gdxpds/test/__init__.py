@@ -44,7 +44,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import os
 
 # if True, test products will be deleted on tear down
-clean_up = False
+clean_up = True
 
 def apply_dirname(f, num_times):
     ret = f

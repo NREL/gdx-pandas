@@ -54,6 +54,7 @@ except ImportError:
 import copy
 from enum import Enum
 import logging
+from numbers import Number
 from six import string_types
 
 # try to import gdx loading utility
@@ -101,10 +102,12 @@ class GdxFile(MutableSequence, NeedsGamsDir):
         self._producer = None
         self._filename = None
         self._symbols = OrderedDict()
-        self.universal_set = GdxSymbol('*',GamsDataType.Set,dims=1,file=self,index=0)
 
         NeedsGamsDir.__init__(self,gams_dir=gams_dir)
         self._H = self._create_gdx_object()
+        self.universal_set = GdxSymbol('*',GamsDataType.Set,dims=1,file=None,index=0)
+        self.universal_set._file = self
+        return
 
     def __enter__(self):
         return self
@@ -255,6 +258,19 @@ class GdxFile(MutableSequence, NeedsGamsDir):
         self._symbols = OrderedDict(data)
         return
 
+    def __contains__(self,key):
+        """
+        Returns True if __getitem__ works with key.
+        """
+        try:
+            self.__getitem__(key)
+            return True
+        except:
+            return False
+
+    def keys(self):
+        return [symbol.name for symbol in self]
+
     def _name_key(self,key):
         name_key = key
         if isinstance(key,int):
@@ -304,12 +320,12 @@ class GamsVariableType(Enum):
 
 
 class GamsEquationType(Enum):
-    Equality = gdxcc.GMS_EQUTYPE_E
-    GreaterThan = gdxcc.GMS_EQUTYPE_G
-    LessThan = gdxcc.GMS_EQUTYPE_L
-    NothingEnforced = gdxcc.GMS_EQUTYPE_N
-    External = gdxcc.GMS_EQUTYPE_X
-    Conic = gdxcc.GMS_EQUTYPE_C
+    Equality = 53 + gdxcc.GMS_EQUTYPE_E
+    GreaterThan = 53 + gdxcc.GMS_EQUTYPE_G
+    LessThan = 53 + gdxcc.GMS_EQUTYPE_L
+    NothingEnforced = 53 + gdxcc.GMS_EQUTYPE_N
+    External = 53 + gdxcc.GMS_EQUTYPE_X
+    Conic = 53 + gdxcc.GMS_EQUTYPE_C
 
 class GamsValueType(Enum):
     Level = gdxcc.GMS_VAL_LEVEL       # .l
@@ -339,7 +355,7 @@ class GdxSymbol(object):
         self._file = file
         self._index = index        
 
-        if self.file:
+        if self.file is not None:
             # reading from file
             # get additional meta-data
             ret, records, userinfo, description = gdxcc.gdxSymbolInfoX(self.file.H,self.index)
@@ -361,6 +377,7 @@ class GdxSymbol(object):
         
         # writing new symbol
         self._loaded = True
+        return
 
     @property
     def name(self):
@@ -369,7 +386,7 @@ class GdxSymbol(object):
     @name.setter
     def name(self,value):
         self._name = value
-        if self.file:
+        if self.file is not None:
             self.file._fixup_name_keys()
         return
 
@@ -497,10 +514,12 @@ class GdxSymbol(object):
             # Fix up dimensions
             num_dims = len(data.columns) - len(self.value_cols)
             dim_cols = list(data.columns[:num_dims])
+            logger.debug("When setting dataframe for {}, found {} dimensions with columns labeled {}.".format(self.name,num_dims,dim_cols))
             replace_dims = True
             for col in dim_cols:
                 if not isinstance(col,string_types):
                     replace_dims = False
+                    logger.info("Not using dataframe column names to set dimensions because {} is not a string.".format(col))
                     break
             if replace_dims:
                 self.dims = dim_cols
@@ -608,8 +627,11 @@ class GdxSymbol(object):
             vals = row[self.num_dims:]
             for col_name, col_ind in self.value_cols:
                 try:
-                    values[col_ind] = 1.0 if isinstance(vals[col_ind],bool) else vals[col_ind]
-                except:
+                    if isinstance(vals[col_ind],Number):
+                        values[col_ind] = float(vals[col_ind]) if col_ind < len(vals) else float(0.0)
+                    else:
+                        values[col_ind] = float(int(0))
+                except: 
                     raise Error("Unable to set element {} from {}.".format(col_ind,vals))
             gdxcc.gdxDataWriteStr(self.file.H,dims,values)
         gdxcc.gdxDataWriteDone(self.file.H)
