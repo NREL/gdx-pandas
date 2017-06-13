@@ -42,7 +42,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '''
 
 
-__version__ = '0.6.0'
+__version__ = '1.0.0'
 
 import logging
 import os
@@ -57,6 +57,7 @@ except ImportError:
     logger.info("Optional package psutil not found. pip install psutil if " + \
                 "you would like to monitor memory usage.")
 
+from gdxpds.tools import Error
 from gdxpds.read_gdx import to_dataframes
 from gdxpds.read_gdx import list_symbols
 from gdxpds.read_gdx import to_dataframe

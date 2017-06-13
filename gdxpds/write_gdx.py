@@ -41,131 +41,96 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 '''
 
-import gdxpds.gdxdict as gdxdict
 import logging
+from numbers import Number
+from six import string_types
+
 import numpy as np
 import pandas as pds
-from six import string_types
 
 logger = logging.getLogger(__name__)
 
-import gdxpds.tools
+from gdxpds.gdx import GdxFile, GdxSymbol, GAMS_VALUE_COLS_MAP, GamsDataType
+from gdxpds.tools import Error
 
 class Translator(object):
-    def __init__(self, dataframes):
+    def __init__(self,dataframes,gams_dir=None):
         self.dataframes = dataframes
+        self.__gams_dir=None
 
     @property
     def dataframes(self):
         return self.__dataframes
 
     @dataframes.setter
-    def dataframes(self, value):
-        if not isinstance(value, dict):
-            raise RuntimeError("Expecting dict of name, pandas.DataFrame pairs.")
-        for symbol_name, df in value.items():
-            if not isinstance(symbol_name, str):
-                raise RuntimeError("Expecting dict of name, pandas.DataFrame pairs.")
-            if not isinstance(df, pds.DataFrame):
-                raise RuntimeError("Expecting dict of name, pandas.DataFrame pairs.")
+    def dataframes(self,value):
+        err_msg = "Expecting map of name, pandas.DataFrame pairs."
+        try:
+            for symbol_name, df in value.items():
+                if not isinstance(symbol_name, str): raise Error(err_msg)
+                if not isinstance(df, pds.DataFrame): raise Error(err_msg)
+        except AttributeError: raise Error(err_msg)
         self.__dataframes = value
         self.__gdx = None
 
     @property
+    def gams_dir(self):
+        return self.__gams_dir
+
+    @gams_dir.setter
+    def gams_dir(self, value):
+        self.__gams_dir = value
+
+    @property
     def gdx(self):
         if self.__gdx is None:
-            self.__gdx = gdxdict.gdxdict()
+            self.__gdx = GdxFile(gams_dir=self.__gams_dir)
             for symbol_name, df in self.dataframes.items():
-                try:
-                    self.__add_symbol_to_gdx(symbol_name, df)
-                except:
-                    logger.error("Unable to add symbol {} to gdx with dataframe\n {}.".format(symbol_name, df))
-                    raise
+                self.__add_symbol_to_gdx(symbol_name, df)
         return self.__gdx
 
-    def save_gdx(self, path, gams_dir = None):
-        gdxpds.tools.GdxWriter(self.gdx, path, gams_dir).save()
+    def save_gdx(self,path,gams_dir=None):
+        if gams_dir is not None:
+            self.__gams_dir=gams_dir
+        self.gdx.write(path)
 
     def __add_symbol_to_gdx(self, symbol_name, df):
-        symbol_info = {}
-        if not df.columns[-1].lower().strip() == 'value':
-            raise RuntimeError("The last column must be labeled 'value' (case insensitive).")
-        is_set = True if isinstance(df.loc[df.index[0],df.columns[-1]], (bool, np.bool_)) else False
-        symbol_info['name'] = symbol_name
-        symbol_info['typename'] = 'Set' if is_set else 'Parameter'
-        symbol_info['dims'] = len(df.columns) - 1
-        symbol_info['records'] = len(df.index)
-        symbol_info['domain'] = []
-        for col in df.columns:
-            if not col.lower().strip() == 'value':
-                symbol_info['domain'].append({'key': '*'})
-                # If we register the domain names, it seems that gdxdict expects us
-                # to explicitly create a Set symbol for each domain. (Something that
-                # can be done as an enhancement.)
-                # symbol_info['domain'].append({'key': col})
-        self.__gdx.add_symbol(symbol_info)
-        top_dim = self.__gdx[symbol_name]
+        data_type = self.__infer_data_type(symbol_name,df)
+        logger.info("Inferred data type of {} to be {}.".format(symbol_name,data_type.name))
 
-        if symbol_info['dims'] == 0:
-            assert top_dim is None
-            self.__gdx[symbol_name] = df.loc[df.index[0],df.columns[-1]]
-            return
+        self.__gdx.append(GdxSymbol(symbol_name,data_type))
+        self.__gdx[symbol_name].dataframe = df
+        return
 
-        def add_data(dim, data):
-            """
-            Appends data, the row of a csv file, to dim, the data structure holding
-            a gdx symbol.
-
-            Parameters:
-                - dim (gdxdict.gdxdim): top-level container for symbol data
-                - data (pds.Series): row of csv data, with index being the dimension
-                  name or 'value', and the corresponding value being the dimension's
-                  set element or the parameter value, respectively.
-            """
-            cur_dim = dim
-            prev_value = None
-            # each item in the series, except for the 'value', takes us farther into
-            # a tree of gdxdict.gdxdim objects. each level of the tree represents a
-            # dimension of the data. each actual value is at a leaf of the tree.
-            for i, value in data.iteritems():
-                assert cur_dim is not None
-                if prev_value is None:
-                    # initialize
-                    if 'name' not in cur_dim.info:
-                        cur_dim.info['name'] = i
-                    else:
-                        assert cur_dim.info['name'] == i
-                    prev_value = value
-                elif isinstance(i,string_types) and (i.lower().strip() == 'value'):
-                    # finalize, that is
-                    # register the value at the current level
-                    assert prev_value not in cur_dim
-                    cur_dim[prev_value] = value
-                    # this should be the last item in the series
-                    cur_dim = None
+    def __infer_data_type(self,symbol_name,df):
+        # See if structure implies that symbol_name may be a Variable or an Equation
+        # If so, break tie based on naming convention--Variables start with upper case, 
+        # equations start with lower case
+        var_or_eqn = False        
+        df_col_names = df.columns
+        var_eqn_col_names = [col_name for col_name, col_ind in GAMS_VALUE_COLS_MAP[GamsDataType.Variable]]
+        if len(df_col_names) >= len(var_eqn_col_names):
+            # might be variable or equation
+            var_or_eqn = True
+            trunc_df_col_names = df_col_names[len(df_col_names) - len(var_eqn_col_names):]
+            for i, df_col in enumerate(trunc_df_col_names):
+                if df_col and (df_col.lower() != var_eqn_col_names[i].lower()):
+                    var_or_eqn = False
+                    break
+            if var_or_eqn:
+                if symbol_name[0].upper() == symbol_name[0]:
+                    return GamsDataType.Variable
                 else:
-                    # in the middle of the Series,
-                    # create or descend into the next level of the tree
-                    new_dim = None
-                    if prev_value in cur_dim:
-                        # next level is already there, just grab it
-                        new_dim = cur_dim[prev_value]
-                        assert new_dim.info['name'] == i
-                    else:
-                        # make a new level of the tree by creating a node for prev_value
-                        # that points down to the next dimension
-                        new_dim = gdxdict.gdxdim(self.__gdx)
-                        new_dim.info['name'] = i
-                        cur_dim[prev_value] = new_dim
-                    # prev_value will be used as a label, so make sure it is a string
-                    prev_value = str(value)
-                    cur_dim = new_dim
+                    return GamsDataType.Equation
 
-        # add each row to the gdx symbol
-        for i, row in df.iterrows():
-            add_data(top_dim, row)
+        # Parameter or set
+        if len(df.index) > 0:
+            if isinstance(df.loc[df.index[0],df.columns[-1]],Number):
+                return GamsDataType.Parameter
+        return GamsDataType.Set
 
-def to_gdx(dataframes, path = None, gams_dir = None):
+
+def to_gdx(dataframes,path=None,gams_dir=None):
     """
     Parameters:
       - dataframes (map of pandas.DataFrame): symbol name to pandas.DataFrame
@@ -178,8 +143,8 @@ def to_gdx(dataframes, path = None, gams_dir = None):
 
     Returns a gdxdict.gdxdict, which is defined in [py-gdx](https://github.com/geoffleyland/py-gdx).
     """
-    translator = Translator(dataframes)
+    translator = Translator(dataframes,gams_dir=gams_dir)
     if path is not None:
-        translator.save_gdx(path, gams_dir)
+        translator.save_gdx(path)
     return translator.gdx
 
