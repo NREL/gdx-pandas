@@ -115,6 +115,19 @@ class GdxFile(MutableSequence, NeedsGamsDir):
     def __exit__(self, exc_type, exc_value, traceback):
         gdxcc.gdxFree(self.H)
 
+    def clone(self):
+        """
+        Returns a new GdxFile containing clones of the GdxSymbols in this 
+        GdxFile. The clone will not be associated with a filename. The clone's
+        GdxSymbols will not have indexes. The clone will be ready to write to 
+        a new file.
+        """
+        result = GdxFile(gams_dir=self.gams_dir,lazy_load=False)
+        for symbol in self:
+            result.append(symbol.clone())
+            result[-1]._file = result
+        return result
+
     @property
     def empty(self):
         """
@@ -202,7 +215,7 @@ class GdxFile(MutableSequence, NeedsGamsDir):
 
         ret = gdxcc.gdxOpenWrite(self.H,filename,"gdxpds")
         if not ret:
-            raise GdxError(self.H,"Could not open {} for writing.".format(repr(filename)))
+            raise GdxError(self.H,"Could not open {} for writing. Consider cloning this file (.clone()) before trying to write".format(repr(filename)))
         self._filename = filename
         
         # write the universal set
@@ -350,7 +363,7 @@ class GdxSymbol(object):
         self._variable_type = None; self.variable_type = variable_type
         self._equation_type = None; self.equation_type = equation_type
         self._dataframe = None
-        self.dims = dims       
+        self._dims = []; self.dims = dims       
         assert self._dataframe is not None
         self._file = file
         self._index = index        
@@ -373,11 +386,29 @@ class GdxSymbol(object):
                     raise GdxError(self.file.H,"Unable to get domain information for {}".format(self.name))
                 assert len(gdx_domain) == len(self.dims), "Dimensional information read in from GDX should be consistent."
                 self.dims = gdx_domain
+            else:
+                # universal set
+                assert self.index == 0
+                self._loaded = True
             return
         
         # writing new symbol
         self._loaded = True
         return
+
+    def clone(self):
+        if not self.loaded:
+            raise Error("Symbol {} cannot be cloned because it is not yet loaded.".format(repr(self.name)))
+
+        assert self.loaded
+        result = GdxSymbol(self.name,self.data_type,
+                           dims=self.dims,
+                           description=self.description,
+                           variable_type=self.variable_type,
+                           equation_type=self.equation_type)
+        result.dataframe = copy.deepcopy(self.dataframe)
+        assert result.loaded
+        return result
 
     @property
     def name(self):
@@ -589,7 +620,7 @@ class GdxSymbol(object):
 
     def write(self,index=None): 
         if not self.loaded:
-            raise Error("Cannot write an unloaded symbol.")
+            raise Error("Cannot write unloaded symbol {}.".format(repr(self.name)))
 
         if index is not None:
             self._index = index
