@@ -71,14 +71,14 @@ def test_gdx_roundtrip():
     def roundtrip_one_gdx(filename):
         # load gdx, make map of symbols and number of records
         gdx_file = os.path.join(base_dir(),filename)
-        gdx = gdxpds.gdx.GdxFile()
-        gdx.read(gdx_file)
-        num_records = {}
-        total_records = 0
-        for symbol in gdx:
-            num_records[symbol.name] = symbol.num_records
-            total_records += num_records[symbol.name]
-        assert total_records > 0
+        with gdxpds.gdx.GdxFile() as gdx:
+            gdx.read(gdx_file)
+            num_records = {}
+            total_records = 0
+            for symbol in gdx:
+                num_records[symbol.name] = symbol.num_records
+                total_records += num_records[symbol.name]
+            assert total_records > 0
     
         # call command-line interface to transform gdx to csv
         out_dir = os.path.join(run_dir(), 'gdx_roundtrip', os.path.splitext(filename)[0])
@@ -106,20 +106,19 @@ def test_gdx_roundtrip():
     
         # load gdx and check symbols and records against original map...
         # ... first without full load
-        gdx = gdxpds.gdx.GdxFile(lazy_load=True)
-        gdx.read(roundtripped_gdx)
-        for symbol_name, records in num_records.items():
-            if records > 0:
-                assert symbol_name in gdx, "Expected {} in {}.".format(symbol_name,roundtripped_gdx)
-                assert gdx[symbol_name].num_records == records, "Expected {} in {} to have {} records, but has {}.".format(symbol_name,roundtripped_gdx,records,gdx[symbol_name].num_records)
+        with gdxpds.gdx.GdxFile(lazy_load=True) as gdx:
+            gdx.read(roundtripped_gdx)
+            for symbol_name, records in num_records.items():
+                if records > 0:
+                    assert symbol_name in gdx, "Expected {} in {}.".format(symbol_name,roundtripped_gdx)
+                    assert gdx[symbol_name].num_records == records, "Expected {} in {} to have {} records, but has {}.".format(symbol_name,roundtripped_gdx,records,gdx[symbol_name].num_records)
         # ... then with a full load
-        gdx = gdxpds.gdx.GdxFile(lazy_load=False)
-        gdx.read(roundtripped_gdx)
-        for symbol_name, records in num_records.items():
-            if records > 0:
-                assert symbol_name in gdx, "Expected {} in {}.".format(symbol_name,roundtripped_gdx)
-                assert gdx[symbol_name].num_records == records, "Expected {} in {} to have {} records, but has {}.".format(symbol_name,roundtripped_gdx,records,gdx[symbol_name].num_records)
-
+        with gdxpds.gdx.GdxFile(lazy_load=False) as gdx:
+            gdx.read(roundtripped_gdx)
+            for symbol_name, records in num_records.items():
+                if records > 0:
+                    assert symbol_name in gdx, "Expected {} in {}.".format(symbol_name,roundtripped_gdx)
+                    assert gdx[symbol_name].num_records == records, "Expected {} in {} to have {} records, but has {}.".format(symbol_name,roundtripped_gdx,records,gdx[symbol_name].num_records)
 
     for filename in filenames:
         roundtrip_one_gdx(filename)

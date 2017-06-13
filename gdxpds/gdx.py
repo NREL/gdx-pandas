@@ -44,6 +44,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 from __future__ import absolute_import, print_function
 from builtins import super
 
+import atexit
 from collections import defaultdict, OrderedDict
 
 try:
@@ -65,6 +66,7 @@ try:
 except ImportError: pass
 
 import gdxcc
+import numpy as np
 import pandas as pds
 
 from gdxpds import Error
@@ -107,13 +109,21 @@ class GdxFile(MutableSequence, NeedsGamsDir):
         self._H = self._create_gdx_object()
         self.universal_set = GdxSymbol('*',GamsDataType.Set,dims=1,file=None,index=0)
         self.universal_set._file = self
+
+        atexit.register(self.cleanup)
         return
+
+    def cleanup(self):
+        gdxcc.gdxFree(self.H)
 
     def __enter__(self):
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
-        gdxcc.gdxFree(self.H)
+        self.cleanup()
+
+    def __del__(self):
+        self.cleanup()
 
     def clone(self):
         """
@@ -217,6 +227,13 @@ class GdxFile(MutableSequence, NeedsGamsDir):
         if not ret:
             raise GdxError(self.H,"Could not open {} for writing. Consider cloning this file (.clone()) before trying to write".format(repr(filename)))
         self._filename = filename
+
+        # get and set special values
+        special_values = gdxcc.doubleArray(gdxcc.GMS_SVIDX_MAX)
+        gdxcc.gdxGetSpecialValues(self.H,special_values)
+        ret = gdxcc.gdxSetSpecialValues(self.H,special_values)
+        if ret == 0:
+            raise GdxError(self.H,"Unable to set special values")
         
         # write the universal set
         self.universal_set.write()
