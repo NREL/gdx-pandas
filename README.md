@@ -64,15 +64,15 @@ python C:\your_python_path\Scripts\csv_to_gdx.py --help
 - psutil (optional--for monitoring memory use)
 - nose (optional--for running tests)
 - GAMS Python bindings
-    - See GAMS/win64/XX.X/apifiles/readme.txt
+    - See GAMS/win64/XX.X/apifiles/readme.txt on Windows, GAMS/gamsXX.X_osx_x64_64_sfx/apifiles/readme.txt on Mac, and /opt/gams/gamsXX.X_linux_x64_64_sfx/apifiles/readme.txt on Linux
     - Run the following for the correct version of the Python bindings
         
         ```bash
         python setup.py install
         ```
 
-    - GAMS/win64/XX.X/apifiles/Python/api/setup.py works for Python 2.X
-    - For Python 3.X, use GAMS/win64/XX.X/apifiles/Python/api_3X/setup.py, for
+    - .../apifiles/Python/api/setup.py works for Python 2.X
+    - For Python 3.X, use .../apifiles/Python/api_3X/setup.py, for
       which you will need GAMS version >= 24.5.1 (Python 3.4, Windows and Linux),
       24.7.4 (Python 3.4, Mac OS X), or >= 24.8.4 (Python 3.6)
 
