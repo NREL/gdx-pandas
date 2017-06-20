@@ -61,6 +61,7 @@ python C:\your_python_path\Scripts\csv_to_gdx.py --help
 
 - Python 2.6 or higher 2.X; Python 3.4 or higher 3.X
 - pandas (In general you will want the SciPy stack. Anaconda comes with it, or see [my notes for Windows](http://elainethale.wordpress.com/programming-notes/python-environment-set-up/).)
+- For Python versions < 3.4, enum34. Also **uninstall the enum package** if it is installed.
 - psutil (optional--for monitoring memory use)
 - nose (optional--for running tests)
 - GAMS Python bindings
