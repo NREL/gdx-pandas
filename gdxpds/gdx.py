@@ -109,6 +109,9 @@ class GdxFile(MutableSequence, NeedsGamsDir):
         self._H = self._create_gdx_object()
         self.universal_set = GdxSymbol('*',GamsDataType.Set,dims=1,file=None,index=0)
         self.universal_set._file = self
+        # get special values
+        self.special_values = gdxcc.doubleArray(gdxcc.GMS_SVIDX_MAX)
+        gdxcc.gdxGetSpecialValues(self.H,self.special_values)
 
         atexit.register(self.cleanup)
         return
@@ -228,10 +231,8 @@ class GdxFile(MutableSequence, NeedsGamsDir):
             raise GdxError(self.H,"Could not open {} for writing. Consider cloning this file (.clone()) before trying to write".format(repr(filename)))
         self._filename = filename
 
-        # get and set special values
-        special_values = gdxcc.doubleArray(gdxcc.GMS_SVIDX_MAX)
-        gdxcc.gdxGetSpecialValues(self.H,special_values)
-        ret = gdxcc.gdxSetSpecialValues(self.H,special_values)
+        # set special values
+        ret = gdxcc.gdxSetSpecialValues(self.H,self.special_values)
         if ret == 0:
             raise GdxError(self.H,"Unable to set special values")
         
@@ -496,6 +497,11 @@ class GdxSymbol(object):
 
     @property
     def value_cols(self):
+        """
+        Returns list of (name, GamsValueType.value) tuples that describe the 
+        value columns in the dataframe, that is, those columns that follow the 
+        self.dims.
+        """
         return GAMS_VALUE_COLS_MAP[self.data_type]
 
     @property
@@ -581,6 +587,15 @@ class GdxSymbol(object):
 
     def _init_dataframe(self):
         self._dataframe = pds.DataFrame([],columns=self.dims + self.value_col_names)
+        if self.data_type == GamsDataType.Set:
+            colname = self._dataframe.columns[-1]
+            # This weirdness with replacing columns is a workaround for 
+            # pandas crashing on multiple columns called '*'.
+            cols = self._dataframe.columns
+            tmpcols = [col if col != '*' else 'aaa' for col in cols ]
+            self._dataframe.columns = tmpcols
+            self._dataframe[colname] = self._dataframe[colname].astype(bool)
+            self._dataframe.columns = cols
         return
 
     @property

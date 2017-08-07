@@ -46,6 +46,9 @@ import os
 # if True, test products will be deleted on tear down
 clean_up = True
 
+base_dir = os.path.dirname(__file__)
+run_dir = os.path.join(base_dir, 'output')
+
 def apply_dirname(f, num_times):
     ret = f
     for i in range(num_times):
