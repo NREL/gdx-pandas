@@ -41,7 +41,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 '''
 import os
-import shutil
 import subprocess as subp
 
 import pandas as pds
@@ -50,64 +49,68 @@ import gdxpds.gdx
 from gdxpds.test import base_dir, run_dir
 from gdxpds.test.test_session import manage_rundir
 
+def roundtrip_one_gdx(filename,dirname):
+    # load gdx, make map of symbols and number of records
+    gdx_file = os.path.join(base_dir,filename)
+    with gdxpds.gdx.GdxFile() as gdx:
+        gdx.read(gdx_file)
+        num_records = {}
+        total_records = 0
+        for symbol in gdx:
+            num_records[symbol.name] = symbol.num_records
+            total_records += num_records[symbol.name]
+        assert total_records > 0
+
+    # call command-line interface to transform gdx to csv
+    out_dir = os.path.join(run_dir, dirname, os.path.splitext(filename)[0])
+    if not os.path.exists(os.path.dirname(out_dir)):
+        os.mkdir(os.path.dirname(out_dir))
+    cmds = ['python', os.path.join(gdxpds.test.bin_prefix,'gdx_to_csv.py'),
+            '-i', gdx_file,
+            '-o', out_dir]
+    subp.call(cmds)            
+
+    # call command-line interface to transform csv to gdx
+    txt_file = os.path.join(out_dir, 'csvs.txt')
+    f = open(txt_file, 'w')
+    for p, dirs, files in os.walk(out_dir):
+        for file in files:
+            if os.path.splitext(file)[1] == '.csv':
+                f.write("{}\n".format(os.path.join(p,file)))
+        break
+    f.close()
+    roundtripped_gdx = os.path.join(out_dir, 'output.gdx')
+    cmds = ['python', os.path.join(gdxpds.test.bin_prefix,'csv_to_gdx.py'),
+            '-i', txt_file,
+            '-o', roundtripped_gdx]
+    subp.call(cmds)
+
+    # load gdx and check symbols and records against original map...
+    # ... first without full load
+    with gdxpds.gdx.GdxFile(lazy_load=True) as gdx:
+        gdx.read(roundtripped_gdx)
+        for symbol_name, records in num_records.items():
+            if records > 0:
+                assert symbol_name in gdx, "Expected {} in {}.".format(symbol_name,roundtripped_gdx)
+                assert gdx[symbol_name].num_records == records, "Expected {} in {} to have {} records, but has {}.".format(symbol_name,roundtripped_gdx,records,gdx[symbol_name].num_records)
+    # ... then with a full load
+    with gdxpds.gdx.GdxFile(lazy_load=False) as gdx:
+        gdx.read(roundtripped_gdx)
+        for symbol_name, records in num_records.items():
+            if records > 0:
+                assert symbol_name in gdx, "Expected {} in {}.".format(symbol_name,roundtripped_gdx)
+                assert gdx[symbol_name].num_records == records, "Expected {} in {} to have {} records, but has {}.".format(symbol_name,roundtripped_gdx,records,gdx[symbol_name].num_records)
+
+    return roundtripped_gdx
+
         
 def test_gdx_roundtrip(manage_rundir):
     filenames = ['CONVqn.gdx','OptimalCSPConfig_In.gdx','OptimalCSPConfig_Out.gdx']
 
-    def roundtrip_one_gdx(filename):
-        # load gdx, make map of symbols and number of records
-        gdx_file = os.path.join(base_dir,filename)
-        with gdxpds.gdx.GdxFile() as gdx:
-            gdx.read(gdx_file)
-            num_records = {}
-            total_records = 0
-            for symbol in gdx:
-                num_records[symbol.name] = symbol.num_records
-                total_records += num_records[symbol.name]
-            assert total_records > 0
-    
-        # call command-line interface to transform gdx to csv
-        out_dir = os.path.join(run_dir, 'gdx_roundtrip', os.path.splitext(filename)[0])
-        if not os.path.exists(os.path.dirname(out_dir)):
-            os.mkdir(os.path.dirname(out_dir))
-        cmds = ['python', os.path.join(gdxpds.test.bin_prefix,'gdx_to_csv.py'),
-                '-i', gdx_file,
-                '-o', out_dir]
-        subp.call(cmds)            
-    
-        # call command-line interface to transform csv to gdx
-        txt_file = os.path.join(out_dir, 'csvs.txt')
-        f = open(txt_file, 'w')
-        for p, dirs, files in os.walk(out_dir):
-            for file in files:
-                if os.path.splitext(file)[1] == '.csv':
-                    f.write("{}\n".format(os.path.join(p,file)))
-            break
-        f.close()
-        roundtripped_gdx = os.path.join(out_dir, 'output.gdx')
-        cmds = ['python', os.path.join(gdxpds.test.bin_prefix,'csv_to_gdx.py'),
-                '-i', txt_file,
-                '-o', roundtripped_gdx]
-        subp.call(cmds)
-    
-        # load gdx and check symbols and records against original map...
-        # ... first without full load
-        with gdxpds.gdx.GdxFile(lazy_load=True) as gdx:
-            gdx.read(roundtripped_gdx)
-            for symbol_name, records in num_records.items():
-                if records > 0:
-                    assert symbol_name in gdx, "Expected {} in {}.".format(symbol_name,roundtripped_gdx)
-                    assert gdx[symbol_name].num_records == records, "Expected {} in {} to have {} records, but has {}.".format(symbol_name,roundtripped_gdx,records,gdx[symbol_name].num_records)
-        # ... then with a full load
-        with gdxpds.gdx.GdxFile(lazy_load=False) as gdx:
-            gdx.read(roundtripped_gdx)
-            for symbol_name, records in num_records.items():
-                if records > 0:
-                    assert symbol_name in gdx, "Expected {} in {}.".format(symbol_name,roundtripped_gdx)
-                    assert gdx[symbol_name].num_records == records, "Expected {} in {} to have {} records, but has {}.".format(symbol_name,roundtripped_gdx,records,gdx[symbol_name].num_records)
-
     for filename in filenames:
-        roundtrip_one_gdx(filename)
+        roundtrip_one_gdx(filename,'gdx_roundtrip')
+
+    return
     
     
 def test_csv_roundtrip(manage_rundir):
@@ -125,7 +128,8 @@ def test_csv_roundtrip(manage_rundir):
     
     # call command-line interface to transform csv to gdx
     out_dir = os.path.join(run_dir, 'csv_roundtrip')
-    os.mkdir(out_dir)
+    if not os.path.exists(out_dir):
+        os.mkdir(out_dir)
     gdx_file = os.path.join(out_dir, 'intermediate.gdx')
     cmds = ['python', os.path.join(gdxpds.test.bin_prefix,'csv_to_gdx.py'),
             '-i', csvs[0], csvs[1],

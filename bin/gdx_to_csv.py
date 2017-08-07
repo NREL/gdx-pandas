@@ -41,10 +41,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 '''
 
+import argparse
+import logging
+import os
+
 import gdxpds
 
-import argparse
-import os
+logger = logging.getLogger(__name__)
+
 
 def convert_gdx_to_csv(in_gdx, out_dir, gams_dir=None):
     # check inputs
@@ -61,7 +65,7 @@ def convert_gdx_to_csv(in_gdx, out_dir, gams_dir=None):
     for symbol_name, df in dataframes.items():
         csv_path = os.path.join(out_dir, symbol_name + ".csv")
         if os.path.exists(csv_path):
-            print("Overwriting '{}'".format(csv_path))
+            logger.info("Overwriting '{}'".format(csv_path))
         df.to_csv(csv_path,index=False)
 
 if __name__ == "__main__":

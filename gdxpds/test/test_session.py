@@ -14,10 +14,8 @@ def manage_rundir(request):
     Arguments
     - request contains the pytest session, including collected tests
     """
-    if os.path.exists(run_dir):
-        # create clean space for running tests
-        shutil.rmtree(run_dir)
-    os.mkdir(run_dir)
+    if not os.path.exists(run_dir):
+        os.mkdir(run_dir)
     def finalize_rundir():
         if os.path.exists(run_dir) and clean_up:
             shutil.rmtree(run_dir)
