@@ -40,37 +40,23 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 [/LICENSE]
 
 '''
-
-import pandas as pds
-
-import gdxpds.test
-import gdxpds.gdx
-
 import os
 import shutil
 import subprocess as subp
 
-def base_dir():
-    return os.path.dirname(__file__)
+import pandas as pds
 
-def run_dir():
-    return os.path.join(base_dir(), 'output')
-    
-def setup_module():
-    if os.path.exists(run_dir()):
-        shutil.rmtree(run_dir())
-    os.mkdir(run_dir())
-    
-def teardown_module():
-    if gdxpds.test.clean_up:
-        shutil.rmtree(run_dir())
+import gdxpds.gdx
+from gdxpds.test import base_dir, run_dir
+from gdxpds.test.test_session import manage_rundir
+
         
-def test_gdx_roundtrip():
+def test_gdx_roundtrip(manage_rundir):
     filenames = ['CONVqn.gdx','OptimalCSPConfig_In.gdx','OptimalCSPConfig_Out.gdx']
 
     def roundtrip_one_gdx(filename):
         # load gdx, make map of symbols and number of records
-        gdx_file = os.path.join(base_dir(),filename)
+        gdx_file = os.path.join(base_dir,filename)
         with gdxpds.gdx.GdxFile() as gdx:
             gdx.read(gdx_file)
             num_records = {}
@@ -81,7 +67,7 @@ def test_gdx_roundtrip():
             assert total_records > 0
     
         # call command-line interface to transform gdx to csv
-        out_dir = os.path.join(run_dir(), 'gdx_roundtrip', os.path.splitext(filename)[0])
+        out_dir = os.path.join(run_dir, 'gdx_roundtrip', os.path.splitext(filename)[0])
         if not os.path.exists(os.path.dirname(out_dir)):
             os.mkdir(os.path.dirname(out_dir))
         cmds = ['python', os.path.join(gdxpds.test.bin_prefix,'gdx_to_csv.py'),
@@ -123,10 +109,11 @@ def test_gdx_roundtrip():
     for filename in filenames:
         roundtrip_one_gdx(filename)
     
-def test_csv_roundtrip():
+    
+def test_csv_roundtrip(manage_rundir):
     # load csvs into pandas and make map of filenames to number of rows
-    csvs = [os.path.join(base_dir(), 'installed_capacity.csv'),
-            os.path.join(base_dir(), 'annual_generation.csv')]
+    csvs = [os.path.join(base_dir, 'installed_capacity.csv'),
+            os.path.join(base_dir, 'annual_generation.csv')]
     n = len(csvs)
     num_records = {}
     total_records = 0
@@ -137,7 +124,7 @@ def test_csv_roundtrip():
     assert total_records > 0
     
     # call command-line interface to transform csv to gdx
-    out_dir = os.path.join(run_dir(), 'csv_roundtrip')
+    out_dir = os.path.join(run_dir, 'csv_roundtrip')
     os.mkdir(out_dir)
     gdx_file = os.path.join(out_dir, 'intermediate.gdx')
     cmds = ['python', os.path.join(gdxpds.test.bin_prefix,'csv_to_gdx.py'),
