@@ -74,6 +74,9 @@ from gdxpds.tools import NeedsGamsDir
 
 logger = logging.getLogger(__name__)
 
+# List of numpy special values in gdxGetSpecialValues order
+NUMPY_SPECIAL_VALUES = [np.finfo(float).eps, np.inf, -np.inf, np.nan, np.nan]
+
 
 class GdxError(Error):
     def __init__(self, H, msg):
@@ -112,6 +115,14 @@ class GdxFile(MutableSequence, NeedsGamsDir):
         # get special values
         self.special_values = gdxcc.doubleArray(gdxcc.GMS_SVIDX_MAX)
         gdxcc.gdxGetSpecialValues(self.H,self.special_values)
+
+        self.gdx_to_np_svs = {}
+        self.np_to_gdx_svs = {}
+        for i, gdx_val in enumerate(self.special_values):
+            if i >= len(NUMPY_SPECIAL_VALUES):
+                break
+            self.gdx_to_np_svs[gdx_val] = NUMPY_SPECIAL_VALUES[i]
+            self.np_to_gdx_svs[NUMPY_SPECIAL_VALUES[i]] = gdx_val
 
         atexit.register(self.cleanup)
         return
@@ -642,7 +653,11 @@ class GdxSymbol(object):
         ret, records = gdxcc.gdxDataReadStrStart(self.file.H,self.index)
         for i in range(records):
             ret, elements, values, afdim = gdxcc.gdxDataReadStr(self.file.H)
-            data.append(elements + [values[col_ind] for col_name, col_ind in self.value_cols])
+            # make sure we pick value columns up correctly
+            values = [values[col_ind] for col_name, col_ind in self.value_cols]
+            # convert gdx special values to numpy special values
+            values = [self.file.gdx_to_np_svs[val] if val in self.file.gdx_to_np_svs else val for val in values]
+            data.append(elements + values)
             if self.data_type == GamsDataType.Set:
                 data[-1][-1] = True
                 # gdxdict called gdxGetElemText here, but I do not currently see value in doing that
@@ -690,7 +705,10 @@ class GdxSymbol(object):
             vals = row[self.num_dims:]
             for col_name, col_ind in self.value_cols:
                 try:
-                    if isinstance(vals[col_ind],Number):
+                    if vals[col_ind] in self.file.np_to_gdx_svs:
+                        # convert special values from numpy to gdx encoding
+                        values[col_ind] = self.file.np_to_gdx_svs[vals[col_ind]]
+                    elif isinstance(vals[col_ind],Number):
                         values[col_ind] = float(vals[col_ind]) if col_ind < len(vals) else float(0.0)
                     else:
                         values[col_ind] = float(int(0))
