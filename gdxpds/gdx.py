@@ -75,7 +75,8 @@ from gdxpds.tools import NeedsGamsDir
 logger = logging.getLogger(__name__)
 
 # List of numpy special values in gdxGetSpecialValues order
-NUMPY_SPECIAL_VALUES = [np.finfo(float).eps, np.inf, -np.inf, np.nan, np.nan]
+#                      1E300,  2E300,  3E300,   4E300,               5E300 
+NUMPY_SPECIAL_VALUES = [None, np.nan, np.inf, -np.inf, np.finfo(float).eps]
 
 
 class GdxError(Error):
@@ -118,9 +119,10 @@ class GdxFile(MutableSequence, NeedsGamsDir):
 
         self.gdx_to_np_svs = {}
         self.np_to_gdx_svs = {}
-        for i, gdx_val in enumerate(self.special_values):
+        for i in range(gdxcc.GMS_SVIDX_MAX):
             if i >= len(NUMPY_SPECIAL_VALUES):
                 break
+            gdx_val = self.special_values[i]
             self.gdx_to_np_svs[gdx_val] = NUMPY_SPECIAL_VALUES[i]
             self.np_to_gdx_svs[NUMPY_SPECIAL_VALUES[i]] = gdx_val
 
@@ -705,13 +707,13 @@ class GdxSymbol(object):
             vals = row[self.num_dims:]
             for col_name, col_ind in self.value_cols:
                 try:
-                    if vals[col_ind] in self.file.np_to_gdx_svs:
-                        # convert special values from numpy to gdx encoding
-                        values[col_ind] = self.file.np_to_gdx_svs[vals[col_ind]]
-                    elif isinstance(vals[col_ind],Number):
-                        values[col_ind] = float(vals[col_ind]) if col_ind < len(vals) else float(0.0)
-                    else:
-                        values[col_ind] = float(int(0))
+                    values[col_ind] = float(0.0)
+                    if col_ind < len(vals):
+                        if vals[col_ind] in self.file.np_to_gdx_svs:
+                            # convert special values from numpy to gdx encoding
+                            values[col_ind] = self.file.np_to_gdx_svs[vals[col_ind]]
+                        elif isinstance(vals[col_ind],Number):
+                            values[col_ind] = float(vals[col_ind])
                 except: 
                     raise Error("Unable to set element {} from {}.".format(col_ind,vals))
             gdxcc.gdxDataWriteStr(self.file.H,dims,values)

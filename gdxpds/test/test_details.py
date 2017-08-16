@@ -1,6 +1,9 @@
+import logging
 import os
 import subprocess as subp
 
+import gdxcc
+import numpy as np
 import pandas as pds
 
 import gdxpds.gdx
@@ -8,11 +11,78 @@ from gdxpds.test import base_dir, run_dir
 from gdxpds.test.test_session import manage_rundir
 from gdxpds.test.test_conversions import roundtrip_one_gdx
 
+logger = logging.getLogger(__name__)
+
 def value_column_index(sym,gams_value_type):
     for i, val in enumerate(sym.value_cols):
         if val[1] == gams_value_type.value:
             break
     return len(sym.dims) + i
+
+def test_roundtrip_just_special_values(manage_rundir):
+    outdir = os.path.join(run_dir,'special_values')
+    if not os.path.exists(outdir):
+        os.mkdir(outdir)
+    # create gdx file containing all special values
+    with gdxpds.gdx.GdxFile() as f:
+        df = pds.DataFrame([['sv' + str(i+1), f.special_values[i]] for i in range(gdxcc.GMS_SVIDX_MAX)],
+                           columns=['sv','Value'])
+        logger.info("Special values are:\n{}".format(df))
+
+        # save this directly as a GdxSymbol
+        filename = os.path.join(outdir,'direct_write_special_values.gdx')
+        ret = gdxcc.gdxOpenWrite(f.H,filename,"gdxpds")
+        if not ret:
+            raise gdxpds.gdx.GdxError(f.H,"Could not open {} for writing. Consider cloning this file (.clone()) before trying to write".format(repr(filename)))
+        # set special values
+        ret = gdxcc.gdxSetSpecialValues(f.H,f.special_values)
+        if ret == 0:
+            raise gdxpds.gdx.GdxError(f.H,"Unable to set special values")
+        # write the universal set
+        f.universal_set.write()
+        if not gdxcc.gdxDataWriteStrStart(f.H,
+                                          'special_values',
+                                          '',
+                                          1,
+                                          gdxpds.gdx.GamsDataType.Parameter.value,
+                                          0):
+            raise gdxpds.gdx.GdxError(f.H,"Could not start writing data for symbol special_values")
+        # set domain information
+        if not gdxcc.gdxSymbolSetDomainX(f.H,1,[df.columns[0]]):
+            raise gdxpds.gdx.GdxError(f.H,"Could not set domain information for special_values.")
+        values = gdxcc.doubleArray(gdxcc.GMS_VAL_MAX)
+        for row in df.itertuples(index=False,name=None):
+            dims = [str(x) for x in row[:1]]
+            vals = row[1:]
+            for col_name, col_ind in gdxpds.gdx.GAMS_VALUE_COLS_MAP[gdxpds.gdx.GamsDataType.Parameter]:
+                values[col_ind] = float(vals[col_ind])
+            gdxcc.gdxDataWriteStr(f.H,dims,values)
+        gdxcc.gdxDataWriteDone(f.H)
+        gdxcc.gdxClose(f.H)
+
+    # general test for expected values
+    def check_special_values(gdx_file):
+        df = gdx_file['special_values'].dataframe
+        for i, val in enumerate(df['Value'].values):
+            assert gdx_file.np_to_gdx_svs[val] == gdx_file.special_values[i]
+
+    # now roundtrip it gdx-only
+    with gdxpds.gdx.GdxFile(lazy_load=False) as f:
+        f.read(filename)
+        check_special_values(f)
+        with f.clone() as g:
+            rt_filename = os.path.join('outdir','roundtripped.gdx')
+            g.write(rt_filename)
+    with gdxpds.gdx.GdxFile(lazy_load=False) as g:
+        g.read(filename)
+        check_special_values(g)
+
+    # now roundtrip it through csv
+    roundtripped_gdx = roundtrip_one_gdx(filename,'roundtrip_just_special_values')
+    with gdxpds.gdx.GdxFile(lazy_load=False) as h:
+        h.read(roundtripped_gdx)
+        check_special_values(h)
+    
 
 def test_roundtrip_special_values(manage_rundir):
     filename = 'OptimalCSPConfig_Out.gdx'
@@ -26,17 +96,17 @@ def test_roundtrip_special_values(manage_rundir):
             sym = gdx['calculate_capacity_value']
             assert sym.data_type == gdxpds.gdx.GamsDataType.Equation
             val = sym.dataframe.iloc[0,value_column_index(sym,gdxpds.gdx.GamsValueType.Marginal)]
-            assert val in gdx.special_values
+            assert np.isnan(val) or (val in gdxpds.gdx.NUMPY_SPECIAL_VALUES)
             data[-1].append(val)
             sym = gdx['CapacityValue']
             assert sym.data_type == gdxpds.gdx.GamsDataType.Variable
             val = sym.dataframe.iloc[0,value_column_index(sym,gdxpds.gdx.GamsValueType.Upper)]
-            assert val in gdx.special_values
+            assert np.isnan(val) or (val in gdxpds.gdx.NUMPY_SPECIAL_VALUES)
             data[-1].append(val)
     data = list(zip(*data))
     for pt in data:
         for i in range(1,len(pt)):
-            assert pt[i] == pt[0]
+            assert (pt[i] == pt[0]) or (np.isnan(pt[i]) and np.isnan(pt[0]))
 
 def test_from_scratch_sets(manage_rundir):
     outdir = os.path.join(run_dir,'from_scratch_sets')
