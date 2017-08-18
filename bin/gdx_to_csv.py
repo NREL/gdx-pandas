@@ -66,7 +66,9 @@ def convert_gdx_to_csv(in_gdx, out_dir, gams_dir=None):
         csv_path = os.path.join(out_dir, symbol_name + ".csv")
         if os.path.exists(csv_path):
             logger.info("Overwriting '{}'".format(csv_path))
-        df.to_csv(csv_path,index=False)
+        df.to_csv(csv_path,
+                  na_rep='NaN',
+                  index=False)
 
 if __name__ == "__main__":
 

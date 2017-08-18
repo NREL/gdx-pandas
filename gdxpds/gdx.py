@@ -75,6 +75,59 @@ from gdxpds.tools import NeedsGamsDir
 logger = logging.getLogger(__name__)
 
 
+# List of numpy special values in gdxGetSpecialValues order
+#                      1E300,  2E300,  3E300,   4E300,               5E300 
+NUMPY_SPECIAL_VALUES = [None, np.nan, np.inf, -np.inf, np.finfo(float).eps]
+
+def convert_gdx_to_np_svs(df,num_dims,gdxf):
+    def to_np_svs(value):
+        if value in gdxf.gdx_to_np_svs:
+            return gdxf.gdx_to_np_svs[value]
+        return value
+    tmp = copy.deepcopy(df)
+    tmp.iloc[:,num_dims:] = tmp.iloc[:,num_dims:].applymap(to_np_svs)
+    return tmp
+
+def is_np_eps(val):
+    return np.abs(val - NUMPY_SPECIAL_VALUES[-1]) < NUMPY_SPECIAL_VALUES[-1]
+
+def is_np_sv(val):
+    return np.isnan(val) or (val in NUMPY_SPECIAL_VALUES) or is_np_eps(val)
+
+def convert_np_to_gdx_svs(df,num_dims,gdxf):
+    def to_gdx_svs(value):
+        # NANs already handled
+        for i, npsv in enumerate(NUMPY_SPECIAL_VALUES):
+            if value == npsv:
+                return gdxf.np_to_gdx_svs[i]
+        if is_np_eps(value):
+            return gdxf.np_to_gdx_svs[4]
+        return value
+    tmp = copy.deepcopy(df)
+    tmp.iloc[:,num_dims:].fillna(gdxf.np_to_gdx_svs[1],inplace=True)
+    tmp.iloc[:,num_dims:] = tmp.iloc[:,num_dims:].applymap(to_gdx_svs)
+    return tmp
+
+def gdx_isnan(val,gdxf):
+    """
+    Returns true if val is a GDX encoded special value that maps to None or 
+    np.nan.
+    """
+    return val in [gdxf.np_to_gdx_svs[0],gdxf.np_to_gdx_svs[1]]
+
+def gdx_val_equal(val1,val2,gdxf):
+    """
+    Returns true if val1 and val2 are equal in the sense of == or they are 
+    equivalent special values. Any special values are assumed to be encoded for 
+    GDX format, that is, in gdxf.gdx_to_np_svs.keys(). The values that map to 
+    None and np.nan are assumed to be equal because pandas cannot be relied upon 
+    to make the distinction.
+    """
+    if gdx_isnan(val1,gdxf) and gdx_isnan(val2,gdxf):
+        return True
+    return val1 == val2
+
+
 class GdxError(Error):
     def __init__(self, H, msg):
         """
@@ -112,6 +165,15 @@ class GdxFile(MutableSequence, NeedsGamsDir):
         # get special values
         self.special_values = gdxcc.doubleArray(gdxcc.GMS_SVIDX_MAX)
         gdxcc.gdxGetSpecialValues(self.H,self.special_values)
+
+        self.gdx_to_np_svs = {}
+        self.np_to_gdx_svs = {}
+        for i in range(gdxcc.GMS_SVIDX_MAX):
+            if i >= len(NUMPY_SPECIAL_VALUES):
+                break
+            gdx_val = self.special_values[i]
+            self.gdx_to_np_svs[gdx_val] = NUMPY_SPECIAL_VALUES[i]
+            self.np_to_gdx_svs[i] = gdx_val
 
         atexit.register(self.cleanup)
         return
@@ -642,11 +704,14 @@ class GdxSymbol(object):
         ret, records = gdxcc.gdxDataReadStrStart(self.file.H,self.index)
         for i in range(records):
             ret, elements, values, afdim = gdxcc.gdxDataReadStr(self.file.H)
+            # make sure we pick value columns up correctly
             data.append(elements + [values[col_ind] for col_name, col_ind in self.value_cols])
             if self.data_type == GamsDataType.Set:
                 data[-1][-1] = True
                 # gdxdict called gdxGetElemText here, but I do not currently see value in doing that
         self.dataframe = data
+        if not self.data_type == GamsDataType.Set:
+            self.dataframe = convert_gdx_to_np_svs(self.dataframe,self.num_dims,self.file)
         self._loaded = True
         return
 
@@ -685,15 +750,14 @@ class GdxSymbol(object):
             else:
                 logger.info("Not writing domain information because symbol index is unknown.")
         values = gdxcc.doubleArray(gdxcc.GMS_VAL_MAX)
-        for row in self.dataframe.itertuples(index=False,name=None):
+        for row in convert_np_to_gdx_svs(self.dataframe,self.num_dims,self.file).itertuples(index=False,name=None):
             dims = [str(x) for x in row[:self.num_dims]]
             vals = row[self.num_dims:]
             for col_name, col_ind in self.value_cols:
+                values[col_ind] = float(0.0)
                 try:
                     if isinstance(vals[col_ind],Number):
-                        values[col_ind] = float(vals[col_ind]) if col_ind < len(vals) else float(0.0)
-                    else:
-                        values[col_ind] = float(int(0))
+                        values[col_ind] = float(vals[col_ind])
                 except: 
                     raise Error("Unable to set element {} from {}.".format(col_ind,vals))
             gdxcc.gdxDataWriteStr(self.file.H,dims,values)

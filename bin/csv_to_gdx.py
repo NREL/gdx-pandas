@@ -78,7 +78,7 @@ def convert_csv_to_gdx(input_files, output_file, gams_dir=None):
     dataframes = {}
     for ifile in ifiles:
         dataframes[os.path.splitext(os.path.basename(ifile))[0]] = \
-            pds.DataFrame.from_csv(ifile,index_col=None)
+            pds.read_csv(ifile,index_col=None)
             
     gdxpds.to_gdx(dataframes, output_file, gams_dir)
     
