@@ -25,7 +25,7 @@ def test_roundtrip_just_special_values(manage_rundir):
         os.mkdir(outdir)
     # create gdx file containing all special values
     with gdxpds.gdx.GdxFile() as f:
-        df = pds.DataFrame([['sv' + str(i+1), f.special_values[i]] for i in range(gdxcc.GMS_SVIDX_MAX)],
+        df = pds.DataFrame([['sv' + str(i+1), f.special_values[i]] for i in range(gdxcc.GMS_SVIDX_MAX-2)],
                            columns=['sv','Value'])
         logger.info("Special values are:\n{}".format(df))
 
@@ -64,14 +64,14 @@ def test_roundtrip_just_special_values(manage_rundir):
     def check_special_values(gdx_file):
         df = gdx_file['special_values'].dataframe
         for i, val in enumerate(df['Value'].values):
-            assert gdx_file.np_to_gdx_svs[val] == gdx_file.special_values[i]
+            assert gdxpds.gdx.gdx_val_equal(gdx_file.np_to_gdx_svs[i],gdx_file.special_values[i],gdx_file)
 
     # now roundtrip it gdx-only
     with gdxpds.gdx.GdxFile(lazy_load=False) as f:
         f.read(filename)
         check_special_values(f)
         with f.clone() as g:
-            rt_filename = os.path.join('outdir','roundtripped.gdx')
+            rt_filename = os.path.join(outdir,'roundtripped.gdx')
             g.write(rt_filename)
     with gdxpds.gdx.GdxFile(lazy_load=False) as g:
         g.read(filename)
@@ -96,12 +96,12 @@ def test_roundtrip_special_values(manage_rundir):
             sym = gdx['calculate_capacity_value']
             assert sym.data_type == gdxpds.gdx.GamsDataType.Equation
             val = sym.dataframe.iloc[0,value_column_index(sym,gdxpds.gdx.GamsValueType.Marginal)]
-            assert np.isnan(val) or (val in gdxpds.gdx.NUMPY_SPECIAL_VALUES)
+            assert gdxpds.gdx.is_np_sv(val)
             data[-1].append(val)
             sym = gdx['CapacityValue']
             assert sym.data_type == gdxpds.gdx.GamsDataType.Variable
             val = sym.dataframe.iloc[0,value_column_index(sym,gdxpds.gdx.GamsValueType.Upper)]
-            assert np.isnan(val) or (val in gdxpds.gdx.NUMPY_SPECIAL_VALUES)
+            assert gdxpds.gdx.is_np_sv(val)
             data[-1].append(val)
     data = list(zip(*data))
     for pt in data:
