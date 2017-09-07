@@ -1,4 +1,6 @@
-v1.0.0, 06/XX/17 -- complete rewrite of gdx file api. new GdxFile and GdxSymbol objects
+v1.0.0, 06/XX/17 -- complete rewrite of gdx file api; new GdxFile and GdxSymbol objects
+                    dimension names are imported as DataFrame column names by default
+                    conversion between GDX and numpy special value encodings
 v0.6.0, 04/19/17 -- now works with Python 2 and Python 3
 v0.5.3, 01/17/17 -- fixing bugs related to non-standard indexes and scalars
 v0.5.2, 01/12/17 -- fixing bug related to divide by zero error for reading empty symbols
