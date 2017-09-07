@@ -1,8 +1,7 @@
 '''
-
 [LICENSE]
 
-Copyright (c) 2015, Alliance for Sustainable Energy.
+Copyright (c) 2017, Alliance for Sustainable Energy.
 All rights reserved.
 
 Redistribution and use in source and binary forms, 
@@ -38,8 +37,8 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 [/LICENSE]
-
 '''
+
 import os
 import subprocess as subp
 

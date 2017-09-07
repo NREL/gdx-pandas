@@ -162,9 +162,9 @@ if __name__ == '__main__':
     #iterate through files
     for current_file in python_files:
         if not args.remove:
-            print 'Adding license to: %s' % current_file
+            print('Adding license to: {}'.format(current_file))
         else:
-            print 'Removing license from: %s' % current_file
+            print('Removing license from: {}'.format(current_file))
         with open(current_file) as f:
             current_file_text = f.read()
             
