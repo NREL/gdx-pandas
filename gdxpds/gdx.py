@@ -84,8 +84,13 @@ def convert_gdx_to_np_svs(df,num_dims,gdxf):
         if value in gdxf.gdx_to_np_svs:
             return gdxf.gdx_to_np_svs[value]
         return value
-    tmp = copy.deepcopy(df)
-    tmp.iloc[:,num_dims:] = tmp.iloc[:,num_dims:].applymap(to_np_svs)
+    try:
+        tmp = copy.deepcopy(df)
+    except:
+        logger.warn("Unable to deepcopy:\n{}".format(df))
+        tmp = copy.copy(df)
+    tmp = (tmp.iloc[:,:num_dims]).merge(tmp.iloc[:,num_dims:].applymap(to_np_svs), 
+                                        left_index=True,right_index=True)
     return tmp
 
 def is_np_eps(val):
@@ -103,9 +108,13 @@ def convert_np_to_gdx_svs(df,num_dims,gdxf):
         if is_np_eps(value):
             return gdxf.np_to_gdx_svs[4]
         return value
-    tmp = copy.deepcopy(df)
-    tmp.iloc[:,num_dims:].fillna(gdxf.np_to_gdx_svs[1],inplace=True)
-    tmp.iloc[:,num_dims:] = tmp.iloc[:,num_dims:].applymap(to_gdx_svs)
+    try:
+        tmp = copy.deepcopy(df)
+    except:
+        logger.warn("Unable to deepcopy:\n{}".format(df))
+        tmp = copy.copy(df)
+    values = tmp.iloc[:,num_dims:].fillna(gdxf.np_to_gdx_svs[1]).applymap(to_gdx_svs)
+    tmp = (tmp.iloc[:,:num_dims]).merge(values,left_index=True,right_index=True)
     return tmp
 
 def gdx_isnan(val,gdxf):
