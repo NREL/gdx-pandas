@@ -105,6 +105,7 @@ with gdxpds.gdx.GdxFile() as gdx:
     data = pds.DataFrame([['u' + str(i), i*100] for i in range(1,11)],
                          columns=(gdx[-1].dims + gdx[-1].value_col_names))
     gdx[-1].dataframe = data
+    gdx.write(out_file)
 ```
 
 ## Install
