@@ -42,11 +42,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import os
 import subprocess as subp
 
-import pandas as pds
-
 import gdxpds.gdx
 from gdxpds.test import base_dir, run_dir
 from gdxpds.test.test_session import manage_rundir
+
+import pandas as pds
 
 def roundtrip_one_gdx(filename,dirname):
     # load gdx, make map of symbols and number of records

@@ -64,7 +64,7 @@ class GamsDirFinder(object):
     to clean up your input. (Even on Windows, the GAMS path must use '/' rather than 
     '\'.)
     """
-    def __init__(self, gams_dir = None):
+    def __init__(self,gams_dir=None):
         self.gams_dir = gams_dir
         
     @property

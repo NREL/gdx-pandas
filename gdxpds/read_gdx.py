@@ -43,10 +43,12 @@ from collections import OrderedDict
 import copy
 import logging
 
-import pandas as pds
-
-from gdxpds.gdx import GdxFile
+# gdxpds needs to be imported before pandas to try to avoid library conflict on 
+# Linux that causes a segmentation fault.
 from gdxpds.tools import Error
+from gdxpds.gdx import GdxFile
+
+import pandas as pds
 
 logger = logging.getLogger(__name__)
 

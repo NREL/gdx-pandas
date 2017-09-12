@@ -63,12 +63,14 @@ try:
     HAVE_GDX2PY = True
 except ImportError: pass
 
+# gdxpds needs to be imported before pandas to try to avoid library conflict on 
+# Linux that causes a segmentation fault.
+from gdxpds import Error
+from gdxpds.tools import NeedsGamsDir
+
 import gdxcc
 import numpy as np
 import pandas as pds
-
-from gdxpds import Error
-from gdxpds.tools import NeedsGamsDir
 
 logger = logging.getLogger(__name__)
 

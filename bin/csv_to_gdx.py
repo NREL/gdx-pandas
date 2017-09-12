@@ -39,11 +39,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 [/LICENSE]
 '''
 
-import pandas as pds
-import gdxpds
-
 import argparse
 import os
+
+# Against coding standards, gdxpds needs to be imported before pandas to 
+# try to avoid library conflict on Linux that causes a segmentation fault.
+import gdxpds
+
+import pandas as pds
 
 def convert_csv_to_gdx(input_files, output_file, gams_dir=None):
     # check input files
