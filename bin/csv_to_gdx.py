@@ -42,8 +42,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import argparse
 import os
 
-# Against coding standards, gdxpds needs to be imported before pandas to 
-# try to avoid library conflict on Linux that causes a segmentation fault.
+# gdxpds needs to be imported before pandas to try to avoid library conflict on 
+# Linux that causes a segmentation fault.
 import gdxpds
 
 import pandas as pds
