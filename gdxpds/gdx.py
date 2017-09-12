@@ -167,21 +167,14 @@ class GdxFile(MutableSequence, NeedsGamsDir):
         self._filename = None
         self._symbols = OrderedDict()
 
-        print('finding gams_dir')
         NeedsGamsDir.__init__(self,gams_dir=gams_dir)
-        print('gams_dir is {}'.format(self.gams_dir))
-        print('creating gdx object')
         self._H = self._create_gdx_object()
-        print('creating universal set')
         self.universal_set = GdxSymbol('*',GamsDataType.Set,dims=1,file=None,index=0)
         self.universal_set._file = self
         # get special values
-        print('creating spectial values array')
         self.special_values = gdxcc.doubleArray(gdxcc.GMS_SVIDX_MAX)
-        print('retrieving special values')
         gdxcc.gdxGetSpecialValues(self.H,self.special_values)
 
-        print('mapping special values')
         self.gdx_to_np_svs = {}
         self.np_to_gdx_svs = {}
         for i in range(gdxcc.GMS_SVIDX_MAX):
@@ -195,7 +188,6 @@ class GdxFile(MutableSequence, NeedsGamsDir):
         return
 
     def cleanup(self):
-        print('freeing handle')
         gdxcc.gdxFree(self.H)
 
     def __enter__(self):
@@ -401,16 +393,10 @@ class GdxFile(MutableSequence, NeedsGamsDir):
         return        
 
     def _create_gdx_object(self):
-        print('creating handle')
         H = gdxcc.new_gdxHandle_tp()
-        print('creating object')
-        print(type(self.gams_dir))
-        print(repr(self.gams_dir))
         rc = gdxcc.gdxCreateD(H,self.gams_dir,gdxcc.GMS_SSSIZE)
         if not rc:
-            print('raising error')
             raise GdxError(H,rc[1])
-        print('returning object')
         return H
 
 
