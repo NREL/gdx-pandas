@@ -1,4 +1,6 @@
-v1.0.0, 06/XX/17 -- complete rewrite of gdx file api; new GdxFile and GdxSymbol objects
+v1.0.1, 09/12/17 -- workaround bug fix for library conflicts between gdxcc and pandas 
+                    on some Linux systems
+v1.0.0, 09/07/17 -- complete rewrite of gdx file api; new GdxFile and GdxSymbol objects
                     dimension names are imported as DataFrame column names by default
                     conversion between GDX and numpy special value encodings
 v0.6.0, 04/19/17 -- now works with Python 2 and Python 3

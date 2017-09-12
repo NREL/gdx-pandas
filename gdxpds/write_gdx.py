@@ -43,13 +43,15 @@ import logging
 from numbers import Number
 from six import string_types
 
+# gdxpds needs to be imported before pandas to try to avoid library conflict on 
+# Linux that causes a segmentation fault.
+from gdxpds.tools import Error
+from gdxpds.gdx import GdxFile, GdxSymbol, GAMS_VALUE_COLS_MAP, GamsDataType
+
 import numpy as np
 import pandas as pds
 
 logger = logging.getLogger(__name__)
-
-from gdxpds.gdx import GdxFile, GdxSymbol, GAMS_VALUE_COLS_MAP, GamsDataType
-from gdxpds.tools import Error
 
 class Translator(object):
     def __init__(self,dataframes,gams_dir=None):
