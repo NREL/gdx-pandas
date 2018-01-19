@@ -1,5 +1,6 @@
 '''
-[LICENSE]
+[LICENSE]
+
 Copyright (c) 2017, Alliance for Sustainable Energy.
 All rights reserved.
 
@@ -33,8 +34,10 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-[/LICENSE]
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+[/LICENSE]
+
 
 
 '''
@@ -56,14 +59,20 @@ def apply_dirname(f, num_times):
 bin_prefix = ''    
 # git repo (development)
 candidate = os.path.join(apply_dirname(__file__,3), 'bin')
-if os.path.isdir(candidate) and os.path.isfile(os.path.join(candidate, 'gdx_to_csv.py')):
+if os.path.isdir(candidate) and os.path.isfile(os.path.join(candidate,'gdx_to_csv.py')):
+    bin_prefix = candidate
+
+# anaconda set-up
+candidate = os.path.join(apply_dirname(__file__,6), 'bin')
+if os.path.isdir(candidate) and os.path.isfile(os.path.join(candidate,'gdx_to_csv.py')):
     bin_prefix = candidate
 
 # install location for Windows
 candidate = os.path.join(apply_dirname(__file__,5), 'Scripts')
-if bin_prefix == '' and os.path.isdir(candidate) and os.path.isfile(os.path.join(candidate, 'gdx_to_csv.py')):
+if bin_prefix == '' and os.path.isdir(candidate) and os.path.isfile(os.path.join(candidate,'gdx_to_csv.py')):
     bin_prefix = candidate
 
-# TODO: install location for Mac
-
-# TODO: install location for Linux
+# install location for Linux
+candidate = os.path.join('/','usr','local','bin')
+if bin_prefix == '' and os.path.isdir(candidate) and os.path.isfile(os.path.join(candidate,'gdx_to_csv.py')):
+    bin_prefix = candidate
