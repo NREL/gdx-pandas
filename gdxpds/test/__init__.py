@@ -62,15 +62,17 @@ candidate = os.path.join(apply_dirname(__file__,3), 'bin')
 if os.path.isdir(candidate) and os.path.isfile(os.path.join(candidate,'gdx_to_csv.py')):
     bin_prefix = candidate
 
+# anaconda set-up
+candidate = os.path.join(apply_dirname(__file__,6), 'bin')
+if os.path.isdir(candidate) and os.path.isfile(os.path.join(candidate,'gdx_to_csv.py')):
+    bin_prefix = candidate
+
 # install location for Windows
 candidate = os.path.join(apply_dirname(__file__,5), 'Scripts')
 if bin_prefix == '' and os.path.isdir(candidate) and os.path.isfile(os.path.join(candidate,'gdx_to_csv.py')):
     bin_prefix = candidate
 
-# TODO: install location for Mac
-
 # install location for Linux
 candidate = os.path.join('/','usr','local','bin')
 if bin_prefix == '' and os.path.isdir(candidate) and os.path.isfile(os.path.join(candidate,'gdx_to_csv.py')):
     bin_prefix = candidate
-    
