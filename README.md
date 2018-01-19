@@ -159,7 +159,7 @@ Versions are listed at https://github.com/NREL/gdx-pandas/releases.
 After installation, you can test the package using pytest:
 
 ```bash
-pytest gdxpds
+pytest --pyargs gdxpds
 ```
 
 ## Uninstall
