@@ -162,6 +162,9 @@ After installation, you can test the package using pytest:
 pytest --pyargs gdxpds
 ```
 
+If the tests fail due to permission IOErrors, apply `chmod g+x` and `chmod a+x` 
+to the `gdx-pandas/gdxpds/test` folder.
+
 ## Uninstall
 
 ```
