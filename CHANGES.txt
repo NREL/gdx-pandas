@@ -1,3 +1,5 @@
+v1.0.2, 01/19/18 -- instructions and additional filepaths for running pytest on 
+                    installed package
 v1.0.1, 09/12/17 -- workaround bug fix for library conflicts between gdxcc and pandas 
                     on some Linux systems
 v1.0.0, 09/07/17 -- complete rewrite of gdx file api; new GdxFile and GdxSymbol objects

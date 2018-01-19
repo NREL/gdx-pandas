@@ -151,7 +151,7 @@ pip install git+https://github.com/NREL/gdx-pandas.git@master
 or 
 
 ```bash
-pip install git+https://github.com/NREL/gdx-pandas.git@v1.0.1
+pip install git+https://github.com/NREL/gdx-pandas.git@v1.0.2
 ```
 
 Versions are listed at https://github.com/NREL/gdx-pandas/releases.
