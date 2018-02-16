@@ -690,7 +690,6 @@ class GdxSymbol(object):
         colname = self._dataframe.columns[-1]
         assert colname == self.value_col_names[0], "Unexpected final column in Set dataframe"
         self._dataframe[colname].fillna(value=True,inplace=True)
-        # self._dataframe[colname].astype(c_bool,copy=False)
         self._dataframe[colname] = self._dataframe[colname].apply(lambda x: c_bool(x))
         return
 
