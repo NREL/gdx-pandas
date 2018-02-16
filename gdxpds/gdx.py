@@ -51,6 +51,7 @@ except ImportError:
     from collections import MutableSequence
 
 import copy
+from ctypes import c_bool
 from enum import Enum
 import logging
 from numbers import Number
@@ -654,6 +655,9 @@ class GdxSymbol(object):
             self._dataframe.columns = self.dims + self.value_col_names
         else:
             self._dataframe = pds.DataFrame(data,columns=self.dims + self.value_col_names)
+
+        if self.data_type == GamsDataType.Set:
+            self._fixup_set_value()
         return
 
     def _init_dataframe(self):
@@ -665,8 +669,28 @@ class GdxSymbol(object):
             cols = self._dataframe.columns
             tmpcols = [col if col != '*' else 'aaa' for col in cols ]
             self._dataframe.columns = tmpcols
-            self._dataframe[colname] = self._dataframe[colname].astype(bool)
+            self._dataframe[colname] = self._dataframe[colname].astype(c_bool)
             self._dataframe.columns = cols
+        return
+
+    def _fixup_set_value(self):
+        """
+        Tricky to get boolean set values to come through right. 
+        isinstance(True,Number) == True and float(True) = 1, but 
+        isinstance(c_bool(True),Number) == False, and this keeps the default 
+        value of 0.0.
+
+        Could just test for isinstance(,bool), but this fix has the added 
+        advantage of speaking the GDX bindings data type language, and also 
+        fills in any missing values, so users no longer need to actually specify
+        self.dataframe['Value'] = True.
+        """
+        assert self.data_type == GamsDataType.Set
+
+        colname = self._dataframe.columns[-1]
+        assert colname == self.value_col_names[0], "Unexpected final column in Set dataframe"
+        self._dataframe[colname].fillna(value=True,inplace=True)
+        self._dataframe[colname] = self._dataframe[colname].apply(lambda x: c_bool(x))
         return
 
     @property
@@ -727,6 +751,9 @@ class GdxSymbol(object):
     def write(self,index=None): 
         if not self.loaded:
             raise Error("Cannot write unloaded symbol {}.".format(repr(self.name)))
+
+        if self.data_type == GamsDataType.Set:
+            self._fixup_set_value()
 
         if index is not None:
             self._index = index
