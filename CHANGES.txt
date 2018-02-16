@@ -1,3 +1,4 @@
+v1.0.3, 02/15/18 -- fix up set 'Value' column when write to GDX
 v1.0.2, 01/19/18 -- instructions and additional filepaths for running pytest on 
                     installed package
 v1.0.1, 09/12/17 -- workaround bug fix for library conflicts between gdxcc and pandas 

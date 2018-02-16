@@ -39,6 +39,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 [/LICENSE]
 '''
 
+from ctypes import c_bool
 import logging
 import os
 import subprocess as subp
@@ -158,12 +159,11 @@ def test_from_scratch_sets(manage_rundir):
         data = pds.DataFrame([['u' + str(i)] for i in range(1,11)])
         data['Value'] = True
         gdx[-1].dataframe = data
-        assert gdx[-1].dataframe[gdx[-1].dataframe.columns[-1]].dtype == bool
+        assert isinstance(gdx[-1].dataframe[gdx[-1].dataframe.columns[-1]].values[0], c_bool)
         gdx.append(gdxpds.gdx.GdxSymbol('my_other_set',gdxpds.gdx.GamsDataType.Set,dims=['u']))
         data = pds.DataFrame([['u' + str(i)] for i in range(1,11)],columns=['u'])
         data['Value'] = True
-        gdx[-1].dataframe = gdx[-1].dataframe.append(data)
-        assert gdx[-1].dataframe[gdx[-1].dataframe.columns[-1]].dtype == bool        
+        gdx[-1].dataframe = gdx[-1].dataframe.append(data)        
         gdx.write(os.path.join(outdir,'my_sets.gdx'))
     with gdxpds.gdx.GdxFile(lazy_load=False) as gdx:
         gdx.read(os.path.join(outdir,'my_sets.gdx'))
@@ -172,4 +172,4 @@ def test_from_scratch_sets(manage_rundir):
             assert sym.dims[0] == 'u'
             assert sym.data_type == gdxpds.gdx.GamsDataType.Set
             assert sym.num_records == 10
-            assert sym.dataframe[sym.dataframe.columns[-1]].dtype == bool
+            assert isinstance(sym.dataframe[sym.dataframe.columns[-1]].values[0],c_bool)
