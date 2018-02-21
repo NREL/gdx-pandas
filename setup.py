@@ -10,7 +10,7 @@ setup(
     scripts = ['bin/csv_to_gdx.py', 'bin/gdx_to_csv.py'],
     url = 'https://github.com/NREL/gdx-pandas',
     description = 'Python package to translate between gdx (GAMS data) and pandas.',
-    long_description=open('README.md').read(),
+    long_description=open('README.txt').read(),
     package_data={
         'gdxpds.test': ['*.csv','*.gdx']
     },
