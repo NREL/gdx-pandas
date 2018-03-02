@@ -43,7 +43,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '''
 
 
-__version__ = '1.0.3'
+__version__ = '1.0.4'
 
 import logging
 import os

@@ -1,3 +1,4 @@
+v1.0.4, 03/02/18 -- make sure set 'Value' column fix works even when dims are all named '*'
 v1.0.3, 02/15/18 -- fix up set 'Value' column when write to GDX
 v1.0.2, 01/19/18 -- instructions and additional filepaths for running pytest on 
                     installed package

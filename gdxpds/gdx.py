@@ -137,6 +137,16 @@ def gdx_val_equal(val1,val2,gdxf):
         return True
     return val1 == val2
 
+def replace_df_column(df,colname,new_col):
+    # This weirdness with replacing columns is a workaround for 
+    # pandas crashing on multiple columns called '*'.
+    cols = df.columns
+    tmpcols = [col if col != '*' else 'aaa' for col in cols ]
+    df.columns = tmpcols
+    df[colname] = new_col
+    df.columns = cols
+    return
+
 
 class GdxError(Error):
     def __init__(self, H, msg):
@@ -657,6 +667,7 @@ class GdxSymbol(object):
             self._dataframe = pds.DataFrame(data,columns=self.dims + self.value_col_names)
 
         if self.data_type == GamsDataType.Set:
+            logger.debug(self._dataframe.head())
             self._fixup_set_value()
         return
 
@@ -664,13 +675,7 @@ class GdxSymbol(object):
         self._dataframe = pds.DataFrame([],columns=self.dims + self.value_col_names)
         if self.data_type == GamsDataType.Set:
             colname = self._dataframe.columns[-1]
-            # This weirdness with replacing columns is a workaround for 
-            # pandas crashing on multiple columns called '*'.
-            cols = self._dataframe.columns
-            tmpcols = [col if col != '*' else 'aaa' for col in cols ]
-            self._dataframe.columns = tmpcols
-            self._dataframe[colname] = self._dataframe[colname].astype(c_bool)
-            self._dataframe.columns = cols
+            replace_df_column(self._dataframe,colname,self._dataframe[colname].astype(c_bool))
         return
 
     def _fixup_set_value(self):
@@ -687,10 +692,21 @@ class GdxSymbol(object):
         """
         assert self.data_type == GamsDataType.Set
 
+        warned_values = []
+
+        def fix_individual_value(val):
+            try:
+                return c_bool(val)
+            except:
+                if val not in warned_values:
+                    logger.warn("Replacing {} with {}".format(val,c_bool(True)))
+                    warned_values.append(val)
+                return c_bool(True)
+
         colname = self._dataframe.columns[-1]
         assert colname == self.value_col_names[0], "Unexpected final column in Set dataframe"
         self._dataframe[colname].fillna(value=True,inplace=True)
-        self._dataframe[colname] = self._dataframe[colname].apply(lambda x: c_bool(x))
+        replace_df_column(self._dataframe,colname,self._dataframe[colname].apply(lambda x: c_bool(x)))
         return
 
     @property
