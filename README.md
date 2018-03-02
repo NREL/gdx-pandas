@@ -1,5 +1,5 @@
-gdx-pandas
-==========
+# gdx-pandas
+[![PyPI](https://img.shields.io/pypi/v/gdxpds.svg)](https://pypi.python.org/pypi/gdxpds/)
 
 Python package to translate between gdx (GAMS data) and pandas. 
 
@@ -145,16 +145,24 @@ with gdxpds.gdx.GdxFile() as gdx:
 ### Get the Latest Package
 
 ```bash
+pip install gdxpds
+```
+
+or
+
+```bash
+pip install git+https://github.com/NREL/gdx-pandas.git@v1.0.4
+```
+
+or
+
+```bash
 pip install git+https://github.com/NREL/gdx-pandas.git@master
 ```
 
-or 
 
-```bash
-pip install git+https://github.com/NREL/gdx-pandas.git@v1.0.3
-```
-
-Versions are listed at https://github.com/NREL/gdx-pandas/releases.
+Versions are listed at [pypi](https://pypi.python.org/pypi/gdxpds/) and 
+https://github.com/NREL/gdx-pandas/releases.
 
 After installation, you can test the package using pytest:
 

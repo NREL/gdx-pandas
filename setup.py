@@ -3,7 +3,7 @@ from distutils.core import setup
 
 setup(
     name = 'gdxpds',
-    version = "1.0.3",
+    version = "1.0.4",
     author = 'Elaine T. Hale',
     author_email = 'elaine.hale@nrel.gov',
     packages = ['gdxpds', 'gdxpds.test'],
