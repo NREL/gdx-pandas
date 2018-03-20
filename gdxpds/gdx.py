@@ -114,8 +114,13 @@ def convert_np_to_gdx_svs(df,num_dims,gdxf):
     except:
         logger.warn("Unable to deepcopy:\n{}".format(df))
         tmp = copy.copy(df)
-    values = tmp.iloc[:,num_dims:].fillna(gdxf.np_to_gdx_svs[1]).applymap(to_gdx_svs)
-    tmp = (tmp.iloc[:,:num_dims]).merge(values,left_index=True,right_index=True)
+    try:
+        values = tmp.iloc[:,num_dims:].fillna(gdxf.np_to_gdx_svs[1]).applymap(to_gdx_svs)
+        tmp = (tmp.iloc[:,:num_dims]).merge(values,left_index=True,right_index=True)
+    except:
+        logger.error("Unable to convert numpy special values to GDX special values." + \
+            "num_dims: {}, dataframe:\n{}".format(num_dims,df))
+        raise
     return tmp
 
 def gdx_isnan(val,gdxf):
@@ -322,7 +327,11 @@ class GdxFile(MutableSequence, NeedsGamsDir):
         self.universal_set.write()
 
         for i, symbol in enumerate(self,start=1):
-            symbol.write(index=i)
+            try:
+                symbol.write(index=i)
+            except:
+                logger.error("Unable to write {} to {}".format(symbol,filename))
+                raise
 
         gdxcc.gdxClose(self.H)
 
