@@ -37,6 +37,11 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 [/LICENSE]
+
+Backend functionality for reading and writing GDX files. 
+The GdxFile and GdxSymbol classes are full-featured interfaces
+for going between the GDX format and pandas DataFrames,
+including translation between GDX and numpy special values. 
 '''
 
 from __future__ import absolute_import, print_function
@@ -60,6 +65,7 @@ from six import string_types
 # try to import gdx loading utility
 HAVE_GDX2PY = False
 try:
+    # special Windows dll for optimized loading of GAMS parameters
     import gdx2py
     HAVE_GDX2PY = True
 except ImportError: pass
@@ -81,39 +87,113 @@ logger = logging.getLogger(__name__)
 NUMPY_SPECIAL_VALUES = [None, np.nan, np.inf, -np.inf, np.finfo(float).eps]
 
 def convert_gdx_to_np_svs(df,num_dims,gdxf):
+    """
+    Converts GDX special values to the corresponding numpy versions.
+
+    Parmeters
+    ---------
+    df : pandas.DataFrame
+        a GdxSymbol DataFrame as it was read directly from GDX
+    num_dims : int
+        the number of columns in df that list the dimension values for which the
+        symbol value is non-zero / non-default
+    gdxf : GdxFile
+        the GdxFile containing the symbol. Used to provide the gdx_to_np_svs map.
+
+    Returns
+    -------
+    pandas.DataFrame
+        copy of df for which all GDX special values have been converted to 
+        their numpy equivalents
+    """
+
+    # single-value mapping function
     def to_np_svs(value):
         if value in gdxf.gdx_to_np_svs:
             return gdxf.gdx_to_np_svs[value]
         return value
+
+    # create clean copy of df
     try:
         tmp = copy.deepcopy(df)
     except:
         logger.warn("Unable to deepcopy:\n{}".format(df))
         tmp = copy.copy(df)
+    
+    # apply the map to the value columns and merge with the dimensional information
     tmp = (tmp.iloc[:,:num_dims]).merge(tmp.iloc[:,num_dims:].applymap(to_np_svs), 
                                         left_index=True,right_index=True)
     return tmp
 
 def is_np_eps(val):
+    """
+    Parameters
+    ----------
+    val : numeric
+        value to test
+
+    Returns
+    -------
+    bool
+        True if val is equal to eps (np.finfo(float).eps), False otherwise
+    """
     return np.abs(val - NUMPY_SPECIAL_VALUES[-1]) < NUMPY_SPECIAL_VALUES[-1]
 
 def is_np_sv(val):
+    """
+    Parameters
+    ----------
+    val : numeric
+        value to test
+
+    Returns
+    -------
+    bool
+        True if val is NaN, eps, or is in NUMPY_SPECIAL_VALUES; False otherwise
+    """
     return np.isnan(val) or (val in NUMPY_SPECIAL_VALUES) or is_np_eps(val)
 
 def convert_np_to_gdx_svs(df,num_dims,gdxf):
+    """
+    Converts numpy special values to the corresponding GDX versions.
+
+    Parmeters
+    ---------
+    df : pandas.DataFrame
+        a GdxSymbol DataFrame in pandas/numpy form
+    num_dims : int
+        the number of columns in df that list the dimension values for which the
+        symbol value is non-zero / non-default
+    gdxf : GdxFile
+        the GdxFile containing the symbol. Used to provide the np_to_gdx_svs map.
+
+    Returns
+    -------
+    pandas.DataFrame
+        copy of df for which all numpy special values have been converted to 
+        their GDX equivalents
+    """
+
+    # converts a single value; NANs are assumed already handled
     def to_gdx_svs(value):
-        # NANs already handled
+        # find numpy special values by direct comparison
         for i, npsv in enumerate(NUMPY_SPECIAL_VALUES):
             if value == npsv:
                 return gdxf.np_to_gdx_svs[i]
+        # eps values are not always caught by ==, use is_np_eps which applies 
+        # a tolerance
         if is_np_eps(value):
             return gdxf.np_to_gdx_svs[4]
         return value
+
+    # get a clean copy of df
     try:
         tmp = copy.deepcopy(df)
     except:
         logger.warn("Unable to deepcopy:\n{}".format(df))
         tmp = copy.copy(df)
+  
+    # fillna and apply map to value columns, then merge with dimensional columns
     try:
         values = tmp.iloc[:,num_dims:].fillna(gdxf.np_to_gdx_svs[1]).applymap(to_gdx_svs)
         tmp = (tmp.iloc[:,:num_dims]).merge(values,left_index=True,right_index=True)
@@ -125,26 +205,64 @@ def convert_np_to_gdx_svs(df,num_dims,gdxf):
 
 def gdx_isnan(val,gdxf):
     """
-    Returns true if val is a GDX encoded special value that maps to None or 
-    np.nan.
+    Utility function for equating the GDX special values that map to None or NaN
+    (which are indistinguishable in pandas).
+
+    Parameters
+    ----------
+    val : numeric
+        value to test
+    gdxf : GdxFile
+        GDX file containing the value. Provides np_to_gdx_svs map.
+
+    Returns
+    -------
+    bool
+        True if val is a GDX encoded special value that maps to None or numpy.nan;
+        False otherwise
     """
     return val in [gdxf.np_to_gdx_svs[0],gdxf.np_to_gdx_svs[1]]
 
 def gdx_val_equal(val1,val2,gdxf):
     """
-    Returns true if val1 and val2 are equal in the sense of == or they are 
-    equivalent special values. Any special values are assumed to be encoded for 
-    GDX format, that is, in gdxf.gdx_to_np_svs.keys(). The values that map to 
-    None and np.nan are assumed to be equal because pandas cannot be relied upon 
-    to make the distinction.
+    Utility function used to test special value conversions.
+
+    Parameters
+    ----------
+    val1 : float or GDX special value
+        first value to compare
+    val2 : float or GDX special value
+        second value to compare
+    gdxf : GdxFile
+        GDX file containing val1 and val2
+
+    Returns
+    -------
+    bool
+        True if val1 and val2 are equal in the sense of == or they are 
+        equivalent GDX-format special values. The values that map to None 
+        and np.nan are assumed to be equal because pandas cannot be relied 
+        upon to make the distinction.
     """
     if gdx_isnan(val1,gdxf) and gdx_isnan(val2,gdxf):
         return True
     return val1 == val2
 
 def replace_df_column(df,colname,new_col):
-    # This weirdness with replacing columns is a workaround for 
-    # pandas crashing on multiple columns called '*'.
+    """
+    Utility function that replaces df[colname] with new_col. Special 
+    care is taken for the case when df has multiple columns named '*',
+    since this causes pandas to crash.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        edited in place by this function
+    colname : str
+        name of column in df whose data is to be replaced
+    new_col : vector, list, pandas.Series
+        new column data for df[colname]
+    """
     cols = df.columns
     tmpcols = [col if col != '*' else 'aaa' for col in cols ]
     df.columns = tmpcols
@@ -159,9 +277,17 @@ class GdxError(Error):
         Pulls information from gdxcc about the last encountered error and appends
         it to msg.
 
-        Positional Arguments:
-            - H (pointer or None) - SWIG binding pointer to a GDX object
-            - msg (str) - gdxpds error message
+        Parameters
+        ----------
+        H : pointer or None
+            SWIG binding pointer to a GDX object
+        msg : str
+            gdxpds error message
+
+        Attributes
+        ----------
+        msg : str
+            msg that is passed in with a gdxErrorStr appended
         """
         self.msg = msg + "."
         if H:
@@ -286,7 +412,7 @@ class GdxFile(MutableSequence, NeedsGamsDir):
         # ... for the file
         ret, self._version, self._producer = gdxcc.gdxFileVersion(self.H)
         if ret != 1: 
-            raise GDXError(self.H,"Could not get file version")
+            raise GdxError(self.H,"Could not get file version")
         ret, symbol_count, element_count = gdxcc.gdxSystemInfo(self.H)
         logger.info("Opening '{}' with {} symbols and {} elements with lazy_load = {}.".format(filename,symbol_count,element_count,self.lazy_load))
         # ... for the symbols
@@ -655,25 +781,29 @@ class GdxSymbol(object):
 
     @dataframe.setter
     def dataframe(self, data):
-        if isinstance(data, pds.DataFrame):
-            # Fix up dimensions
-            num_dims = len(data.columns) - len(self.value_cols)
-            dim_cols = list(data.columns[:num_dims])
-            logger.debug("When setting dataframe for {}, found {} dimensions with columns labeled {}.".format(self.name,num_dims,dim_cols))
-            replace_dims = True
-            for col in dim_cols:
-                if not isinstance(col,string_types):
-                    replace_dims = False
-                    logger.info("Not using dataframe column names to set dimensions because {} is not a string.".format(col))
-                    break
-            if replace_dims:
-                self.dims = dim_cols
-            if num_dims != self.num_dims:
-                self.dims = num_dims
-            self._dataframe = copy.deepcopy(data)
-            self._dataframe.columns = self.dims + self.value_col_names
-        else:
-            self._dataframe = pds.DataFrame(data,columns=self.dims + self.value_col_names)
+        try:
+            if isinstance(data, pds.DataFrame):
+                # Fix up dimensions
+                num_dims = len(data.columns) - len(self.value_cols)
+                dim_cols = list(data.columns[:num_dims])
+                logger.debug("When setting dataframe for {}, found {} dimensions with columns labeled {}.".format(self.name,num_dims,dim_cols))
+                replace_dims = True
+                for col in dim_cols:
+                    if not isinstance(col,string_types):
+                        replace_dims = False
+                        logger.info("Not using dataframe column names to set dimensions because {} is not a string.".format(col))
+                        break
+                if replace_dims:
+                    self.dims = dim_cols
+                if num_dims != self.num_dims:
+                    self.dims = num_dims
+                self._dataframe = copy.deepcopy(data)
+                self._dataframe.columns = self.dims + self.value_col_names
+            else:
+                self._dataframe = pds.DataFrame(data,columns=self.dims + self.value_col_names)
+        except Exception:
+            logger.error("Unable to set dataframe for {} to\n{}\n\nIn process dataframe: {}".format(self,data,self._dataframe))
+            raise
 
         if self.data_type == GamsDataType.Set:
             logger.debug(self._dataframe.head())
@@ -700,17 +830,6 @@ class GdxSymbol(object):
         self.dataframe['Value'] = True.
         """
         assert self.data_type == GamsDataType.Set
-
-        warned_values = []
-
-        def fix_individual_value(val):
-            try:
-                return c_bool(val)
-            except:
-                if val not in warned_values:
-                    logger.warn("Replacing {} with {}".format(val,c_bool(True)))
-                    warned_values.append(val)
-                return c_bool(True)
 
         colname = self._dataframe.columns[-1]
         assert colname == self.value_col_names[0], "Unexpected final column in Set dataframe"
@@ -811,6 +930,8 @@ class GdxSymbol(object):
             else:
                 logger.info("Not writing domain information because symbol index is unknown.")
         values = gdxcc.doubleArray(gdxcc.GMS_VAL_MAX)
+        # make sure index is clean -- needed for merging in convert_np_to_gdx_svs
+        self.dataframe = self.dataframe.reset_index(drop=True)
         for row in convert_np_to_gdx_svs(self.dataframe,self.num_dims,self.file).itertuples(index=False,name=None):
             dims = [str(x) for x in row[:self.num_dims]]
             vals = row[self.num_dims:]
