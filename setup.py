@@ -1,9 +1,17 @@
 
 from distutils.core import setup
+import os
+
+here = os.path.abspath(os.path.dirname(__file__))
+
+with open(os.path.join(here, 'gdxpds', '_version.py'), encoding='utf-8') as f:
+    version = f.read()
+
+version = version.split()[2].strip('"').strip("'")
 
 setup(
     name = 'gdxpds',
-    version = "1.0.4",
+    version = version,
     author = 'Elaine T. Hale',
     author_email = 'elaine.hale@nrel.gov',
     packages = ['gdxpds', 'gdxpds.test'],

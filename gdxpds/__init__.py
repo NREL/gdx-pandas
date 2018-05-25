@@ -37,13 +37,12 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 [/LICENSE]
-
-
-
 '''
 
+__author__ = "Elaine T. Hale"
+__email__ = "elaine.hale@nrel.gov"
 
-__version__ = '1.0.4'
+from ._version import __version__
 
 import logging
 import os
@@ -54,6 +53,15 @@ logger = logging.getLogger(__name__)
 from gdxpds.tools import Error
 
 def load_gdxcc(gams_dir=None):
+    """
+    Method to initialize GAMS, especially to load required libraries that can 
+    sometimes conflict with other packages.
+
+    Parameters
+    ----------
+    gams_dir : None or str
+        if not None, directory containing the GAMS executable
+    """
     if 'pandas' in sys.modules:
         logger.warn("Especially on Linux, gdxpds should be imported before " + \
                     "pandas to avoid a library conflict. Also make sure your " + \
@@ -79,22 +87,5 @@ except:
                 "before importing pandas to avoid a library conflict.")
 
 
-from gdxpds.read_gdx import to_dataframes
-from gdxpds.read_gdx import list_symbols
-from gdxpds.read_gdx import to_dataframe
+from gdxpds.read_gdx import to_dataframes, list_symbols, to_dataframe
 from gdxpds.write_gdx import to_gdx
-
-HAVE_PSUTIL = False
-try:
-    import psutil
-    HAVE_PSUTIL = True
-except ImportError:
-    logger.info("Optional package psutil not found. pip install psutil if " + \
-                "you would like to monitor memory usage.")
-
-def memory_use_str(pid=None):
-    if HAVE_PSUTIL:
-        pid = os.getpid() if pid is None else pid
-        rss = psutil.Process(pid).memory_info().rss
-        return "Process {} using {:.2f} GB of memory.".format(pid, float(rss) / (1024.0**3))
-    return "Feature unavailable."
