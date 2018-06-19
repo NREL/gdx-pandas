@@ -677,14 +677,18 @@ class GdxSymbol(object):
     @variable_type.setter
     def variable_type(self,value):
         if self.data_type == GamsDataType.Variable:
-            try:
-                self._variable_type = GamsVariableType(value)
-            except:
-                if isinstance(self._variable_type,GamsVariableType):
-                    logger.debug("Ignoring invalid GamsVariableType request.")
-                    return
-                logger.debug("Setting variable_type to {}.".format(GamsVariableType.Free))
+            if value is None:
+                # default to Free
                 self._variable_type = GamsVariableType.Free
+            else:
+                try:
+                    self._variable_type = GamsVariableType(value)
+                except:
+                    if isinstance(self._variable_type,GamsVariableType):
+                        logger.warn("Ignoring invalid GamsVariableType request '{}'.".format(value))
+                        return
+                    logger.debug("Setting variable_type to {}.".format(GamsVariableType.Free))
+                    self._variable_type = GamsVariableType.Free
             return
         assert self.data_type != GamsDataType.Variable
         if value is not None:
@@ -698,14 +702,18 @@ class GdxSymbol(object):
     @equation_type.setter
     def equation_type(self,value):
         if self.data_type == GamsDataType.Equation:
-            try:
-                self._equation_type = GamsEquationType(value)
-            except:
-                if isinstance(self._equation_type,GamsEquationType):
-                    logger.debug("Ignoring invalid GamsEquationType request.")
-                    return
-                logger.debug("Setting equation_type to {}.".format(GamsEquationType.Equality))
+            if value is None:
+                # default to Equality
                 self._equation_type = GamsEquationType.Equality
+            else:
+                try:
+                    self._equation_type = GamsEquationType(value)
+                except:
+                    if isinstance(self._equation_type,GamsEquationType):
+                        logger.warn("Ignoring invalid GamsEquationType request '{}'.".format(value))
+                        return
+                    logger.debug("Setting equation_type to {}.".format(GamsEquationType.Equality))
+                    self._equation_type = GamsEquationType.Equality
             return
         assert self.data_type != GamsDataType.Equation
         if value is not None:
@@ -786,7 +794,7 @@ class GdxSymbol(object):
                 # Fix up dimensions
                 num_dims = len(data.columns) - len(self.value_cols)
                 dim_cols = list(data.columns[:num_dims])
-                logger.debug("When setting dataframe for {}, found {} dimensions with columns labeled {}.".format(self.name,num_dims,dim_cols))
+                #logger.debug("When setting dataframe for {}, found {} dimensions with columns labeled {}.".format(self.name,num_dims,dim_cols))
                 replace_dims = True
                 for col in dim_cols:
                     if not isinstance(col,string_types):

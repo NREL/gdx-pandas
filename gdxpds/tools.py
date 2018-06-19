@@ -64,6 +64,8 @@ class GamsDirFinder(object):
     to clean up your input. (Even on Windows, the GAMS path must use '/' rather than 
     '\'.)
     """
+    gams_dir_cache = None
+
     def __init__(self,gams_dir=None):
         self.gams_dir = gams_dir
         
@@ -137,6 +139,11 @@ class GamsDirFinder(object):
                 
         if ret is not None:
             ret = self.__clean_gams_dir(ret)
+            GamsDirFinder.gams_dir_cache = ret
+
+        if ret is None:
+            logger.debug("Did not find GAMS directory. Using cached value {}.".format(self.gams_dir_cache))
+            ret = GamsDirFinder.gams_dir_cache
             
         return ret
         

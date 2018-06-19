@@ -58,6 +58,14 @@ class Translator(object):
         self.dataframes = dataframes
         self.__gams_dir=None
 
+    def __exit__(self, *args):
+        if self.__gdx is not None:
+            self.__gdx.__exit__(self, *args)
+
+    def __del__(self):
+        if self.__gdx is not None:
+            self.__gdx.__del__()
+
     @property
     def dataframes(self):
         return self.__dataframes
