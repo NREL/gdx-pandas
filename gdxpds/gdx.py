@@ -414,7 +414,7 @@ class GdxFile(MutableSequence, NeedsGamsDir):
         if ret != 1: 
             raise GdxError(self.H,"Could not get file version")
         ret, symbol_count, element_count = gdxcc.gdxSystemInfo(self.H)
-        logger.info("Opening '{}' with {} symbols and {} elements with lazy_load = {}.".format(filename,symbol_count,element_count,self.lazy_load))
+        logger.debug("Opening '{}' with {} symbols and {} elements with lazy_load = {}.".format(filename,symbol_count,element_count,self.lazy_load))
         # ... for the symbols
         ret, name, dims, data_type = gdxcc.gdxSymbolInfo(self.H,0)
         if ret != 1:
