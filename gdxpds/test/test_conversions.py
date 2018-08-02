@@ -120,7 +120,7 @@ def test_csv_roundtrip(manage_rundir):
     num_records = {}
     total_records = 0
     for csv in csvs:
-        df = pds.DataFrame.from_csv(csv, index_col = None)
+        df = pds.read_csv(csv, index_col = None)
         num_records[os.path.splitext(os.path.basename(csv))[0]] = len(df.index)
         total_records += len(df.index)
     assert total_records > 0
@@ -145,7 +145,7 @@ def test_csv_roundtrip(manage_rundir):
     for csv_name, records in num_records.items():
         csv_file = os.path.join(out_dir, csv_name + '.csv')
         assert os.path.isfile(csv_file)
-        df = pds.DataFrame.from_csv(csv_file, index_col = None)
+        df = pds.read_csv(csv_file, index_col = None)
         assert len(df.index) == records
 
     cnt = 0
