@@ -54,8 +54,9 @@ import pandas as pds
 logger = logging.getLogger(__name__)
 
 class Translator(object):
-    def __init__(self,dataframes,gams_dir=None):
+    def __init__(self,dataframes,gams_dir=None,data_types=None):
         self.dataframes = dataframes
+        self.data_types = data_types
         self.__gams_dir=None
 
     def __exit__(self, *args):
@@ -103,8 +104,11 @@ class Translator(object):
         self.gdx.write(path)
 
     def __add_symbol_to_gdx(self, symbol_name, df):
-        data_type = self.__infer_data_type(symbol_name,df)
-        logger.info("Inferred data type of {} to be {}.".format(symbol_name,data_type.name))
+        if self.data_types is not None:
+            data_type = self.data_types[symbol_name]
+        else:
+            data_type = self.__infer_data_type(symbol_name,df)
+            logger.info("Inferred data type of {} to be {}.".format(symbol_name,data_type.name))
 
         self.__gdx.append(GdxSymbol(symbol_name,data_type))
         self.__gdx[symbol_name].dataframe = df
@@ -138,7 +142,7 @@ class Translator(object):
         return GamsDataType.Set
 
 
-def to_gdx(dataframes,path=None,gams_dir=None):
+def to_gdx(dataframes,path=None,gams_dir=None,data_types=None):
     """
     Parameters:
       - dataframes (map of pandas.DataFrame): symbol name to pandas.DataFrame
@@ -148,10 +152,12 @@ def to_gdx(dataframes,path=None,gams_dir=None):
         insensitive) 'value'.
       - path (optional string): if provided, the gdx file will be written
         to this path
+      - data_types: a dictionary same keys with dataframes dictionary (i.e. names of the symbols) and
+        values as data types, which are members of GamsDataType enum.
 
     Returns a gdxdict.gdxdict, which is defined in [py-gdx](https://github.com/geoffleyland/py-gdx).
     """
-    translator = Translator(dataframes,gams_dir=gams_dir)
+    translator = Translator(dataframes,gams_dir=gams_dir,data_types=data_types)
     if path is not None:
         translator.save_gdx(path)
     return translator.gdx
