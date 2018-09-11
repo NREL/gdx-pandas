@@ -174,7 +174,7 @@ def test_from_scratch_sets(manage_rundir):
             assert sym.num_records == 10
             assert isinstance(sym.dataframe[sym.dataframe.columns[-1]].values[0],c_bool)
 
-test_numpy_eps():
+def test_numpy_eps():
     assert(gdxpds.gdx.is_np_eps(np.finfo(float).eps))
     assert(not gdxpds.gdx.is_np_eps(float(0.0)))
     assert(not gdxpds.gdx.is_np_eps(2.0 * np.finfo(float).eps))
