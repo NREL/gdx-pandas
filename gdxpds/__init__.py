@@ -63,9 +63,9 @@ def load_gdxcc(gams_dir=None):
         if not None, directory containing the GAMS executable
     """
     if 'pandas' in sys.modules:
-        logger.warn("Especially on Linux, gdxpds should be imported before " + \
-                    "pandas to avoid a library conflict. Also make sure your " + \
-                    "GAMS directory is listed in LD_LIBRARY_PATH.")
+        logger.warning("Especially on Linux, gdxpds should be imported before " + \
+                       "pandas to avoid a library conflict. Also make sure your " + \
+                       "GAMS directory is listed in LD_LIBRARY_PATH.")
     import gdxcc
     from gdxpds.tools import GamsDirFinder
     finder = GamsDirFinder(gams_dir=gams_dir)
@@ -82,9 +82,9 @@ except:
     try:
         gams_dir = GamsDirFinder().gams_dir
     except: pass
-    logger.warn("Unable to load gdxcc with default GAMS directory '{}'. ".format(gams_dir) + \
-                "You may need to explicitly call gdxpds.load_gdxcc(gams_dir) " + \
-                "before importing pandas to avoid a library conflict.")
+    logger.warning("Unable to load gdxcc with default GAMS directory '{}'. ".format(gams_dir) + \
+                   "You may need to explicitly call gdxpds.load_gdxcc(gams_dir) " + \
+                   "before importing pandas to avoid a library conflict.")
 
 
 from gdxpds.read_gdx import to_dataframes, list_symbols, to_dataframe

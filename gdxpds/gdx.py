@@ -117,7 +117,7 @@ def convert_gdx_to_np_svs(df,num_dims,gdxf):
     try:
         tmp = copy.deepcopy(df)
     except:
-        logger.warn("Unable to deepcopy:\n{}".format(df))
+        logger.warning("Unable to deepcopy:\n{}".format(df))
         tmp = copy.copy(df)
     
     # apply the map to the value columns and merge with the dimensional information
@@ -190,7 +190,7 @@ def convert_np_to_gdx_svs(df,num_dims,gdxf):
     try:
         tmp = copy.deepcopy(df)
     except:
-        logger.warn("Unable to deepcopy:\n{}".format(df))
+        logger.warning("Unable to deepcopy:\n{}".format(df))
         tmp = copy.copy(df)
   
     # fillna and apply map to value columns, then merge with dimensional columns
@@ -685,14 +685,14 @@ class GdxSymbol(object):
                     self._variable_type = GamsVariableType(value)
                 except:
                     if isinstance(self._variable_type,GamsVariableType):
-                        logger.warn("Ignoring invalid GamsVariableType request '{}'.".format(value))
+                        logger.warning("Ignoring invalid GamsVariableType request '{}'.".format(value))
                         return
                     logger.debug("Setting variable_type to {}.".format(GamsVariableType.Free))
                     self._variable_type = GamsVariableType.Free
             return
         assert self.data_type != GamsDataType.Variable
         if value is not None:
-            logger.warn("GdxSymbol is not a Variable, so setting variable_type to None")
+            logger.warning("GdxSymbol is not a Variable, so setting variable_type to None")
         self._variable_type = None
 
     @property
@@ -710,14 +710,14 @@ class GdxSymbol(object):
                     self._equation_type = GamsEquationType(value)
                 except:
                     if isinstance(self._equation_type,GamsEquationType):
-                        logger.warn("Ignoring invalid GamsEquationType request '{}'.".format(value))
+                        logger.warning("Ignoring invalid GamsEquationType request '{}'.".format(value))
                         return
                     logger.debug("Setting equation_type to {}.".format(GamsEquationType.Equality))
                     self._equation_type = GamsEquationType.Equality
             return
         assert self.data_type != GamsDataType.Equation
         if value is not None:
-            logger.warn("GdxSymbol is not an Equation, so setting equation_type to None")
+            logger.warning("GdxSymbol is not an Equation, so setting equation_type to None")
         self._equation_type = None
 
     @property
@@ -761,7 +761,7 @@ class GdxSymbol(object):
     def dims(self, value):
         if self.loaded and self.num_records > 0:
             if not isinstance(value,list) or len(value) != self.num_dims:
-                logger.warn("Cannot set dims to {}, because dataframe with dims {} already contains data.".format(value,self.dims))
+                logger.warning("Cannot set dims to {}, because dataframe with dims {} already contains data.".format(value,self.dims))
         if isinstance(value,int):
             self._dims = ['*'] * value
             self._init_dataframe()
@@ -772,7 +772,7 @@ class GdxSymbol(object):
             if not isinstance(dim,string_types):
                 raise Error('Individual dimensions must be denoted by strings. Was passed {} as element of {}.'.format(dim, value))
         if self.num_dims > 0 and self.num_dims != len(value):
-            logger.warn("{}'s number of dimensions is changing from {} to {}.".format(self.name,self.num_dims,len(value)))
+            logger.warning("{}'s number of dimensions is changing from {} to {}.".format(self.name,self.num_dims,len(value)))
         self._dims = value
         if self.loaded and self.num_records > 0:
             self._dataframe.columns = self.dims + self.value_col_names
