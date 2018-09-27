@@ -582,11 +582,42 @@ class GamsValueType(Enum):
     Upper = gdxcc.GMS_VAL_UPPER       # .ub
     Scale = gdxcc.GMS_VAL_SCALE       # .scale
 
+    @classmethod
+    def _missing_(cls, value):
+        if isinstance(value,str):
+            for value_type in cls:
+                if value_type.name == value:
+                    return value_type
+            if value == 'Value':
+                return GamsValueType(GamsValueType.Level)
+        super()._missing_(value)
+
 
 GAMS_VALUE_COLS_MAP = defaultdict(lambda : [('Value',GamsValueType.Level.value)])
 GAMS_VALUE_COLS_MAP[GamsDataType.Variable] = [(value_type.name, value_type.value) for value_type in GamsValueType]
 GAMS_VALUE_COLS_MAP[GamsDataType.Equation] = GAMS_VALUE_COLS_MAP[GamsDataType.Variable]
 
+
+GAMS_VALUE_DEFAULTS = {
+    GamsValueType.Level: 0.0,
+    GamsValueType.Marginal: 0.0,
+    GamsValueType.Lower: -np.inf,
+    GamsValueType.Upper: np.inf,
+    GamsValueType.Scale: 1.0
+}
+
+GAMS_VARIABLE_DEFAULT_LOWER_UPPER_BOUNDS = {
+    GamsVariableType.Unknown: (-np.inf,np.inf),
+    GamsVariableType.Binary: (0.0,1.0),
+    GamsVariableType.Integer: (0.0,np.inf),
+    GamsVariableType.Positive: (0.0,np.inf),
+    GamsVariableType.Negative: (-np.inf,0.0),
+    GamsVariableType.Free : (-np.inf,np.inf),
+    GamsVariableType.SOS1: (0.0,np.inf),
+    GamsVariableType.SOS2: (0.0,np.inf),
+    GamsVariableType.Semicont: (1.0,np.inf),
+    GamsVariableType.Semiint: (1.0,np.inf)
+}
 
 class GdxSymbol(object): 
     def __init__(self,name,data_type,dims=0,file=None,index=None,
@@ -731,7 +762,25 @@ class GdxSymbol(object):
 
     @property
     def value_col_names(self):
-        return [col_name for col_name, col_ind in self.value_cols]            
+        return [col_name for col_name, col_ind in self.value_cols]    
+
+    def get_value_col_default(self,value_col_name):
+        if not value_col_name in self.value_col_names:
+            raise Error("{} is not one of the value columns for this GdxSymbol, which is a {}".format(value_col_name,self.data_type))
+        value_col = GamsValueType(value_col_name)
+        if self.data_type == GamsDataType.Set:
+            assert value_col == GamsValueType.Level
+            return True
+        if (self.data_type == GamsDataType.Variable) and (
+               (value_col == GamsValueType.Lower) or 
+               (value_col == GamsValueType.Upper)):
+            lb_default, ub_default = GAMS_VARIABLE_DEFAULT_LOWER_UPPER_BOUNDS[self.variable_type]
+            if value_col == GamsValueType.Lower:
+                return lb_default
+            else:
+                assert value_col == GamsValueType.Upper
+                return ub_default
+        return GAMS_VALUE_DEFAULTS[value_col] 
 
     @property
     def file(self):

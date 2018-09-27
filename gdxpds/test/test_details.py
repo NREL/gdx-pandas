@@ -40,6 +40,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '''
 
 from ctypes import c_bool
+import copy
 import logging
 import os
 import subprocess as subp
@@ -178,3 +179,60 @@ def test_numpy_eps():
     assert(gdxpds.gdx.is_np_eps(np.finfo(float).eps))
     assert(not gdxpds.gdx.is_np_eps(float(0.0)))
     assert(not gdxpds.gdx.is_np_eps(2.0 * np.finfo(float).eps))
+
+def test_unnamed_dimensions(manage_rundir):
+    outdir = os.path.join(run_dir,'unnamed_dimensions')
+    if not os.path.exists(outdir):
+        os.mkdir(outdir)
+    # create a gdx file with all symbol types and 4 dimensions named '*'
+    cols = ['*'] * 4
+    some_entries = pds.DataFrame([['tech_1','year_2','low','h1'],
+                                  ['tech_1','year_2','low','h2'],
+                                  ['tech_1','year_2','low','h3'],
+                                  ['tech_1','year_2','low','h4']],
+                                 columns = cols)
+    with gdxpds.gdx.GdxFile() as gdx:
+        # Set
+        gdx.append(gdxpds.gdx.GdxSymbol('star_set',gdxpds.gdx.GamsDataType.Set,dims=4))
+        gdx[-1].dataframe[cols] = some_entries
+        # Parmeter
+        a_param = copy.deepcopy(some_entries)
+        a_param['Value'] = [1.0,2.0,3.0,4.0]
+        gdx.append(gdxpds.gdx.GdxSymbol('star_param',gdxpds.gdx.GamsDataType.Parameter,dims=4))
+        gdx[-1].dataframe = a_param
+        # Test changing the parameter data
+        a_param.iloc[:,0] = 'tech_2'
+        gdx[-1].dataframe = pds.concat([gdx[-1].dataframe,a_param])
+        # Variable
+        gdx.append(gdxpds.gdx.GdxSymbol('star_var',gdxpds.gdx.GamsDataType.Variable,dims=4,
+                   variable_type=gdxpds.gdx.GamsVariableType.Positive))
+        a_var = copy.deepcopy(some_entries)
+        for value_col_name in gdx[-1].value_col_names:
+            a_var[value_col_name] = gdx[-1].get_value_col_default(value_col_name)
+        gdx[-1].dataframe = a_var
+        # Equation
+        gdx.append(gdxpds.gdx.GdxSymbol('star_eqn',gdxpds.gdx.GamsDataType.Equation,dims=4,
+                   equation_type=gdxpds.gdx.GamsEquationType.GreaterThan))
+        an_eqn = copy.deepcopy(some_entries)
+        for value_col_name in gdx[-1].value_col_names:
+            an_eqn[value_col_name] = gdx[-1].get_value_col_default(value_col_name)
+        gdx[-1].dataframe = an_eqn
+        gdx.write(os.path.join(outdir,'star_symbols.gdx'))
+    with gdxpds.gdx.GdxFile(lazy_load=False) as gdx:
+        gdx.read(os.path.join(outdir,'star_symbols.gdx'))
+        assert gdx['star_set'].num_dims == 4
+        assert gdx['star_set'].data_type == gdxpds.gdx.GamsDataType.Set
+        assert gdx['star_set'].variable_type is None
+        assert gdx['star_set'].equation_type is None
+        assert gdx['star_param'].num_dims == 4
+        assert gdx['star_param'].data_type == gdxpds.gdx.GamsDataType.Parameter
+        assert gdx['star_param'].variable_type is None
+        assert gdx['star_param'].equation_type is None
+        assert gdx['star_var'].num_dims == 4
+        assert gdx['star_var'].data_type == gdxpds.gdx.GamsDataType.Variable
+        assert gdx['star_var'].variable_type == gdxpds.gdx.GamsVariableType.Positive
+        assert gdx['star_var'].equation_type is None
+        assert gdx['star_eqn'].num_dims == 4
+        assert gdx['star_eqn'].data_type == gdxpds.gdx.GamsDataType.Equation
+        assert gdx['star_eqn'].variable_type is None
+        assert gdx['star_eqn'].equation_type == gdxpds.gdx.GamsEquationType.GreaterThan
