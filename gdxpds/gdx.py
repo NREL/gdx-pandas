@@ -628,8 +628,8 @@ class GdxSymbol(object):
         self._data_type = GamsDataType(data_type)
         self._variable_type = None; self.variable_type = variable_type
         self._equation_type = None; self.equation_type = equation_type
-        self._dataframe = None
-        self._dims = []; self.dims = dims       
+        self._dataframe = None; self._dims = None
+        self.dims = dims       
         assert self._dataframe is not None
         self._file = file
         self._index = index        
@@ -770,7 +770,7 @@ class GdxSymbol(object):
         value_col = GamsValueType(value_col_name)
         if self.data_type == GamsDataType.Set:
             assert value_col == GamsValueType.Level
-            return True
+            return c_bool(True)
         if (self.data_type == GamsDataType.Variable) and (
                (value_col == GamsValueType.Lower) or 
                (value_col == GamsValueType.Upper)):
@@ -808,10 +808,10 @@ class GdxSymbol(object):
 
     @dims.setter
     def dims(self, value):
-        if self.loaded and self.num_records > 0:
+        if (self._dims is not None) and (self.loaded and ((self.num_dims > 0) or (self.num_records > 0))):
             if not isinstance(value,list) or len(value) != self.num_dims:
-                logger.warning("Cannot set dims to {}, because dataframe with dims {} already contains data.".format(value,self.dims))
-        if isinstance(value,int):
+                raise Error("Cannot set dims to {}, because the number of dimensions has already been set to {}.".format(value,self.num_dims))
+        if isinstance(value, int):
             self._dims = ['*'] * value
             self._init_dataframe()
             return
@@ -820,8 +820,7 @@ class GdxSymbol(object):
         for dim in value:
             if not isinstance(dim,string_types):
                 raise Error('Individual dimensions must be denoted by strings. Was passed {} as element of {}.'.format(dim, value))
-        if self.num_dims > 0 and self.num_dims != len(value):
-            logger.warning("{}'s number of dimensions is changing from {} to {}.".format(self.name,self.num_dims,len(value)))
+        assert (self._dims is None) or (self.loaded and (self.num_dims == 0) and (self.num_records == 0)) or (len(value) == self.num_dims)
         self._dims = value
         if self.loaded and self.num_records > 0:
             self._dataframe.columns = self.dims + self.value_col_names
@@ -838,26 +837,59 @@ class GdxSymbol(object):
 
     @dataframe.setter
     def dataframe(self, data):
-        try:
+        try:        
+            # get data in common format and start dealing with dimensions    
             if isinstance(data, pds.DataFrame):
-                # Fix up dimensions
-                num_dims = len(data.columns) - len(self.value_cols)
-                dim_cols = list(data.columns[:num_dims])
-                #logger.debug("When setting dataframe for {}, found {} dimensions with columns labeled {}.".format(self.name,num_dims,dim_cols))
-                replace_dims = True
-                for col in dim_cols:
-                    if not isinstance(col,string_types):
-                        replace_dims = False
-                        logger.info("Not using dataframe column names to set dimensions because {} is not a string.".format(col))
-                        break
-                if replace_dims:
-                    self.dims = dim_cols
-                if num_dims != self.num_dims:
-                    self.dims = num_dims
-                self._dataframe = copy.deepcopy(data)
-                self._dataframe.columns = self.dims + self.value_col_names
+                df = copy.deepcopy(data)
+                has_col_names = True
             else:
-                self._dataframe = pds.DataFrame(data,columns=self.dims + self.value_col_names)
+                df = pds.DataFrame(data)
+                has_col_names = False
+                if df.empty:
+                    # clarify dimensionality, as needed for loading empty GdxSymbols
+                    df = pds.DataFrame(data,columns=self.dims + self.value_cols)
+            
+            # finish handling dimensions
+            n = len(df.columns)
+            if (self.num_dims > 0) or (self.num_records > 0):
+                if not ((n == self.num_dims) or (n == self.num_dims + len(self.value_cols))):
+                    raise Error("Cannot set dataframe to {} because the number ".format(df.head()) + \
+                        "of dimensions would change. This symbol has {} ".format(self.num_dims) + \
+                        "dimensions, currently represented by {}.".format(self.dims))
+                num_dims = self.num_dims
+            else:
+                # num_dims not explicitly established yet. in this case we must 
+                # assume value columns have been provided or dimensionality is 0
+                num_dims = max(n - len(self.value_cols),0)
+                if (num_dims == 0) and (n > 0):
+                    raise Error("Cannot set dataframe to {} because the number ".format(df.head()) + \
+                        "of dimensions cannot be established consistent with {}.".format(self))
+
+            replace_dims = True
+            if has_col_names:
+                dim_cols = list(df.columns)[:num_dims]
+            elif self.num_dims == num_dims:
+                dim_cols = self.dims
+                replace_dims = False
+            else:
+                dim_cols = ['*'] * num_dims            
+            for col in dim_cols:
+                if not isinstance(col,string_types):
+                    replace_dims = False
+                    logger.info("Not using dataframe column names to set dimensions because {} is not a string.".format(col))
+                    if num_dims != self.num_dims:
+                        self.dims = num_dims
+                    break
+            if replace_dims:
+                self.dims = dim_cols
+            # all done establishing dimensions
+            assert self.num_dims == num_dims
+
+            # finalize the dataframe
+            if n == self.num_dims:
+                self._append_default_values(df)
+            df.columns = self.dims + self.value_col_names
+            self._dataframe = df
         except Exception:
             logger.error("Unable to set dataframe for {} to\n{}\n\nIn process dataframe: {}".format(self,data,self._dataframe))
             raise
@@ -873,6 +905,12 @@ class GdxSymbol(object):
             colname = self._dataframe.columns[-1]
             replace_df_column(self._dataframe,colname,self._dataframe[colname].astype(c_bool))
         return
+
+    def _append_default_values(self,df):
+        assert len(df.columns) == self.num_dims
+        logger.debug("Applying default values to create valid dataframe for '{}'.".format(self.name))
+        for value_col_name in self.value_col_names:
+            df[value_col_name] = self.get_value_col_default(value_col_name)
 
     def _fixup_set_value(self):
         """
