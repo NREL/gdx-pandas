@@ -40,7 +40,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '''
 
 from collections import OrderedDict
-import copy
 import logging
 
 # gdxpds needs to be imported before pandas to try to avoid library conflict on 
@@ -94,7 +93,7 @@ class Translator(object):
             for symbol in self.__gdx:
                 if not symbol.loaded:
                     symbol.load()
-                self.__dataframes[symbol.name] = symbol.dataframe
+                self.__dataframes[symbol.name] = symbol.dataframe.copy()
         return self.__dataframes
 
     @property
@@ -107,7 +106,7 @@ class Translator(object):
         if not self.gdx[symbol_name].loaded:
             self.gdx[symbol_name].load()
         # This was returning { symbol_name: dataframe }, which seems intuitively off.
-        return self.gdx[symbol_name].dataframe
+        return self.gdx[symbol_name].dataframe.copy()
 
 def to_dataframes(gdx_file,gams_dir=None):
     """
