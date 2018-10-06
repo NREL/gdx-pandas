@@ -861,9 +861,12 @@ class GdxSymbol(object):
                 # num_dims not explicitly established yet. in this case we must 
                 # assume value columns have been provided or dimensionality is 0
                 num_dims = max(n - len(self.value_cols),0)
-                if (num_dims == 0) and (n > 0):
+                if (num_dims == 0) and (n < len(self.value_cols)):
                     raise Error("Cannot set dataframe to {} because the number ".format(df.head()) + \
                         "of dimensions cannot be established consistent with {}.".format(self))
+                if self.loaded and (num_dims > 0):
+                    logger.warning('Inferring {} to have {} dimensions. '.format(self.name,num_dims) + 
+                        'Recommended practice is to explicitly set gdxpds.gdx.GdxSymbol dims in the constructor.')
 
             replace_dims = True
             if has_col_names:

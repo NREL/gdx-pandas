@@ -103,14 +103,20 @@ class Translator(object):
         self.gdx.write(path)
 
     def __add_symbol_to_gdx(self, symbol_name, df):
-        data_type = self.__infer_data_type(symbol_name,df)
+        data_type, num_dims = self.__infer_data_type(symbol_name,df)
         logger.info("Inferred data type of {} to be {}.".format(symbol_name,data_type.name))
 
-        self.__gdx.append(GdxSymbol(symbol_name,data_type))
+        self.__gdx.append(GdxSymbol(symbol_name,data_type,dims=num_dims))
         self.__gdx[symbol_name].dataframe = df
         return
 
     def __infer_data_type(self,symbol_name,df):
+        """
+        Returns
+        -------
+        (gdxpds.GamsDataType, int)
+            symbol type and number of dimensions implied by df
+        """
         # See if structure implies that symbol_name may be a Variable or an Equation
         # If so, break tie based on naming convention--Variables start with upper case, 
         # equations start with lower case
@@ -126,16 +132,18 @@ class Translator(object):
                     var_or_eqn = False
                     break
             if var_or_eqn:
+                num_dims = len(df_col_names) - len(var_eqn_col_names)
                 if symbol_name[0].upper() == symbol_name[0]:
-                    return GamsDataType.Variable
+                    return GamsDataType.Variable, num_dims
                 else:
-                    return GamsDataType.Equation
+                    return GamsDataType.Equation, num_dims
 
         # Parameter or set
+        num_dims = len(df_col_names) - 1
         if len(df.index) > 0:
             if isinstance(df.loc[df.index[0],df.columns[-1]],Number):
-                return GamsDataType.Parameter
-        return GamsDataType.Set
+                return GamsDataType.Parameter, num_dims
+        return GamsDataType.Set, num_dims
 
 
 def to_gdx(dataframes,path=None,gams_dir=None):

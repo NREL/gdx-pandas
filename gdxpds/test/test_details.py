@@ -53,6 +53,7 @@ from gdxpds.test.test_conversions import roundtrip_one_gdx
 import gdxcc
 import numpy as np
 import pandas as pds
+import pytest
 
 logger = logging.getLogger(__name__)
 
@@ -236,3 +237,104 @@ def test_unnamed_dimensions(manage_rundir):
         assert gdx['star_eqn'].data_type == gdxpds.gdx.GamsDataType.Equation
         assert gdx['star_eqn'].variable_type is None
         assert gdx['star_eqn'].equation_type == gdxpds.gdx.GamsEquationType.GreaterThan
+
+def test_setting_dataframes(manage_rundir):
+    outdir = os.path.join(run_dir,'setting_dataframes')
+    if not os.path.exists(outdir):
+        os.mkdir(outdir)
+
+    with gdxpds.gdx.GdxFile() as gdx:
+        # reading is tested elsewhere. here go through the different ways to
+        # set a dataframe. 
+        
+        # start with WAYS THAT WORK:
+        # 0 dims
+        #     full dataframe
+        gdx.append(gdxpds.gdx.GdxSymbol('sym_1',gdxpds.gdx.GamsDataType.Parameter))
+        gdx[-1].dataframe = pds.DataFrame([[2.0]])
+        assert list(gdx[-1].dataframe.columns) == ['Value']
+        #     edit initialized dataframe - Parameter
+        gdx.append(gdxpds.gdx.GdxSymbol('sym_2',gdxpds.gdx.GamsDataType.Parameter))
+        n = len(gdx[-1].dataframe.columns)
+        gdx[-1].dataframe['Value'] = [5.0] # list is required to specify number of rows to make
+        assert n == len(gdx[-1].dataframe.columns)
+        #     list of lists
+        gdx.append(gdxpds.gdx.GdxSymbol('sym_3',gdxpds.gdx.GamsDataType.Variable))
+        values = [3.0]
+        for value_col_name in gdx[-1].value_col_names:
+            if value_col_name == 'Level':
+                continue
+            values.append(gdx[-1].get_value_col_default(value_col_name))
+        gdx[-1].dataframe = [values]
+        #     reset with empty list
+        gdx.append(gdxpds.gdx.GdxSymbol('sym_4',gdxpds.gdx.GamsDataType.Parameter))
+        gdx[-1].dataframe = pds.DataFrame([[1.0]])
+        gdx[-1].dataframe = []
+        assert gdx[-1].num_records == 0
+
+        # > 0 dims - GdxSymbol initialized with dims=0
+        #     full dataframe
+        gdx.append(gdxpds.gdx.GdxSymbol('sym_5',gdxpds.gdx.GamsDataType.Parameter))
+        gdx[-1].dataframe = pds.DataFrame([['u1','CC',8727.2],
+                                           ['u2','CC',7500.2],
+                                           ['u3','CT',9258.0]])
+        assert gdx[-1].num_dims == 2
+        assert gdx[-1].num_records == 3
+        #     full list of lists
+
+        #     reset with empty list
+
+        # > 0 dims - GdxSymbol initialized with dims=n
+
+        #     dataframe of dims
+
+        #     full dataframe
+
+        #     list of lists containing dims only
+
+        #     full list of lists
+
+        #     reset with empty list
+
+        # > 0 dims - GdxSymbol initialized with dims=[list of actual dims]
+
+        #     dataframe of dims
+
+        #     full dataframe
+
+        #     list of lists containing dims only
+
+        #     full list of lists
+
+        #     reset with empty list
+
+
+        # And then document that some ways DO NOT WORK:
+        # dims=0
+
+        #       set value, then try to unset value
+
+        # dims=0, set value, then try to set different number of dimensions
+
+        # dims > 0
+        #     explicitly set dims to something else
+        gdx.append(gdxpds.gdx.GdxSymbol('sym_x',gdxpds.gdx.GamsDataType.Parameter,
+                   dims=['g','t']))
+        with pytest.raises(Exception) as e_info:
+            gdx[-1].dims = ['g','t','d']
+        #     dataframe of different number of dims
+
+        #     full dataframe of different number of dims
+
+        #     list of lists of varying widths
+
+        gdx.write(os.path.join(outdir,'dataframe_set_tests.gdx'))
+    with gdxpds.gdx.GdxFile(lazy_load=False) as gdx:
+        gdx.read(os.path.join(outdir,'dataframe_set_tests.gdx'))
+        assert gdx['sym_1'].num_records == 1
+        assert gdx['sym_2'].num_records == 1
+        assert gdx['sym_3'].num_records == 1
+        assert gdx['sym_4'].num_records == 1 # GAMS defaults empty 0-dim parameter to 0
+        assert gdx['sym_4'].dataframe['Value'].values[0] == 0.0
+        assert gdx['sym_5'].num_records == 3
+        assert gdx['sym_5'].dataframe['Value'].values[1] == 7500.2
