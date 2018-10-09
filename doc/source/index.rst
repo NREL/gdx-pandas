@@ -1,16 +1,21 @@
-.. gdx-pandas documentation master file, created by
-   sphinx-quickstart on Mon Apr  2 20:51:20 2018.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+gdx-pandas documentation
+========================
 
-Welcome to gdx-pandas's documentation!
-======================================
+|PyPI| |Documentation|
+
+gdx-pandas is a python package to translate between gdx (GAMS data) and
+pandas.
+
+.. |PyPI| image:: https://img.shields.io/pypi/v/gdxpds.svg
+   :target: https://pypi.python.org/pypi/gdxpds/
+.. |Documentation| image:: https://img.shields.io/badge/docs-ready-blue.svg
+   :target: http://nrel.github.io/gdx-pandas
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
 
-
+   overview
+   api
 
 Indices and tables
 ==================
