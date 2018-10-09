@@ -11,7 +11,7 @@ import os
 from collections import OrderedDict
 
 START_LICENSE = '[LICENSE]'
-LICENSE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'gdx-pandas-header.txt')
+LICENSE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','LICENSE')
 END_LICENSE = '[/LICENSE]'
 
 
@@ -42,7 +42,16 @@ ARGS['-x']           = ( ['--remove'],
                            'default'    :False, 
                            'help'       :"""(optional) Remove the license from the given file only, do not add the provided license."""} )
 
-def get_header(s):
+
+def get_file_linesep(s):
+    lines_without = s.splitlines(False)
+    lines_with = s.splitlines(True)
+    if lines_without and lines_with:
+        return lines_with[0][len(lines_without[0]):]
+    return os.linesep
+
+
+def get_header(s,sep=os.linesep):
     '''
     Splits .py file into its header and body. If no header is found on line 0, one is created.
     '''
@@ -52,18 +61,24 @@ def get_header(s):
     lines = s.splitlines(True)
     
     #check if has a header
-    if (len(lines)) > 0 and ('\'\'\'' in lines[0]):
+    if (len(lines)) > 0 and (lines[0].startswith('#')):
         eoh = False
-        header += lines[0]
-        for l in lines[1:]:
+        for l in lines:
+            if (not eoh) and (not l.startswith('#')):
+                eoh = True
+                if l == '' + sep:
+                    # keep first blank line with header
+                    header += l
+                    continue
+                else:
+                    # make a blank line to keep
+                    header += '' + sep
             if not eoh:
                 header += l
-                if '\'\'\'' in l:
-                    eoh = True
             else:
                 body += l
     else: #no header
-        header = '\'\'\'' + os.linesep + '\'\'\'' + os.linesep
+        header = '' + sep
         body = s
     
     return header, body
@@ -71,7 +86,7 @@ def get_header(s):
 def has_license(header):
     return (START_LICENSE in header) and (END_LICENSE in header)
 
-def rem_license(header):
+def rem_license(header,sep=os.linesep):
     ret_header = ''
     if has_license(header):
         found_beg_license = False
@@ -96,22 +111,23 @@ def rem_license(header):
         
     return ret_header
 
-def add_license(header,lic):
+def add_license(header,lic,sep=os.linesep):
     if has_license(header):
         raise Exception('There is already a license in the provided header. Please rem_license prior to adding a new one.')
     
     ret_head = ''
     
     lines = header.splitlines(True)
-    ret_head += lines[0]
     
     #add license to header
-    ret_head += '%s%s' % (START_LICENSE,os.linesep)
-    ret_head += '%s%s' % (lic,os.linesep)
-    ret_head += '%s%s' % (END_LICENSE,os.linesep)
+    ret_head += ('# ' + START_LICENSE + sep)
+    count = 0
+    for lic_l in lic.splitlines(True):
+        ret_head += ('# ' + lic_l)
+    ret_head += ('# ' + END_LICENSE + sep)
     
     #add the rest of the header
-    for l in lines[1:]:
+    for l in lines:
         ret_head += l
     
     return ret_head
@@ -130,9 +146,8 @@ def get_python_files(dirname):
     return ret
 
 if __name__ == '__main__':
-    #TODO: parse args
-    parser = argparse.ArgumentParser(description="""Script for adding
-    a license to the header of Python files.""")
+    parser = argparse.ArgumentParser(description="""Script for adding a license 
+        to the header of Python files.""")
     
     #add the arguments from ARGS
     for key in ARGS.keys():
@@ -167,15 +182,16 @@ if __name__ == '__main__':
             print('Removing license from: {}'.format(current_file))
         with open(current_file) as f:
             current_file_text = f.read()
-            
-        header, body = get_header(current_file_text)
+
+        sep = get_file_linesep(current_file_text)
+        header, body = get_header(current_file_text,sep=sep)
         
         if has_license(header):
-            header = rem_license(header)
+            header = rem_license(header,sep=sep)
             
         #only add license if not remove-only
         if not args.remove:
-            header = add_license(header,current_license)
+            header = add_license(header,current_license,sep=sep)
         
         with open(current_file,'w') as f:
             f.write(header+body)

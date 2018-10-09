@@ -1,3 +1,8 @@
+v1.1.0, 10/09/18 -- fixes to_dataframes and to_gdx memory leaks, respects 
+                    GAMS_DIR environment variable, additional bug and warning 
+                    fixes. GdxSymbol.dataframe can now be set just using the 
+                    GdxSymbol.dims columns; in that case the value columns are 
+                    filled in with defaults
 v1.0.4, 03/02/18 -- make sure set 'Value' column fix works even when dims are all named '*'
 v1.0.3, 02/15/18 -- fix up set 'Value' column when write to GDX
 v1.0.2, 01/19/18 -- instructions and additional filepaths for running pytest on 
