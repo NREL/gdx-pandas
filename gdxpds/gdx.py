@@ -460,7 +460,7 @@ class GdxFile(MutableSequence, NeedsGamsDir):
         gdxcc.gdxClose(self.H)
 
     def __repr__(self):
-        return "GdxFile(self,gams_dir={},lazy_laod={})".format(
+        return "GdxFile(self,gams_dir={},lazy_load={})".format(
                    repr(self.gams_dir),
                    repr(self.lazy_load))
 
