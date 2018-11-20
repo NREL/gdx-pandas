@@ -3,7 +3,7 @@
 To get all of the development dependencies for Python:
 
 ```
-pip install -r layerstack/dev/requirements.txt
+pip install -r gdx-pandas/dev/requirements.txt
 ```
 
 Also, you will need to install
