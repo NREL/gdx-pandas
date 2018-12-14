@@ -192,7 +192,7 @@ def special_getter():
         np_to_gdx_svs[i] = gdx_val
 
     gdxcc.gdxFree(H)
-    return gdx_to_np_svs, np_to_gdx_svs
+    return special_values, gdx_to_np_svs, np_to_gdx_svs
 
 
-GDX_TO_NP_SVS, NP_TO_GDX_SVS = special_getter()
+SPECIAL_VALUES, GDX_TO_NP_SVS, NP_TO_GDX_SVS = special_getter()

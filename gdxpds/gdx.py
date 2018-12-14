@@ -76,173 +76,10 @@ import gdxcc
 import numpy as np
 import pandas as pds
 
-from gdxpds.special import NUMPY_SPECIAL_VALUES
+import gdxpds.special as special
 
 logger = logging.getLogger(__name__)
 
-
-
-def convert_gdx_to_np_svs(df,num_dims,gdxf):
-    """
-    Converts GDX special values to the corresponding numpy versions.
-
-    Parmeters
-    ---------
-    df : pandas.DataFrame
-        a GdxSymbol DataFrame as it was read directly from GDX
-    num_dims : int
-        the number of columns in df that list the dimension values for which the
-        symbol value is non-zero / non-default
-    gdxf : GdxFile
-        the GdxFile containing the symbol. Used to provide the gdx_to_np_svs map.
-
-    Returns
-    -------
-    pandas.DataFrame
-        copy of df for which all GDX special values have been converted to 
-        their numpy equivalents
-    """
-
-    # single-value mapping function
-    def to_np_svs(value):
-        if value in gdxf.gdx_to_np_svs:
-            return gdxf.gdx_to_np_svs[value]
-        return value
-
-    # create clean copy of df
-    try:
-        tmp = copy.deepcopy(df)
-    except:
-        logger.warning("Unable to deepcopy:\n{}".format(df))
-        tmp = copy.copy(df)
-    
-    # apply the map to the value columns and merge with the dimensional information
-    tmp = (tmp.iloc[:,:num_dims]).merge(tmp.iloc[:,num_dims:].applymap(to_np_svs), 
-                                        left_index=True,right_index=True)
-    return tmp
-
-def is_np_eps(val):
-    """
-    Parameters
-    ----------
-    val : numeric
-        value to test
-
-    Returns
-    -------
-    bool
-        True if val is equal to eps (np.finfo(float).eps), False otherwise
-    """
-    return np.abs(val - NUMPY_SPECIAL_VALUES[-1]) < NUMPY_SPECIAL_VALUES[-1]
-
-def is_np_sv(val):
-    """
-    Parameters
-    ----------
-    val : numeric
-        value to test
-
-    Returns
-    -------
-    bool
-        True if val is NaN, eps, or is in NUMPY_SPECIAL_VALUES; False otherwise
-    """
-    return np.isnan(val) or (val in NUMPY_SPECIAL_VALUES) or is_np_eps(val)
-
-def convert_np_to_gdx_svs(df,num_dims,gdxf):
-    """
-    Converts numpy special values to the corresponding GDX versions.
-
-    Parmeters
-    ---------
-    df : pandas.DataFrame
-        a GdxSymbol DataFrame in pandas/numpy form
-    num_dims : int
-        the number of columns in df that list the dimension values for which the
-        symbol value is non-zero / non-default
-    gdxf : GdxFile
-        the GdxFile containing the symbol. Used to provide the np_to_gdx_svs map.
-
-    Returns
-    -------
-    pandas.DataFrame
-        copy of df for which all numpy special values have been converted to 
-        their GDX equivalents
-    """
-
-    # converts a single value; NANs are assumed already handled
-    def to_gdx_svs(value):
-        # find numpy special values by direct comparison
-        for i, npsv in enumerate(NUMPY_SPECIAL_VALUES):
-            if value == npsv:
-                return gdxf.np_to_gdx_svs[i]
-        # eps values are not always caught by ==, use is_np_eps which applies 
-        # a tolerance
-        if is_np_eps(value):
-            return gdxf.np_to_gdx_svs[4]
-        return value
-
-    # get a clean copy of df
-    try:
-        tmp = copy.deepcopy(df)
-    except:
-        logger.warning("Unable to deepcopy:\n{}".format(df))
-        tmp = copy.copy(df)
-  
-    # fillna and apply map to value columns, then merge with dimensional columns
-    try:
-        values = tmp.iloc[:,num_dims:].fillna(gdxf.np_to_gdx_svs[1]).applymap(to_gdx_svs)
-        tmp = (tmp.iloc[:,:num_dims]).merge(values,left_index=True,right_index=True)
-    except:
-        logger.error("Unable to convert numpy special values to GDX special values." + \
-            "num_dims: {}, dataframe:\n{}".format(num_dims,df))
-        raise
-    return tmp
-
-def gdx_isnan(val,gdxf):
-    """
-    Utility function for equating the GDX special values that map to None or NaN
-    (which are indistinguishable in pandas).
-
-    Parameters
-    ----------
-    val : numeric
-        value to test
-    gdxf : GdxFile
-        GDX file containing the value. Provides np_to_gdx_svs map.
-
-    Returns
-    -------
-    bool
-        True if val is a GDX encoded special value that maps to None or numpy.nan;
-        False otherwise
-    """
-    return val in [gdxf.np_to_gdx_svs[0],gdxf.np_to_gdx_svs[1]]
-
-def gdx_val_equal(val1,val2,gdxf):
-    """
-    Utility function used to test special value conversions.
-
-    Parameters
-    ----------
-    val1 : float or GDX special value
-        first value to compare
-    val2 : float or GDX special value
-        second value to compare
-    gdxf : GdxFile
-        GDX file containing val1 and val2
-
-    Returns
-    -------
-    bool
-        True if val1 and val2 are equal in the sense of == or they are 
-        equivalent GDX-format special values. The values that map to None 
-        and np.nan are assumed to be equal because pandas cannot be relied 
-        upon to make the distinction.
-    """
-    if gdx_isnan(val1,gdxf) and gdx_isnan(val2,gdxf):
-        return True
-    return val1 == val2
 
 def replace_df_column(df,colname,new_col):
     """
@@ -309,18 +146,6 @@ class GdxFile(MutableSequence, NeedsGamsDir):
         self._H = self._create_gdx_object()
         self.universal_set = GdxSymbol('*',GamsDataType.Set,dims=1,file=None,index=0)
         self.universal_set._file = self
-        # get special values
-        self.special_values = gdxcc.doubleArray(gdxcc.GMS_SVIDX_MAX)
-        gdxcc.gdxGetSpecialValues(self.H,self.special_values)
-
-        self.gdx_to_np_svs = {}
-        self.np_to_gdx_svs = {}
-        for i in range(gdxcc.GMS_SVIDX_MAX):
-            if i >= len(NUMPY_SPECIAL_VALUES):
-                break
-            gdx_val = self.special_values[i]
-            self.gdx_to_np_svs[gdx_val] = NUMPY_SPECIAL_VALUES[i]
-            self.np_to_gdx_svs[i] = gdx_val
 
         atexit.register(self.cleanup)
         return
@@ -441,7 +266,7 @@ class GdxFile(MutableSequence, NeedsGamsDir):
         self._filename = filename
 
         # set special values
-        ret = gdxcc.gdxSetSpecialValues(self.H,self.special_values)
+        ret = gdxcc.gdxSetSpecialValues(self.H, special.SPECIAL_VALUES)
         if ret == 0:
             raise GdxError(self.H,"Unable to set special values")
         
@@ -982,7 +807,7 @@ class GdxSymbol(object):
                 # gdxdict called gdxGetElemText here, but I do not currently see value in doing that
         self.dataframe = data
         if not self.data_type == GamsDataType.Set:
-            self.dataframe = convert_gdx_to_np_svs(self.dataframe,self.num_dims,self.file)
+            self.dataframe = special.convert_gdx_to_np_svs(self.dataframe, self.num_dims)
         self._loaded = True
         return
 
@@ -1026,7 +851,7 @@ class GdxSymbol(object):
         values = gdxcc.doubleArray(gdxcc.GMS_VAL_MAX)
         # make sure index is clean -- needed for merging in convert_np_to_gdx_svs
         self.dataframe = self.dataframe.reset_index(drop=True)
-        for row in convert_np_to_gdx_svs(self.dataframe,self.num_dims,self.file).itertuples(index=False,name=None):
+        for row in special.convert_np_to_gdx_svs(self.dataframe, self.num_dims).itertuples(index=False, name=None):
             dims = [str(x) for x in row[:self.num_dims]]
             vals = row[self.num_dims:]
             for col_name, col_ind in self.value_cols:
