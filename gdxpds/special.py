@@ -13,7 +13,7 @@ NUMPY_SPECIAL_VALUES = [None, np.nan, np.inf, -np.inf, np.finfo(float).eps]
 logger = logging.getLogger(__name__)
 
 
-def convert_gdx_to_np_svs(df, num_dims, gdxf):
+def convert_gdx_to_np_svs(df, num_dims):
     """
     Converts GDX special values to the corresponding numpy versions.
 
@@ -24,8 +24,6 @@ def convert_gdx_to_np_svs(df, num_dims, gdxf):
     num_dims : int
         the number of columns in df that list the dimension values for which the
         symbol value is non-zero / non-default
-    gdxf : GdxFile
-        the GdxFile containing the symbol. Used to provide the gdx_to_np_svs map.
 
     Returns
     -------
@@ -36,8 +34,8 @@ def convert_gdx_to_np_svs(df, num_dims, gdxf):
 
     # single-value mapping function
     def to_np_svs(value):
-        if value in gdxf.gdx_to_np_svs:
-            return gdxf.gdx_to_np_svs[value]
+        if value in GDX_TO_NP_SVS:
+            return GDX_TO_NP_SVS[value]
         return value
 
     # create clean copy of df
@@ -83,7 +81,7 @@ def is_np_sv(val):
     return np.isnan(val) or (val in NUMPY_SPECIAL_VALUES) or is_np_eps(val)
 
 
-def convert_np_to_gdx_svs(df, num_dims, gdxf):
+def convert_np_to_gdx_svs(df, num_dims):
     """
     Converts numpy special values to the corresponding GDX versions.
 
@@ -94,8 +92,6 @@ def convert_np_to_gdx_svs(df, num_dims, gdxf):
     num_dims : int
         the number of columns in df that list the dimension values for which the
         symbol value is non-zero / non-default
-    gdxf : GdxFile
-        the GdxFile containing the symbol. Used to provide the np_to_gdx_svs map.
 
     Returns
     -------
@@ -109,11 +105,11 @@ def convert_np_to_gdx_svs(df, num_dims, gdxf):
         # find numpy special values by direct comparison
         for i, npsv in enumerate(NUMPY_SPECIAL_VALUES):
             if value == npsv:
-                return gdxf.np_to_gdx_svs[i]
+                return NP_TO_GDX_SVS[i]
         # eps values are not always caught by ==, use is_np_eps which applies
         # a tolerance
         if is_np_eps(value):
-            return gdxf.np_to_gdx_svs[4]
+            return NP_TO_GDX_SVS[4]
         return value
 
     # get a clean copy of df
@@ -125,7 +121,7 @@ def convert_np_to_gdx_svs(df, num_dims, gdxf):
 
     # fillna and apply map to value columns, then merge with dimensional columns
     try:
-        values = tmp.iloc[:, num_dims:].fillna(gdxf.np_to_gdx_svs[1]).applymap(to_gdx_svs)
+        values = tmp.iloc[:, num_dims:].fillna(NP_TO_GDX_SVS[1]).applymap(to_gdx_svs)
         tmp = (tmp.iloc[:, :num_dims]).merge(values, left_index=True, right_index=True)
     except:
         logger.error("Unable to convert numpy special values to GDX special values." + \
@@ -134,7 +130,7 @@ def convert_np_to_gdx_svs(df, num_dims, gdxf):
     return tmp
 
 
-def gdx_isnan(val, gdxf):
+def gdx_isnan(val):
     """
     Utility function for equating the GDX special values that map to None or NaN
     (which are indistinguishable in pandas).
@@ -143,8 +139,6 @@ def gdx_isnan(val, gdxf):
     ----------
     val : numeric
         value to test
-    gdxf : GdxFile
-        GDX file containing the value. Provides np_to_gdx_svs map.
 
     Returns
     -------
@@ -152,10 +146,10 @@ def gdx_isnan(val, gdxf):
         True if val is a GDX encoded special value that maps to None or numpy.nan;
         False otherwise
     """
-    return val in [gdxf.np_to_gdx_svs[0], gdxf.np_to_gdx_svs[1]]
+    return val in [NP_TO_GDX_SVS[0], NP_TO_GDX_SVS[1]]
 
 
-def gdx_val_equal(val1, val2, gdxf):
+def gdx_val_equal(val1, val2):
     """
     Utility function used to test special value conversions.
 
@@ -165,8 +159,6 @@ def gdx_val_equal(val1, val2, gdxf):
         first value to compare
     val2 : float or GDX special value
         second value to compare
-    gdxf : GdxFile
-        GDX file containing val1 and val2
 
     Returns
     -------
@@ -176,7 +168,7 @@ def gdx_val_equal(val1, val2, gdxf):
         and np.nan are assumed to be equal because pandas cannot be relied
         upon to make the distinction.
     """
-    if gdx_isnan(val1, gdxf) and gdx_isnan(val2, gdxf):
+    if gdx_isnan(val1) and gdx_isnan(val2):
         return True
     return val1 == val2
 
