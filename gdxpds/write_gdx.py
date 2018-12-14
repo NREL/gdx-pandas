@@ -37,7 +37,6 @@
 
 import logging
 from numbers import Number
-from six import string_types
 
 # gdxpds needs to be imported before pandas to try to avoid library conflict on 
 # Linux that causes a segmentation fault.

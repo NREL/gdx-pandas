@@ -58,7 +58,6 @@ from ctypes import c_bool
 from enum import Enum
 import logging
 from numbers import Number
-from six import string_types
 
 # try to import gdx loading utility
 HAVE_GDX2PY = False
@@ -816,7 +815,7 @@ class GdxSymbol(object):
         if not isinstance(value, list):
             raise Error('dims must be an int or a list. Was passed {} of type {}.'.format(value, type(value)))
         for dim in value:
-            if not isinstance(dim,string_types):
+            if not isinstance(dim, str):
                 raise Error('Individual dimensions must be denoted by strings. Was passed {} as element of {}.'.format(dim, value))
         assert (self._dims is None) or (self.loaded and (self.num_dims == 0) and (self.num_records == 0)) or (len(value) == self.num_dims)
         self._dims = value
@@ -875,7 +874,7 @@ class GdxSymbol(object):
             else:
                 dim_cols = ['*'] * num_dims            
             for col in dim_cols:
-                if not isinstance(col,string_types):
+                if not isinstance(col, str):
                     replace_dims = False
                     logger.info("Not using dataframe column names to set dimensions because {} is not a string.".format(col))
                     if num_dims != self.num_dims:

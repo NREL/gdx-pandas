@@ -39,7 +39,6 @@ import logging
 import os
 import subprocess as subp
 import re
-from six import PY2, string_types, text_type
 
 logger = logging.getLogger(__name__)
 
@@ -77,7 +76,7 @@ class GamsDirFinder(object):
     @gams_dir.setter
     def gams_dir(self, value):
         self.__gams_dir = None
-        if isinstance(value,string_types):
+        if isinstance(value, str):
             self.__gams_dir = self.__clean_gams_dir(value)
         if self.__gams_dir is None:
             self.__gams_dir = self.__find_gams()
@@ -86,13 +85,11 @@ class GamsDirFinder(object):
         """
         Cleans up the path string.
         """
-        assert(isinstance(value,string_types))
+        assert(isinstance(value, str))
         ret = os.path.realpath(value)
         if not os.path.exists(ret):
             return None
         ret = re.sub('\\\\','/',ret)
-        if PY2 and isinstance(ret, text_type):
-            ret = ret.encode('ascii','replace')
         return ret
         
     def __find_gams(self):
