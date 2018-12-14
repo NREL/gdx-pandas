@@ -43,7 +43,6 @@ from numbers import Number
 from gdxpds.tools import Error
 from gdxpds.gdx import GdxFile, GdxSymbol, GAMS_VALUE_COLS_MAP, GamsDataType
 
-import numpy as np
 import pandas as pds
 
 logger = logging.getLogger(__name__)

@@ -41,7 +41,6 @@ __email__ = "elaine.hale@nrel.gov"
 from ._version import __version__
 
 import logging
-import os
 import sys
 
 logger = logging.getLogger(__name__)
