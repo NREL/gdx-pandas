@@ -42,6 +42,7 @@ import os
 import subprocess as subp
 
 import gdxpds.gdx
+import gdxpds.special
 from gdxpds.test import base_dir, run_dir
 from gdxpds.test.test_session import manage_rundir
 from gdxpds.test.test_conversions import roundtrip_one_gdx
@@ -65,7 +66,7 @@ def test_roundtrip_just_special_values(manage_rundir):
         os.mkdir(outdir)
     # create gdx file containing all special values
     with gdxpds.gdx.GdxFile() as f:
-        df = pds.DataFrame([['sv' + str(i+1), f.special_values[i]] for i in range(gdxcc.GMS_SVIDX_MAX-2)],
+        df = pds.DataFrame([['sv' + str(i+1), gdxpds.special.SPECIAL_VALUES[i]] for i in range(gdxcc.GMS_SVIDX_MAX-2)],
                            columns=['sv','Value'])
         logger.info("Special values are:\n{}".format(df))
 
@@ -104,7 +105,7 @@ def test_roundtrip_just_special_values(manage_rundir):
     def check_special_values(gdx_file):
         df = gdx_file['special_values'].dataframe
         for i, val in enumerate(df['Value'].values):
-            assert gdxpds.gdx.gdx_val_equal(gdx_file.np_to_gdx_svs[i],gdx_file.special_values[i],gdx_file)
+            assert gdxpds.special.gdx_val_equal(gdxpds.special.NP_TO_GDX_SVS[i],gdxpds.special.SPECIAL_VALUES[i])
 
     # now roundtrip it gdx-only
     with gdxpds.gdx.GdxFile(lazy_load=False) as f:
@@ -136,12 +137,12 @@ def test_roundtrip_special_values(manage_rundir):
             sym = gdx['calculate_capacity_value']
             assert sym.data_type == gdxpds.gdx.GamsDataType.Equation
             val = sym.dataframe.iloc[0,value_column_index(sym,gdxpds.gdx.GamsValueType.Marginal)]
-            assert gdxpds.gdx.is_np_sv(val)
+            assert gdxpds.special.is_np_sv(val)
             data[-1].append(val)
             sym = gdx['CapacityValue']
             assert sym.data_type == gdxpds.gdx.GamsDataType.Variable
             val = sym.dataframe.iloc[0,value_column_index(sym,gdxpds.gdx.GamsValueType.Upper)]
-            assert gdxpds.gdx.is_np_sv(val)
+            assert gdxpds.special.is_np_sv(val)
             data[-1].append(val)
     data = list(zip(*data))
     for pt in data:
@@ -173,9 +174,9 @@ def test_from_scratch_sets(manage_rundir):
             assert isinstance(sym.dataframe[sym.dataframe.columns[-1]].values[0],c_bool)
 
 def test_numpy_eps():
-    assert(gdxpds.gdx.is_np_eps(np.finfo(float).eps))
-    assert(not gdxpds.gdx.is_np_eps(float(0.0)))
-    assert(not gdxpds.gdx.is_np_eps(2.0 * np.finfo(float).eps))
+    assert(gdxpds.special.is_np_eps(np.finfo(float).eps))
+    assert(not gdxpds.special.is_np_eps(float(0.0)))
+    assert(not gdxpds.special.is_np_eps(2.0 * np.finfo(float).eps))
 
 def test_unnamed_dimensions(manage_rundir):
     outdir = os.path.join(run_dir,'unnamed_dimensions')
