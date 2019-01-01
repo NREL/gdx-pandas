@@ -117,7 +117,7 @@ class GamsDirFinder(object):
             if os.name == 'nt':
                 # windows systems
                 # search in default installation location
-                cur_dir = 'C:\GAMS'
+                cur_dir = r'C:\GAMS'
                 if os.path.exists(cur_dir):
                     # level 1 - prefer win64 to win32
                     for p, dirs, files in os.walk(cur_dir):
