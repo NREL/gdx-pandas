@@ -75,10 +75,6 @@ def test_roundtrip_just_special_values(manage_rundir):
         ret = gdxcc.gdxOpenWrite(f.H,filename,"gdxpds")
         if not ret:
             raise gdxpds.gdx.GdxError(f.H,"Could not open {} for writing. Consider cloning this file (.clone()) before trying to write".format(repr(filename)))
-        # set special values
-        ret = gdxcc.gdxSetSpecialValues(f.H,f.special_values)
-        if ret == 0:
-            raise gdxpds.gdx.GdxError(f.H,"Unable to set special values")
         # write the universal set
         f.universal_set.write()
         if not gdxcc.gdxDataWriteStrStart(f.H,

@@ -264,11 +264,6 @@ class GdxFile(MutableSequence, NeedsGamsDir):
         if not ret:
             raise GdxError(self.H,"Could not open {} for writing. Consider cloning this file (.clone()) before trying to write".format(repr(filename)))
         self._filename = filename
-
-        # set special values
-        ret = gdxcc.gdxSetSpecialValues(self.H, special.SPECIAL_VALUES)
-        if ret == 0:
-            raise GdxError(self.H,"Unable to set special values")
         
         # write the universal set
         self.universal_set.write()
