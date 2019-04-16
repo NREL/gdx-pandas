@@ -3,5 +3,6 @@
 MANIFEST
 dist
 build
+.idea
 .pytest_cache
 gdxpds/test/pytest.log
