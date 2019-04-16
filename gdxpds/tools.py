@@ -54,7 +54,7 @@ class GamsDirFinder(object):
 
     The find function first looks for the 'GAMS_DIR' environment variable. If 
     that is unsuccessful, it next uses 'which gams' for POSIX systems, and the 
-    default install location, 'C:\GAMS', for Windows systems. In the latter case
+    default install location, 'C:/GAMS', for Windows systems. In the latter case
     it prefers the largest version number.
     
     You can always specify the GAMS directory directly, and this class will attempt 
@@ -98,7 +98,7 @@ class GamsDirFinder(object):
         variable.
 
         For Windows, the next step is to look for the GAMS directory based on 
-        the default install location (C:\GAMS). 
+        the default install location (C:/GAMS).
         
         For all others, the next step is 'which gams'.
         
@@ -114,7 +114,7 @@ class GamsDirFinder(object):
             if os.name == 'nt':
                 # windows systems
                 # search in default installation location
-                cur_dir = 'C:\GAMS'
+                cur_dir = r'C:\GAMS'
                 if os.path.exists(cur_dir):
                     # level 1 - prefer win64 to win32
                     for p, dirs, files in os.walk(cur_dir):
