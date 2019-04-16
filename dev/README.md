@@ -85,7 +85,7 @@ git checkout master # or whatever branch you were on
     python setup.py sdist
     twine upload --repository testpypi dist/*
     # look at https://test.pypi.org/project/gdxpds/
-    pip install --index-url https://test.pypi.org/simple/gdxpds
+    pip install --index-url https://test.pypi.org/simple/ gdxpds
     # check it out ... fix things ...
     ```
 
