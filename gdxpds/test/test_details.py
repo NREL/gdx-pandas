@@ -170,8 +170,18 @@ def test_from_scratch_sets(manage_rundir):
             assert isinstance(sym.dataframe[sym.dataframe.columns[-1]].values[0],c_bool)
 
 def check_special_integrity():
-    for i, val in enumerate(gdxpds.special.SPECIAL_VALUES):
-        assert gdxpds.special.NP_TO_GDX_SVS[i] == val
+    """
+    Check that the special values line up
+    """
+    assert all(sv in gdxpds.special.GDX_TO_NP_SVS for sv in gdxpds.special.SPECIAL_VALUES)
+    assert all(sv in gdxpds.special.NP_TO_GDX_SVS for sv in gdxpds.special.NUMPY_SPECIAL_VALUES)
+
+    for val in gdxpds.special.SPECIAL_VALUES:
+        assert gdxpds.special.NP_TO_GDX_SVS(gdxpds.special.GDX_TO_NP_SVS[val]) == val
+
+    for val in gdxpds.special.NUMPY_SPECIAL_VALUES:
+        # Can't use "==", as None != NaN
+        assert gdxpds.special.pd_val_equal(gdxpds.special.GDX_TO_NP_SVS(gdxpds.special.NP_TO_GDX_SVS[val]), val)
 
 def test_numpy_eps():
     assert(gdxpds.special.is_np_eps(np.finfo(float).eps))

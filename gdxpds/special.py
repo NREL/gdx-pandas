@@ -95,15 +95,11 @@ def convert_np_to_gdx_svs(df, num_dims):
     """
 
     # converts a single value; NANs are assumed already handled
-    def to_gdx_svs(value):
-        # find numpy special values by direct comparison
-        for i, npsv in enumerate(NUMPY_SPECIAL_VALUES):
-            if value == npsv:
-                return NP_TO_GDX_SVS[i]
+    def convert_approx_eps(value):
         # eps values are not always caught by ==, use is_np_eps which applies
         # a tolerance
         if is_np_eps(value):
-            return NP_TO_GDX_SVS[4]
+            return SPECIAL_VALUES[4]
         return value
 
     # get a clean copy of df
@@ -115,7 +111,7 @@ def convert_np_to_gdx_svs(df, num_dims):
 
     # fillna and apply map to value columns, then merge with dimensional columns
     try:
-        values = tmp.iloc[:, num_dims:].fillna(NP_TO_GDX_SVS[1]).applymap(to_gdx_svs)
+        values = tmp.iloc[:, num_dims:].replace(NP_TO_GDX_SVS, value=None).applymap(convert_approx_eps)
         tmp = (tmp.iloc[:, :num_dims]).merge(values, left_index=True, right_index=True)
     except:
         logger.error("Unable to convert numpy special values to GDX special values." + \
@@ -182,7 +178,7 @@ def special_getter():
         special_list.append(special_values[i])
         gdx_val = special_values[i]
         gdx_to_np_svs[gdx_val] = NUMPY_SPECIAL_VALUES[i]
-        np_to_gdx_svs[i] = gdx_val
+        np_to_gdx_svs[NUMPY_SPECIAL_VALUES[i]] = gdx_val
 
     gdxcc.gdxFree(H)
     return special_list, gdx_to_np_svs, np_to_gdx_svs
