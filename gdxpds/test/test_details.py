@@ -101,7 +101,7 @@ def test_roundtrip_just_special_values(manage_rundir):
     def check_special_values(gdx_file):
         df = gdx_file['special_values'].dataframe
         for i, val in enumerate(df['Value'].values):
-            assert gdxpds.special.gdx_val_equal(gdxpds.special.NP_TO_GDX_SVS[i],gdxpds.special.SPECIAL_VALUES[i])
+            assert gdxpds.special.pd_val_equal(val, gdxpds.special.NUMPY_SPECIAL_VALUES[i])
 
     # now roundtrip it gdx-only
     with gdxpds.gdx.GdxFile(lazy_load=False) as f:
@@ -168,6 +168,10 @@ def test_from_scratch_sets(manage_rundir):
             assert sym.data_type == gdxpds.gdx.GamsDataType.Set
             assert sym.num_records == 10
             assert isinstance(sym.dataframe[sym.dataframe.columns[-1]].values[0],c_bool)
+
+def check_special_integrity():
+    for i, val in enumerate(gdxpds.special.SPECIAL_VALUES):
+        assert gdxpds.special.NP_TO_GDX_SVS[i] == val
 
 def test_numpy_eps():
     assert(gdxpds.special.is_np_eps(np.finfo(float).eps))
