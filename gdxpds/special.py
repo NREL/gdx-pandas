@@ -32,12 +32,6 @@ def convert_gdx_to_np_svs(df, num_dims):
         their numpy equivalents
     """
 
-    # single-value mapping function
-    def to_np_svs(value):
-        if value in GDX_TO_NP_SVS:
-            return GDX_TO_NP_SVS[value]
-        return value
-
     # create clean copy of df
     try:
         tmp = copy.deepcopy(df)
@@ -46,7 +40,7 @@ def convert_gdx_to_np_svs(df, num_dims):
         tmp = copy.copy(df)
 
     # apply the map to the value columns and merge with the dimensional information
-    tmp = (tmp.iloc[:, :num_dims]).merge(tmp.iloc[:, num_dims:].applymap(to_np_svs),
+    tmp = (tmp.iloc[:, :num_dims]).merge(tmp.iloc[:, num_dims:].replace(GDX_TO_NP_SVS, value=None),
                                          left_index=True, right_index=True)
     return tmp
 
