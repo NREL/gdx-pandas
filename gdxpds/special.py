@@ -176,17 +176,19 @@ def special_getter():
     special_values = gdxcc.doubleArray(gdxcc.GMS_SVIDX_MAX)
     gdxcc.gdxGetSpecialValues(H, special_values)
 
+    special_list = []
     gdx_to_np_svs = {}
     np_to_gdx_svs = {}
     for i in range(gdxcc.GMS_SVIDX_MAX):
         if i >= len(NUMPY_SPECIAL_VALUES):
             break
+        special_list.append(special_values[i])
         gdx_val = special_values[i]
         gdx_to_np_svs[gdx_val] = NUMPY_SPECIAL_VALUES[i]
         np_to_gdx_svs[i] = gdx_val
 
     gdxcc.gdxFree(H)
-    return special_values, gdx_to_np_svs, np_to_gdx_svs
+    return special_list, gdx_to_np_svs, np_to_gdx_svs
 
 
 SPECIAL_VALUES, GDX_TO_NP_SVS, NP_TO_GDX_SVS = special_getter()
