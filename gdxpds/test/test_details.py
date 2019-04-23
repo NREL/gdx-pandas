@@ -177,11 +177,11 @@ def test_special_integrity():
     assert all(sv in gdxpds.special.NP_TO_GDX_SVS for sv in gdxpds.special.NUMPY_SPECIAL_VALUES)
 
     for val in gdxpds.special.SPECIAL_VALUES:
-        assert gdxpds.special.NP_TO_GDX_SVS(gdxpds.special.GDX_TO_NP_SVS[val]) == val
+        assert gdxpds.special.NP_TO_GDX_SVS[gdxpds.special.GDX_TO_NP_SVS[val]] == val
 
     for val in gdxpds.special.NUMPY_SPECIAL_VALUES:
         # Can't use "==", as None != NaN
-        assert gdxpds.special.pd_val_equal(gdxpds.special.GDX_TO_NP_SVS(gdxpds.special.NP_TO_GDX_SVS[val]), val)
+        assert gdxpds.special.pd_val_equal(gdxpds.special.GDX_TO_NP_SVS[gdxpds.special.NP_TO_GDX_SVS[val]], val)
 
 def test_numpy_eps():
     assert(gdxpds.special.is_np_eps(np.finfo(float).eps))
