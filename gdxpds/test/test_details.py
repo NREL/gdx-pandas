@@ -169,7 +169,7 @@ def test_from_scratch_sets(manage_rundir):
             assert sym.num_records == 10
             assert isinstance(sym.dataframe[sym.dataframe.columns[-1]].values[0],c_bool)
 
-def check_special_integrity():
+def test_special_integrity():
     """
     Check that the special values line up
     """
