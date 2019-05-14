@@ -11,9 +11,11 @@ Please visit http://nrel.github.io/gdx-pandas for the latest documentation.
 
 DEPENDENCIES
 
-- Python 3.4 or higher 3.X (support for Python 2.X has been discontinued)
+- Python 3.4 or 3.6 (gdx-pandas support for Python 2.X has been discontinued; GAMS does not yet support Python 3.7)
 - pandas (In general you will want the SciPy stack. Anaconda comes with it, or see [my notes for Windows](http://elainethale.wordpress.com/programming-notes/python-environment-set-up/).)
 - For Python versions < 3.4, enum34. Also **uninstall the enum package** if it is installed.
+- Install [GAMS](https://www.gams.com/download/)
+- Put the GAMS directory in your `PATH` and/or assign it to the `GAMS_DIR` environment variable
 - GAMS Python bindings
     - See GAMS/win64/XX.X/apifiles/readme.txt on Windows, 
       GAMS/gamsXX.X_osx_x64_64_sfx/apifiles/readme.txt on Mac, or 
