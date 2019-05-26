@@ -196,6 +196,53 @@ def pd_val_equal(val1, val2):
     return pd_isnan(val1) and pd_isnan(val2) or val1 == val2
 
 
+def gdx_isnan(val,gdxf):
+    """
+    Utility function for equating the GDX special values that map to None or NaN
+    (which are indistinguishable in pandas).
+
+    Parameters
+    ----------
+    val : numeric
+        value to test
+    gdxf : GdxFile
+        GDX file containing the value. Provides np_to_gdx_svs map.
+
+    Returns
+    -------
+    bool
+        True if val is a GDX encoded special value that maps to None or numpy.nan;
+        False otherwise
+    """
+    return val in [SPECIAL_VALUES[0], SPECIAL_VALUES[1]]
+
+
+def gdx_val_equal(val1,val2,gdxf):
+    """
+    Utility function used to test special value conversions.
+
+    Parameters
+    ----------
+    val1 : float or GDX special value
+        first value to compare
+    val2 : float or GDX special value
+        second value to compare
+    gdxf : GdxFile
+        GDX file containing val1 and val2
+
+    Returns
+    -------
+    bool
+        True if val1 and val2 are equal in the sense of == or they are
+        equivalent GDX-format special values. The values that map to None
+        and np.nan are assumed to be equal because pandas cannot be relied
+        upon to make the distinction.
+    """
+    if gdx_isnan(val1, gdxf) and gdx_isnan(val2, gdxf):
+        return True
+    return val1 == val2
+
+
 def special_getter():
     H = gdxcc.new_gdxHandle_tp()
     rc = gdxcc.gdxCreateD(H, None, gdxcc.GMS_SSSIZE)

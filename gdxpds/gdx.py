@@ -77,6 +77,16 @@ import numpy as np
 import pandas as pds
 
 import gdxpds.special as special
+# Import some things for backward compatibility
+from gdxpds.special import (
+    convert_gdx_to_np_svs,
+    convert_np_to_gdx_svs,
+    gdx_isnan,
+    gdx_val_equal,
+    NUMPY_SPECIAL_VALUES,
+    is_np_eps,
+    is_np_sv,
+)
 
 logger = logging.getLogger(__name__)
 
