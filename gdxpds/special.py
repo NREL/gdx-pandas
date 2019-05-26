@@ -244,6 +244,11 @@ def gdx_val_equal(val1,val2,gdxf):
 
 
 def load_specials():
+    """
+    Load special values
+
+    Needs to be called after gdxcc is loaded.
+    """
     global SPECIAL_VALUES
     global GDX_TO_NP_SVS
     global NP_TO_GDX_SVS
