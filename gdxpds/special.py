@@ -243,7 +243,11 @@ def gdx_val_equal(val1,val2,gdxf):
     return val1 == val2
 
 
-def special_getter():
+def load_specials():
+    global SPECIAL_VALUES
+    global GDX_TO_NP_SVS
+    global NP_TO_GDX_SVS
+
     H = gdxcc.new_gdxHandle_tp()
     rc = gdxcc.gdxCreateD(H, None, gdxcc.GMS_SSSIZE)
     if not rc:
@@ -252,19 +256,21 @@ def special_getter():
     special_values = gdxcc.doubleArray(gdxcc.GMS_SVIDX_MAX)
     gdxcc.gdxGetSpecialValues(H, special_values)
 
-    special_list = []
-    gdx_to_np_svs = {}
-    np_to_gdx_svs = {}
+    SPECIAL_VALUES = []
+    GDX_TO_NP_SVS = {}
+    NP_TO_GDX_SVS = {}
     for i in range(gdxcc.GMS_SVIDX_MAX):
         if i >= len(NUMPY_SPECIAL_VALUES):
             break
-        special_list.append(special_values[i])
+        SPECIAL_VALUES.append(special_values[i])
         gdx_val = special_values[i]
-        gdx_to_np_svs[gdx_val] = NUMPY_SPECIAL_VALUES[i]
-        np_to_gdx_svs[NUMPY_SPECIAL_VALUES[i]] = gdx_val
+        GDX_TO_NP_SVS[gdx_val] = NUMPY_SPECIAL_VALUES[i]
+        NP_TO_GDX_SVS[NUMPY_SPECIAL_VALUES[i]] = gdx_val
 
     gdxcc.gdxFree(H)
-    return special_list, gdx_to_np_svs, np_to_gdx_svs
 
 
-SPECIAL_VALUES, GDX_TO_NP_SVS, NP_TO_GDX_SVS = special_getter()
+# These values are populated by load_specials, called in load_gdxcc
+SPECIAL_VALUES = []
+GDX_TO_NP_SVS = {}
+NP_TO_GDX_SVS = {}
