@@ -113,7 +113,7 @@ class GamsDirFinder(object):
         if ret is None and os.name == 'nt':
             # windows systems
             try:
-                ret = os.path.dirname(subp.check_output(['where', 'gams'])).decode()
+                ret = os.path.dirname(subp.check_output(['where', 'gams']).decode().split("\n")[0])
             except:
                 ret = None
 
