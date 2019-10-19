@@ -111,6 +111,13 @@ class GamsDirFinder(object):
         ret = os.environ.get('GAMS_DIR')
 
         if ret is None and os.name == 'nt':
+            # windows systems
+            try:
+                ret = os.path.dirname(subp.check_output(['where', 'gams'])).decode()
+            except:
+                ret = None
+
+        if ret is None and os.name == 'nt':
             # search in default installation location
             cur_dir = r'C:\GAMS'
             if os.path.exists(cur_dir):
