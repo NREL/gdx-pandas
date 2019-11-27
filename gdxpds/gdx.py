@@ -327,9 +327,14 @@ class GdxFile(MutableSequence, NeedsGamsDir):
     def insert(self,key,value):
         self._check_insert_setitem(key, value)
         value._file = self
-        data = [(symbol.name, symbol) for symbol in self]
-        data.insert(key,(value.name,value))
-        self._symbols = OrderedDict(data)
+        if key == len(self) and value.name not in self._symbols:
+            # We can safely append the symbol. This is fast (O(log(n)) complexity)
+            self._symbols[value.name] = value
+        else:
+            # Need to insert inside the sequence. This is slow (O(n) complexity)
+            data = [(symbol.name, symbol) for symbol in self]
+            data.insert(key,(value.name,value))
+            self._symbols = OrderedDict(data)
         return
 
     def __contains__(self,key):
