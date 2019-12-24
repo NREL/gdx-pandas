@@ -475,7 +475,7 @@ GAMS_VARIABLE_DEFAULT_LOWER_UPPER_BOUNDS = {
 }
 
 class GdxSymbol(object): 
-    def __init__(self,name,data_type,dims=0,file=None,index=None,
+    def __init__(self,name,data_type,dims=None,num_records=None,dataframe=None,file=None,index=None,
                  description='',variable_type=None,equation_type=None): 
         self._name = name
         self.description = description
@@ -484,15 +484,20 @@ class GdxSymbol(object):
         self._variable_type = None; self.variable_type = variable_type
         self._equation_type = None; self.equation_type = equation_type
         self._dataframe = None; self._dims = None
-        self.dims = dims       
-        assert self._dataframe is not None
         self._file = file
-        self._index = index        
-
-        if self.file is None:
-            # writing new symbol
-            self._loaded = True
-        return
+        self._index = index
+        self._loaded = index == 0  # Universal set is always loaded
+        self._num_records = None
+        if (dataframe is not None):
+            # Writing symbol
+            if dims is not None or num_records is not None:
+                raise ValueError("Do not pass both 'dataframe' and 'dims'/'num_records'")
+            self.dataframe = dataframe
+        else:
+            # Reading symbol
+            # Do so lazily
+            self.dims = dims
+            self._num_records = num_records
 
     @classmethod
     def from_gdx(cls, file, index):
@@ -503,14 +508,20 @@ class GdxSymbol(object):
         ret, num_records, userinfo, description = gdxcc.gdxSymbolInfoX(file.H, index)
         if ret != 1:
             raise GdxError(file.H,"Unable to get extended symbol information for {}".format(name))
-        symbol = GdxSymbol(name,data_type,dims=dims,file=file,index=index)
+        symbol = GdxSymbol(
+            name,
+            data_type,
+            dims=dims,
+            num_records=num_records,
+            file=file,
+            index=index,
+            description=description,
+        )
 
-        symbol._num_records = num_records
         if symbol.data_type == GamsDataType.Variable:
             symbol.variable_type = GamsVariableType(userinfo)
         elif symbol.data_type == GamsDataType.Equation:
             symbol.equation_type = GamsEquationType(userinfo)
-        symbol.description = description
         if index > 0:
             ret, gdx_domain = gdxcc.gdxSymbolGetDomainX(file.H, index)
             if ret == 0:
@@ -528,7 +539,7 @@ class GdxSymbol(object):
     def from_df(cls, symbol_name, df):
         data_type, num_dims = infer_data_type(symbol_name, df)
         logger.info("Inferred data type of {} to be {}.".format(symbol_name,data_type.name))
-        symbol = GdxSymbol(symbol_name,data_type,dims=num_dims)
+        symbol = GdxSymbol(symbol_name,data_type,dataframe=df)
         symbol.dataframe = df
         return symbol
 
@@ -679,10 +690,14 @@ class GdxSymbol(object):
 
     @dims.setter
     def dims(self, value):
-        if (self._dims is not None) and (self.loaded and ((self.num_dims > 0) or (self.num_records > 0))):
+        if self._dims is not None:
             if not isinstance(value,list) or len(value) != self.num_dims:
                 raise Error(f"Cannot set dims to {value}, because the number of "
                     "dimensions has already been set to {self.num_dims}.")
+        if value is None:
+            # Seems we don't actually have a value
+            self._dims = None
+            return
         if isinstance(value, int):
             self._dims = ['*'] * value
             self._init_dataframe()
@@ -701,7 +716,10 @@ class GdxSymbol(object):
 
     @property
     def num_dims(self):
-        return len(self.dims)        
+        if self.dims is not None:
+            return len(self.dims)
+        else:
+            return None
 
     @property
     def dataframe(self):
@@ -723,22 +741,15 @@ class GdxSymbol(object):
             
             # finish handling dimensions
             n = len(df.columns)
-            if (self.num_dims > 0) or (self.num_records > 0):
-                if not ((n == self.num_dims) or (n == self.num_dims + len(self.value_cols))):
-                    raise Error("Cannot set dataframe to {} because the number ".format(df.head()) + \
-                        "of dimensions would change. This symbol has {} ".format(self.num_dims) + \
-                        "dimensions, currently represented by {}.".format(self.dims))
-                num_dims = self.num_dims
+            if self.dims is not None and len(self.dims) == n and not any(name in df.columns for name in self.value_col_names):
+                # Looks like we were passed the set columns but not the value columns
+                num_dims = len(self.dims)
             else:
-                # num_dims not explicitly established yet. in this case we must 
-                # assume value columns have been provided or dimensionality is 0
-                num_dims = max(n - len(self.value_cols),0)
-                if (num_dims == 0) and (n < len(self.value_cols)):
-                    raise Error("Cannot set dataframe to {} because the number ".format(df.head()) + \
-                        "of dimensions cannot be established consistent with {}.".format(self))
-                if self.loaded and (num_dims > 0):
-                    logger.warning('Inferring {} to have {} dimensions. '.format(self.name,num_dims) + 
-                        'Recommended practice is to explicitly set gdxpds.gdx.GdxSymbol dims in the constructor.')
+                # Looks like we were passed the entire df, so overwrite num_dims
+                # check that the df is the right size
+                num_dims = n - len(self.value_cols)
+                if num_dims < 0:
+                    raise Error("Dataframe doesn't contain required value columns, is too small")
 
             replace_dims = True
             if has_col_names:
@@ -765,6 +776,7 @@ class GdxSymbol(object):
                 self._append_default_values(df)
             df.columns = self.dims + self.value_col_names
             self._dataframe = df
+            self._loaded = True
         except Exception:
             logger.error("Unable to set dataframe for {} to\n{}\n\nIn process dataframe: {}".format(self,data,self._dataframe))
             raise
@@ -899,7 +911,7 @@ class GdxSymbol(object):
                                           userinfo):
             raise GdxError(self.file.H,"Could not start writing data for symbol {}".format(repr(self.name)))
         # set domain information
-        if self.num_dims > 0:
+        if self.num_dims is not None:
             if self.index:
                 if not gdxcc.gdxSymbolSetDomainX(self.file.H,self.index,self.dims):
                     raise GdxError(self.file.H,"Could not set domain information for {}. Domains are {}".format(repr(self.name),repr(self.dims)))
