@@ -882,9 +882,6 @@ class GdxSymbol(object):
         if not self.loaded:
             raise Error("Cannot write unloaded symbol {}.".format(repr(self.name)))
 
-        if self.data_type == GamsDataType.Set:
-            self._fixup_set_value()
-
         if index is not None:
             self._index = index
 
