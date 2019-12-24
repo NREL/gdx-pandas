@@ -97,12 +97,7 @@ class Translator(object):
         self.gdx.write(path)
 
     def __add_symbol_to_gdx(self, symbol_name, df):
-        data_type, num_dims = infer_data_type(symbol_name,df)
-        logger.info("Inferred data type of {} to be {}.".format(symbol_name,data_type.name))
-
-        self.__gdx.append(GdxSymbol(symbol_name,data_type,dims=num_dims))
-        self.__gdx[symbol_name].dataframe = df
-        return
+        self.__gdx.append(GdxSymbol.from_df(symbol_name,df))
 
 
 def to_gdx(dataframes,path=None,gams_dir=None):

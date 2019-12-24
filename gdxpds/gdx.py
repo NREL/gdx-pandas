@@ -524,6 +524,14 @@ class GdxSymbol(object):
 
         return symbol
 
+    @classmethod
+    def from_df(cls, symbol_name, df):
+        data_type, num_dims = infer_data_type(symbol_name, df)
+        logger.info("Inferred data type of {} to be {}.".format(symbol_name,data_type.name))
+        symbol = GdxSymbol(symbol_name,data_type,dims=num_dims)
+        symbol.dataframe = df
+        return symbol
+
     def clone(self):
         if not self.loaded:
             raise Error("Symbol {} cannot be cloned because it is not yet loaded.".format(repr(self.name)))
