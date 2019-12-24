@@ -538,7 +538,6 @@ class GdxSymbol(object):
         data_type, num_dims = infer_data_type(symbol_name, df)
         logger.info("Inferred data type of {} to be {}.".format(symbol_name,data_type.name))
         symbol = GdxSymbol(symbol_name,data_type,dataframe=df)
-        symbol.dataframe = df
         return symbol
 
     def clone(self):
