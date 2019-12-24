@@ -246,16 +246,9 @@ class GdxFile(MutableSequence, NeedsGamsDir):
         ret, symbol_count, element_count = gdxcc.gdxSystemInfo(self.H)
         logger.debug("Opening '{}' with {} symbols and {} elements with lazy_load = {}.".format(filename,symbol_count,element_count,self.lazy_load))
         # ... for the symbols
-        ret, name, dims, data_type = gdxcc.gdxSymbolInfo(self.H,0)
-        if ret != 1:
-            raise GdxError(self.H,"Could not get symbol info for the universal set")
-        self.universal_set = GdxSymbol(name,data_type,dims=dims,file=self,index=0)
+        self.universal_set = GdxSymbol.from_gdx(file=self, index=0)
         for i in range(symbol_count):
-            index = i + 1
-            ret, name, dims, data_type = gdxcc.gdxSymbolInfo(self.H,index)
-            if ret != 1:
-                raise GdxError(self.H,"Could not get symbol info for symbol {}".format(index))
-            self.append(GdxSymbol(name,data_type,dims=dims,file=self,index=index))
+            self.append(GdxSymbol.from_gdx(file=self, index=i + 1))
 
         # read all symbols if not lazy_load
         if not self.lazy_load:
@@ -460,33 +453,40 @@ class GdxSymbol(object):
         self._file = file
         self._index = index        
 
-        if self.file is not None:
-            # reading from file
-            # get additional meta-data
-            ret, records, userinfo, description = gdxcc.gdxSymbolInfoX(self.file.H,self.index)
-            if ret != 1:
-                raise GdxError(self.file.H,"Unable to get extended symbol information for {}".format(self.name))
-            self._num_records = records
-            if self.data_type == GamsDataType.Variable:
-                self.variable_type = GamsVariableType(userinfo)
-            elif self.data_type == GamsDataType.Equation:
-                self.equation_type = GamsEquationType(userinfo)
-            self.description = description
-            if self.index > 0:
-                ret, gdx_domain = gdxcc.gdxSymbolGetDomainX(self.file.H,self.index)
-                if ret == 0:
-                    raise GdxError(self.file.H,"Unable to get domain information for {}".format(self.name))
-                assert len(gdx_domain) == len(self.dims), "Dimensional information read in from GDX should be consistent."
-                self.dims = gdx_domain
-            else:
-                # universal set
-                assert self.index == 0
-                self._loaded = True
-            return
-        
-        # writing new symbol
-        self._loaded = True
+        if self.file is None:
+            # writing new symbol
+            self._loaded = True
         return
+
+    @classmethod
+    def from_gdx(cls, file, index):
+        # ... for the symbols
+        ret, name, dims, data_type = gdxcc.gdxSymbolInfo(file.H, index)
+        if ret != 1:
+            raise GdxError(file.H,"Could not get symbol info for {}".format(name))
+        ret, num_records, userinfo, description = gdxcc.gdxSymbolInfoX(file.H, index)
+        if ret != 1:
+            raise GdxError(file.H,"Unable to get extended symbol information for {}".format(name))
+        symbol = GdxSymbol(name,data_type,dims=dims,file=file,index=index)
+
+        symbol._num_records = num_records
+        if symbol.data_type == GamsDataType.Variable:
+            symbol.variable_type = GamsVariableType(userinfo)
+        elif symbol.data_type == GamsDataType.Equation:
+            symbol.equation_type = GamsEquationType(userinfo)
+        symbol.description = description
+        if index > 0:
+            ret, gdx_domain = gdxcc.gdxSymbolGetDomainX(file.H, index)
+            if ret == 0:
+                raise GdxError(file.H, "Unable to get domain information for {}".format(name))
+            assert len(gdx_domain) == dims, "Dimensional information read in from GDX should be consistent."
+            symbol.dims = gdx_domain
+        else:
+            # universal set
+            assert index == 0
+            symbol._loaded = True
+
+        return symbol
 
     def clone(self):
         if not self.loaded:
