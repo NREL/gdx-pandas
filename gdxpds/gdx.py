@@ -137,6 +137,42 @@ class GdxError(Error):
         super().__init__(msg)
 
 
+def infer_data_type(symbol_name, df):
+    """
+    Returns
+    -------
+    (gdxpds.GamsDataType, int)
+        symbol type and number of dimensions implied by df
+    """
+    # See if structure implies that symbol_name may be a Variable or an Equation
+    # If so, break tie based on naming convention--Variables start with upper case,
+    # equations start with lower case
+    var_or_eqn = False
+    df_col_names = df.columns
+    var_eqn_col_names = [col_name for col_name, col_ind in GAMS_VALUE_COLS_MAP[GamsDataType.Variable]]
+    if len(df_col_names) >= len(var_eqn_col_names):
+        # might be variable or equation
+        var_or_eqn = True
+        trunc_df_col_names = df_col_names[len(df_col_names) - len(var_eqn_col_names):]
+        for i, df_col in enumerate(trunc_df_col_names):
+            if df_col and (df_col.lower() != var_eqn_col_names[i].lower()):
+                var_or_eqn = False
+                break
+        if var_or_eqn:
+            num_dims = len(df_col_names) - len(var_eqn_col_names)
+            if symbol_name[0].upper() == symbol_name[0]:
+                return GamsDataType.Variable, num_dims
+            else:
+                return GamsDataType.Equation, num_dims
+
+    # Parameter or set
+    num_dims = len(df_col_names) - 1
+    if len(df.index) > 0:
+        if isinstance(df.loc[df.index[0],df.columns[-1]],Number):
+            return GamsDataType.Parameter, num_dims
+    return GamsDataType.Set, num_dims
+
+
 class GdxFile(MutableSequence, NeedsGamsDir):
 
     def __init__(self,gams_dir=None,lazy_load=True):
