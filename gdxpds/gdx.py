@@ -132,10 +132,9 @@ class GdxError(Error):
         msg : str
             msg that is passed in with a gdxErrorStr appended
         """
-        self.msg = msg + "."
         if H:
-            self.msg += " " + gdxcc.gdxErrorStr(H, gdxcc.gdxGetLastError(H))[1] + "."
-        super().__init__(self.msg)
+            msg += ". " + gdxcc.gdxErrorStr(H, gdxcc.gdxGetLastError(H))[1] + "."
+        super().__init__(msg)
 
 
 class GdxFile(MutableSequence, NeedsGamsDir):
@@ -234,9 +233,9 @@ class GdxFile(MutableSequence, NeedsGamsDir):
             raise Error("GdxFile.read can only be used if the GdxFile is .empty")
 
         # open the file
-        rc = gdxcc.gdxOpenRead(self.H,filename)
+        rc = gdxcc.gdxOpenRead(self.H,str(filename))
         if not rc[0]:
-            raise GdxError(self.H,"Could not open '{}'".format(filename))
+            raise GdxError(self.H,f"Could not open {filename!r}")
         self._filename = filename
 
         # read in meta-data ...
@@ -270,9 +269,10 @@ class GdxFile(MutableSequence, NeedsGamsDir):
             if not symbol.loaded:
                 raise Error("All symbols must be loaded before this file can be written.")
 
-        ret = gdxcc.gdxOpenWrite(self.H,filename,"gdxpds")
+        ret = gdxcc.gdxOpenWrite(self.H,str(filename),"gdxpds")
         if not ret:
-            raise GdxError(self.H,"Could not open {} for writing. Consider cloning this file (.clone()) before trying to write".format(repr(filename)))
+            raise GdxError(self.H, f"Could not open {filename!r} for writing. "
+                "Consider cloning this file (.clone()) before trying to write.")
         self._filename = filename
         
         # write the universal set
@@ -636,7 +636,8 @@ class GdxSymbol(object):
     def dims(self, value):
         if (self._dims is not None) and (self.loaded and ((self.num_dims > 0) or (self.num_records > 0))):
             if not isinstance(value,list) or len(value) != self.num_dims:
-                raise Error("Cannot set dims to {}, because the number of dimensions has already been set to {}.".format(value,self.num_dims))
+                raise Error(f"Cannot set dims to {value}, because the number of "
+                    "dimensions has already been set to {self.num_dims}.")
         if isinstance(value, int):
             self._dims = ['*'] * value
             self._init_dataframe()
@@ -666,7 +667,7 @@ class GdxSymbol(object):
         try:        
             # get data in common format and start dealing with dimensions    
             if isinstance(data, pds.DataFrame):
-                df = copy.deepcopy(data)
+                df = data.copy()
                 has_col_names = True
             else:
                 df = pds.DataFrame(data)
@@ -756,8 +757,8 @@ class GdxSymbol(object):
         assert self.data_type == GamsDataType.Set
 
         colname = self._dataframe.columns[-1]
-        assert colname == self.value_col_names[0], "Unexpected final column in Set dataframe"
-        self._dataframe[colname].fillna(value=True,inplace=True)
+        assert colname == self.value_col_names[0], f"Unexpected final column {colname!r} in Set dataframe"
+        replace_df_column(self._dataframe, colname, self._dataframe[colname].fillna(value=True))
         replace_df_column(self._dataframe,colname,self._dataframe[colname].apply(lambda x: c_bool(x)))
         return
 
@@ -802,9 +803,9 @@ class GdxSymbol(object):
             return
 
         data = []
-        ret, records = gdxcc.gdxDataReadStrStart(self.file.H,self.index)
-        for i in range(records):
-            ret, elements, values, afdim = gdxcc.gdxDataReadStr(self.file.H)
+        _ret, records = gdxcc.gdxDataReadStrStart(self.file.H,self.index)
+        for _i in range(records):
+            _ret, elements, values, _afdim = gdxcc.gdxDataReadStr(self.file.H)
             # make sure we pick value columns up correctly
             data.append(elements + [values[col_ind] for col_name, col_ind in self.value_cols])
             if self.data_type == GamsDataType.Set:

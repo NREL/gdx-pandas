@@ -35,10 +35,16 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 # [/LICENSE]
 
+import logging
 import os
 
+import pytest
+
 import gdxpds.gdx
+from gdxpds import to_dataframes
 from gdxpds.test import base_dir
+
+logger = logging.getLogger(__name__)
 
 def test_read():
     filename = 'all_generator_properties_input.gdx'
@@ -47,3 +53,14 @@ def test_read():
         f.read(gdx_file)
         for symbol in f:
             symbol.load()
+
+def test_read_none():
+    with pytest.raises(gdxpds.gdx.GdxError) as excinfo:
+        to_dataframes(None)
+    assert "Could not open None" in str(excinfo.value)
+
+def test_read_path():
+    filename = 'all_generator_properties_input.gdx'
+    from pathlib import Path
+    gdx_file = Path(base_dir) / filename
+    to_dataframes(gdx_file)

@@ -1,154 +1,24 @@
-# [LICENSE]
-# Copyright (c) 2018, Alliance for Sustainable Energy.
-# All rights reserved.
-# 
-# Redistribution and use in source and binary forms, 
-# with or without modification, are permitted provided 
-# that the following conditions are met:
-# 
-# 1. Redistributions of source code must retain the above 
-# copyright notice, this list of conditions and the 
-# following disclaimer.
-# 
-# 2. Redistributions in binary form must reproduce the 
-# above copyright notice, this list of conditions and the 
-# following disclaimer in the documentation and/or other 
-# materials provided with the distribution.
-# 
-# 3. Neither the name of the copyright holder nor the 
-# names of its contributors may be used to endorse or 
-# promote products derived from this software without 
-# specific prior written permission.
-# 
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
-# CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
-# INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
-# MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
-# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
-# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
-# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-# BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR 
-# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
-# HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
-# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
-# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-# [/LICENSE]
-
 from ctypes import c_bool
 import copy
 import logging
 import os
-import subprocess as subp
 
-import gdxpds.gdx
-import gdxpds.special
-from gdxpds.test import base_dir, run_dir
-from gdxpds.test.test_session import manage_rundir
-from gdxpds.test.test_conversions import roundtrip_one_gdx
-
-import gdxcc
-import numpy as np
 import pandas as pds
 import pytest
 
+import gdxpds.gdx
+from gdxpds.tools import Error
+from gdxpds.test import base_dir, run_dir
+from gdxpds.test.test_session import manage_rundir
+
 logger = logging.getLogger(__name__)
 
-def value_column_index(sym,gams_value_type):
-    for i, val in enumerate(sym.value_cols):
-        if val[1] == gams_value_type.value:
-            break
-    return len(sym.dims) + i
-
-def test_roundtrip_just_special_values(manage_rundir):
-    outdir = os.path.join(run_dir,'special_values')
-    if not os.path.exists(outdir):
-        os.mkdir(outdir)
-    # create gdx file containing all special values
-    with gdxpds.gdx.GdxFile() as f:
-        df = pds.DataFrame([['sv' + str(i+1), gdxpds.special.SPECIAL_VALUES[i]] for i in range(gdxcc.GMS_SVIDX_MAX-2)],
-                           columns=['sv','Value'])
-        logger.info("Special values are:\n{}".format(df))
-
-        # save this directly as a GdxSymbol
-        filename = os.path.join(outdir,'direct_write_special_values.gdx')
-        ret = gdxcc.gdxOpenWrite(f.H,filename,"gdxpds")
-        if not ret:
-            raise gdxpds.gdx.GdxError(f.H,"Could not open {} for writing. Consider cloning this file (.clone()) before trying to write".format(repr(filename)))
-        # write the universal set
-        f.universal_set.write()
-        if not gdxcc.gdxDataWriteStrStart(f.H,
-                                          'special_values',
-                                          '',
-                                          1,
-                                          gdxpds.gdx.GamsDataType.Parameter.value,
-                                          0):
-            raise gdxpds.gdx.GdxError(f.H,"Could not start writing data for symbol special_values")
-        # set domain information
-        if not gdxcc.gdxSymbolSetDomainX(f.H,1,[df.columns[0]]):
-            raise gdxpds.gdx.GdxError(f.H,"Could not set domain information for special_values.")
-        values = gdxcc.doubleArray(gdxcc.GMS_VAL_MAX)
-        for row in df.itertuples(index=False,name=None):
-            dims = [str(x) for x in row[:1]]
-            vals = row[1:]
-            for col_name, col_ind in gdxpds.gdx.GAMS_VALUE_COLS_MAP[gdxpds.gdx.GamsDataType.Parameter]:
-                values[col_ind] = float(vals[col_ind])
-            gdxcc.gdxDataWriteStr(f.H,dims,values)
-        gdxcc.gdxDataWriteDone(f.H)
-        gdxcc.gdxClose(f.H)
-
-    # general test for expected values
-    def check_special_values(gdx_file):
-        df = gdx_file['special_values'].dataframe
-        for i, val in enumerate(df['Value'].values):
-            assert gdxpds.special.pd_val_equal(val, gdxpds.special.NUMPY_SPECIAL_VALUES[i])
-
-    # now roundtrip it gdx-only
-    with gdxpds.gdx.GdxFile(lazy_load=False) as f:
-        f.read(filename)
-        check_special_values(f)
-        with f.clone() as g:
-            rt_filename = os.path.join(outdir,'roundtripped.gdx')
-            g.write(rt_filename)
-    with gdxpds.gdx.GdxFile(lazy_load=False) as g:
-        g.read(filename)
-        check_special_values(g)
-
-    # now roundtrip it through csv
-    roundtripped_gdx = roundtrip_one_gdx(filename,'roundtrip_just_special_values')
-    with gdxpds.gdx.GdxFile(lazy_load=False) as h:
-        h.read(roundtripped_gdx)
-        check_special_values(h)
-    
-
-def test_roundtrip_special_values(manage_rundir):
-    filename = 'OptimalCSPConfig_Out.gdx'
-    original_gdx = os.path.join(base_dir,filename)
-    roundtripped_gdx = roundtrip_one_gdx(filename,'roundtrip_special_values')
-    data = []
-    for gdx_file in [original_gdx, roundtripped_gdx]:
-        with gdxpds.gdx.GdxFile(lazy_load=False) as gdx:
-            data.append([])
-            gdx.read(gdx_file)
-            sym = gdx['calculate_capacity_value']
-            assert sym.data_type == gdxpds.gdx.GamsDataType.Equation
-            val = sym.dataframe.iloc[0,value_column_index(sym,gdxpds.gdx.GamsValueType.Marginal)]
-            assert gdxpds.special.is_np_sv(val)
-            data[-1].append(val)
-            sym = gdx['CapacityValue']
-            assert sym.data_type == gdxpds.gdx.GamsDataType.Variable
-            val = sym.dataframe.iloc[0,value_column_index(sym,gdxpds.gdx.GamsValueType.Upper)]
-            assert gdxpds.special.is_np_sv(val)
-            data[-1].append(val)
-    data = list(zip(*data))
-    for pt in data:
-        for i in range(1,len(pt)):
-            assert (pt[i] == pt[0]) or (np.isnan(pt[i]) and np.isnan(pt[0]))
 
 def test_from_scratch_sets(manage_rundir):
     outdir = os.path.join(run_dir,'from_scratch_sets')
     if not os.path.exists(outdir):
         os.mkdir(outdir)
+
     with gdxpds.gdx.GdxFile() as gdx:
         gdx.append(gdxpds.gdx.GdxSymbol('my_set',gdxpds.gdx.GamsDataType.Set,dims=['u']))
         data = pds.DataFrame([['u' + str(i)] for i in range(1,11)])
@@ -160,6 +30,7 @@ def test_from_scratch_sets(manage_rundir):
         data['Value'] = True
         gdx[-1].dataframe = gdx[-1].dataframe.append(data)        
         gdx.write(os.path.join(outdir,'my_sets.gdx'))
+
     with gdxpds.gdx.GdxFile(lazy_load=False) as gdx:
         gdx.read(os.path.join(outdir,'my_sets.gdx'))
         for sym in gdx:
@@ -169,24 +40,6 @@ def test_from_scratch_sets(manage_rundir):
             assert sym.num_records == 10
             assert isinstance(sym.dataframe[sym.dataframe.columns[-1]].values[0],c_bool)
 
-def test_special_integrity():
-    """
-    Check that the special values line up
-    """
-    assert all(sv in gdxpds.special.GDX_TO_NP_SVS for sv in gdxpds.special.SPECIAL_VALUES)
-    assert all(sv in gdxpds.special.NP_TO_GDX_SVS for sv in gdxpds.special.NUMPY_SPECIAL_VALUES)
-
-    for val in gdxpds.special.SPECIAL_VALUES:
-        assert gdxpds.special.NP_TO_GDX_SVS[gdxpds.special.GDX_TO_NP_SVS[val]] == val
-
-    for val in gdxpds.special.NUMPY_SPECIAL_VALUES:
-        # Can't use "==", as None != NaN
-        assert gdxpds.special.pd_val_equal(gdxpds.special.GDX_TO_NP_SVS[gdxpds.special.NP_TO_GDX_SVS[val]], val)
-
-def test_numpy_eps():
-    assert(gdxpds.special.is_np_eps(np.finfo(float).eps))
-    assert(not gdxpds.special.is_np_eps(float(0.0)))
-    assert(not gdxpds.special.is_np_eps(2.0 * np.finfo(float).eps))
 
 def test_unnamed_dimensions(manage_rundir):
     outdir = os.path.join(run_dir,'unnamed_dimensions')
@@ -199,13 +52,14 @@ def test_unnamed_dimensions(manage_rundir):
                                   ['tech_1','year_2','low','h3'],
                                   ['tech_1','year_2','low','h4']],
                                  columns = cols)
+
     with gdxpds.gdx.GdxFile() as gdx:
         # Set
         gdx.append(gdxpds.gdx.GdxSymbol('star_set',gdxpds.gdx.GamsDataType.Set,dims=4))
-        gdx[-1].dataframe[cols] = some_entries
+        gdx[-1].dataframe = some_entries
         # Parmeter
         a_param = copy.deepcopy(some_entries)
-        a_param['Value'] = [1.0,2.0,3.0,4.0]
+        a_param['Value'] = [1.0, 2.0, 3.0, 4.0]
         gdx.append(gdxpds.gdx.GdxSymbol('star_param',gdxpds.gdx.GamsDataType.Parameter,dims=4))
         gdx[-1].dataframe = a_param
         # Test changing the parameter data
@@ -226,6 +80,7 @@ def test_unnamed_dimensions(manage_rundir):
             an_eqn[value_col_name] = gdx[-1].get_value_col_default(value_col_name)
         gdx[-1].dataframe = an_eqn
         gdx.write(os.path.join(outdir,'star_symbols.gdx'))
+        
     with gdxpds.gdx.GdxFile(lazy_load=False) as gdx:
         gdx.read(os.path.join(outdir,'star_symbols.gdx'))
         assert gdx['star_set'].num_dims == 4
@@ -244,6 +99,7 @@ def test_unnamed_dimensions(manage_rundir):
         assert gdx['star_eqn'].data_type == gdxpds.gdx.GamsDataType.Equation
         assert gdx['star_eqn'].variable_type is None
         assert gdx['star_eqn'].equation_type == gdxpds.gdx.GamsEquationType.GreaterThan
+
 
 def test_setting_dataframes(manage_rundir):
     outdir = os.path.join(run_dir,'setting_dataframes')
@@ -310,11 +166,11 @@ def test_setting_dataframes(manage_rundir):
         gdx[-1].dataframe = pds.DataFrame([['u0','BES','c2'],
                                            ['u0','BES','c1'],
                                            ['u1','BES','c2']])
-        assert gdx[-1].num_dims == 3;
+        assert gdx[-1].num_dims == 3
         assert gdx[-1].dims == ['*','*','*']
         assert len(gdx[-1].dataframe.columns) > 3
-        gdx[-1].dataframe[gdxpds.gdx.GamsValueType.Level.name] = 1.0
-        gdx[-1].dataframe[gdxpds.gdx.GamsValueType.Upper.name] = 10.0
+        gdx[-1].dataframe.loc[:,gdxpds.gdx.GamsValueType.Level.name] = 1.0
+        gdx[-1].dataframe.loc[:,gdxpds.gdx.GamsValueType.Upper.name] = 10.0
         #     full dataframe
         gdx.append(gdxpds.gdx.GdxSymbol('sym_9',gdxpds.gdx.GamsDataType.Parameter,
             dims=3))
@@ -331,7 +187,7 @@ def test_setting_dataframes(manage_rundir):
                              ['u0','PHES','c0','3'],
                              ['u0','PHES','c0','4'],
                              ['u0','PHES','c0','5']]
-        gdx[-1].dataframe['Level'] = -15.0
+        gdx[-1].dataframe.loc[:,'Level'] = -15.0
         assert list(gdx[-1].dataframe.columns[:gdx[-1].num_dims]) == ['*'] * 4
         #     full list of lists
         gdx.append(gdxpds.gdx.GdxSymbol('sym_11',gdxpds.gdx.GamsDataType.Set,
@@ -357,7 +213,7 @@ def test_setting_dataframes(manage_rundir):
         gdx[-1].dataframe = pds.DataFrame([['u0','BES','c2'],
                                            ['u0','BES','c1'],
                                            ['u1','BES','c2']])
-        assert gdx[-1].num_dims == 3;
+        assert gdx[-1].num_dims == 3
         assert gdx[-1].dims == ['u','q','c']
         assert len(gdx[-1].dataframe.columns) > 3
         gdx[-1].dataframe[gdxpds.gdx.GamsValueType.Level.name] = 1.0
@@ -403,14 +259,16 @@ def test_setting_dataframes(manage_rundir):
         gdx.append(gdxpds.gdx.GdxSymbol('sym_18',gdxpds.gdx.GamsDataType.Parameter,
             dims=0))
         gdx[-1].dataframe = [[3]]
-        with pytest.raises(Exception) as e_info:
+        with pytest.raises(Error) as excinfo:
             gdx[-1].dims = 3
+        assert "Cannot set dims to 3" in str(excinfo.value)
         # dims > 0
         #     explicitly set dims to something else
         gdx.append(gdxpds.gdx.GdxSymbol('sym_19',gdxpds.gdx.GamsDataType.Parameter,
                    dims=['g','t']))
-        with pytest.raises(Exception) as e_info:
+        with pytest.raises(Exception) as excinfo:
             gdx[-1].dims = ['g','t','d']
+        assert "Cannot set dims" in str(excinfo.value)
         #     dataframe of different number of dims
         gdx.append(gdxpds.gdx.GdxSymbol('sym_20',gdxpds.gdx.GamsDataType.Variable,
             dims=['d','t']))
@@ -446,6 +304,7 @@ def test_setting_dataframes(manage_rundir):
                                  ['u1','PV','c0','2',-30.0]]
 
         gdx.write(os.path.join(outdir,'dataframe_set_tests.gdx'))
+
     with gdxpds.gdx.GdxFile(lazy_load=False) as gdx:
         gdx.read(os.path.join(outdir,'dataframe_set_tests.gdx'))
         assert gdx['sym_1'].num_records == 1
@@ -477,3 +336,12 @@ def test_setting_dataframes(manage_rundir):
         assert gdx['sym_16'].num_records == 4 
         assert gdx['sym_17'].num_dims == 2
         assert gdx['sym_17'].num_records == 0
+
+
+def test_numeric_types(manage_rundir):
+    outdir = os.path.join(run_dir,'numeric_types')
+    if not os.path.exists(outdir):
+        os.mkdir(outdir)
+
+    with gdxpds.gdx.GdxFile() as gdx:
+        pass

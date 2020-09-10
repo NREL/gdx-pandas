@@ -129,7 +129,7 @@ class GamsDirFinder(object):
             cur_dir = r'C:\GAMS'
             if os.path.exists(cur_dir):
                 # level 1 - prefer win64 to win32
-                for p, dirs, files in os.walk(cur_dir):
+                for _p, dirs, _files in os.walk(cur_dir):
                     if 'win64' in dirs:
                         cur_dir = os.path.join(cur_dir, 'win64')
                     elif len(dirs) > 0:
@@ -139,7 +139,7 @@ class GamsDirFinder(object):
                     break
             if os.path.exists(cur_dir):
                 # level 2 - prefer biggest number (most recent version)
-                for p, dirs, files in os.walk(cur_dir):
+                for _p, dirs, _files in os.walk(cur_dir):
                     if len(dirs) > 1:
                         try:
                             versions = [float(x) for x in dirs]

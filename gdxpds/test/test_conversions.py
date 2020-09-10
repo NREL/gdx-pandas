@@ -68,7 +68,7 @@ def roundtrip_one_gdx(filename,dirname):
     # call command-line interface to transform csv to gdx
     txt_file = os.path.join(out_dir, 'csvs.txt')
     f = open(txt_file, 'w')
-    for p, dirs, files in os.walk(out_dir):
+    for p, _dirs, files in os.walk(out_dir):
         for file in files:
             if os.path.splitext(file)[1] == '.csv':
                 f.write("{}\n".format(os.path.join(p,file)))
@@ -145,7 +145,7 @@ def test_csv_roundtrip(manage_rundir):
         assert len(df.index) == records
 
     cnt = 0
-    for p, dirs, files in os.walk(out_dir):
+    for _p, _dirs, files in os.walk(out_dir):
         for file in files:
             if os.path.splitext(file)[1] == '.csv':
                 cnt += 1
