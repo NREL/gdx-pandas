@@ -109,40 +109,46 @@ class GamsDirFinder(object):
         """
         # check for environment variable
         ret = os.environ.get('GAMS_DIR')
-        
-        if ret is None:
-            if os.name == 'nt':
-                # windows systems
-                # search in default installation location
-                cur_dir = r'C:\GAMS'
-                if os.path.exists(cur_dir):
-                    # level 1 - prefer win64 to win32
-                    for p, dirs, files in os.walk(cur_dir):
-                        if 'win64' in dirs:
-                            cur_dir = os.path.join(cur_dir, 'win64')
-                        elif len(dirs) > 0:
-                            cur_dir = os.path.join(cur_dir, dirs[0])
-                        else:
-                            return ret
-                        break
-                if os.path.exists(cur_dir):
-                    # level 2 - prefer biggest number (most recent version)
-                    for p, dirs, files in os.walk(cur_dir):
-                        if len(dirs) > 1:
-                            try:
-                                versions = [float(x) for x in dirs]
-                                ret = os.path.join(cur_dir, "{}".format(max(versions)))
-                            except:
-                                ret = os.path.join(cur_dir, dirs[0])
-                        elif len(dirs) > 0:
+
+        if ret is None and os.name == 'nt':
+            # windows systems
+            try:
+                ret = os.path.dirname(subp.check_output(['where', 'gams']).decode().split("\n")[0])
+            except:
+                ret = None
+
+        if ret is None and os.name == 'nt':
+            # search in default installation location
+            cur_dir = r'C:\GAMS'
+            if os.path.exists(cur_dir):
+                # level 1 - prefer win64 to win32
+                for p, dirs, files in os.walk(cur_dir):
+                    if 'win64' in dirs:
+                        cur_dir = os.path.join(cur_dir, 'win64')
+                    elif len(dirs) > 0:
+                        cur_dir = os.path.join(cur_dir, dirs[0])
+                    else:
+                        return ret
+                    break
+            if os.path.exists(cur_dir):
+                # level 2 - prefer biggest number (most recent version)
+                for p, dirs, files in os.walk(cur_dir):
+                    if len(dirs) > 1:
+                        try:
+                            versions = [float(x) for x in dirs]
+                            ret = os.path.join(cur_dir, "{}".format(max(versions)))
+                        except:
                             ret = os.path.join(cur_dir, dirs[0])
-                        break
-            else:
-                # posix systems
-                try:
-                    ret = os.path.dirname(subp.check_output(['which', 'gams'])).decode()
-                except:
-                    ret = None
+                    elif len(dirs) > 0:
+                        ret = os.path.join(cur_dir, dirs[0])
+                    break
+
+        if ret is None and os.name != 'nt':
+            # posix systems
+            try:
+                ret = os.path.dirname(subp.check_output(['which', 'gams'])).decode()
+            except:
+                ret = None
                 
         if ret is not None:
             ret = self.__clean_gams_dir(ret)
