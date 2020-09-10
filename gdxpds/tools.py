@@ -39,7 +39,6 @@ import logging
 import os
 import subprocess as subp
 import re
-from six import PY2, string_types, text_type
 
 logger = logging.getLogger(__name__)
 
@@ -55,7 +54,7 @@ class GamsDirFinder(object):
 
     The find function first looks for the 'GAMS_DIR' environment variable. If 
     that is unsuccessful, it next uses 'which gams' for POSIX systems, and the 
-    default install location, 'C:\GAMS', for Windows systems. In the latter case
+    default install location, 'C:/GAMS', for Windows systems. In the latter case
     it prefers the largest version number.
     
     You can always specify the GAMS directory directly, and this class will attempt 
@@ -77,7 +76,7 @@ class GamsDirFinder(object):
     @gams_dir.setter
     def gams_dir(self, value):
         self.__gams_dir = None
-        if isinstance(value,string_types):
+        if isinstance(value, str):
             self.__gams_dir = self.__clean_gams_dir(value)
         if self.__gams_dir is None:
             self.__gams_dir = self.__find_gams()
@@ -86,13 +85,11 @@ class GamsDirFinder(object):
         """
         Cleans up the path string.
         """
-        assert(isinstance(value,string_types))
+        assert(isinstance(value, str))
         ret = os.path.realpath(value)
         if not os.path.exists(ret):
             return None
         ret = re.sub('\\\\','/',ret)
-        if PY2 and isinstance(ret, text_type):
-            ret = ret.encode('ascii','replace')
         return ret
         
     def __find_gams(self):
@@ -101,7 +98,7 @@ class GamsDirFinder(object):
         variable.
 
         For Windows, the next step is to look for the GAMS directory based on 
-        the default install location (C:\GAMS). 
+        the default install location (C:/GAMS).
         
         For all others, the next step is 'which gams'.
         
@@ -117,7 +114,7 @@ class GamsDirFinder(object):
             if os.name == 'nt':
                 # windows systems
                 # search in default installation location
-                cur_dir = 'C:\GAMS'
+                cur_dir = r'C:\GAMS'
                 if os.path.exists(cur_dir):
                     # level 1 - prefer win64 to win32
                     for p, dirs, files in os.walk(cur_dir):

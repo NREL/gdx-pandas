@@ -43,8 +43,6 @@ import logging
 from gdxpds.tools import Error
 from gdxpds.gdx import GdxFile
 
-import pandas as pds
-
 logger = logging.getLogger(__name__)
 
 class Translator(object):
