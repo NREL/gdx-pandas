@@ -80,7 +80,6 @@ class GamsDirFinder(object):
             self.__gams_dir = self.__clean_gams_dir(value)
         if self.__gams_dir is None:
             self.__gams_dir = self.__find_gams()
-        raise Error(f"Unexpected gams_dir type {type(value)}; expected str or None")
             
     def __clean_gams_dir(self,value):
         """
