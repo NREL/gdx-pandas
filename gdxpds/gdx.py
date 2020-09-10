@@ -820,6 +820,10 @@ class GdxSymbol(object):
         self._loaded = True
         return
 
+    def unload(self):
+        self.dataframe = None
+        self._loaded = False
+
     def write(self,index=None): 
         if not self.loaded:
             raise Error("Cannot write unloaded symbol {}.".format(repr(self.name)))
