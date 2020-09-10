@@ -78,6 +78,9 @@ class GamsDirFinder(object):
         self.__gams_dir = None
         if isinstance(value, str):
             self.__gams_dir = self.__clean_gams_dir(value)
+        elif value is not None:
+            logger.warning(f"Unexpected gams_dir type {type(value)}. Ignoring "
+                f"input {value!r} because it is not a str.")
         if self.__gams_dir is None:
             self.__gams_dir = self.__find_gams()
             
