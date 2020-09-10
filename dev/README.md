@@ -40,7 +40,7 @@ python ../../dev/md_to_rst.py md_files.txt
 
 ### Refresh API Documentation
 
-- Make sure layerstack is in your PYTHONPATH
+- Make sure gdx-pandas is in your PYTHONPATH
 - Delete the contents of `source/api`.
 - Run `sphinx-apidoc -o source/api ..` from the `doc` folder.
 - Compare `source/api/modules.rst` to `source/api.rst`. Delete `setup.rst` and references to it.
