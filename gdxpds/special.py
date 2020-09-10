@@ -243,18 +243,23 @@ def gdx_val_equal(val1,val2,gdxf):
     return val1 == val2
 
 
-def load_specials():
+def load_specials(gams_dir_finder):
     """
     Load special values
 
-    Needs to be called after gdxcc is loaded.
+    Needs to be called after gdxcc is loaded. Populates the module attributes
+    SPECIAL_VALUES, GDX_TO_NP_SVS, and NP_TO_GDX_SVS.
+
+    Parameters
+    ----------
+    gams_dir_finder : :class:`gdxpds.tools.GamsDirFinder`
     """
     global SPECIAL_VALUES
     global GDX_TO_NP_SVS
     global NP_TO_GDX_SVS
 
     H = gdxcc.new_gdxHandle_tp()
-    rc = gdxcc.gdxCreateD(H, None, gdxcc.GMS_SSSIZE)
+    rc = gdxcc.gdxCreateD(H, gams_dir_finder.gams_dir, gdxcc.GMS_SSSIZE)
     if not rc:
         raise Exception(rc[1])
     # get special values

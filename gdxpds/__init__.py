@@ -68,7 +68,7 @@ def load_gdxcc(gams_dir=None):
     H = gdxcc.new_gdxHandle_tp()
     rc = gdxcc.gdxCreateD(H,finder.gams_dir,gdxcc.GMS_SSSIZE)
     gdxcc.gdxFree(H)
-    load_specials()
+    load_specials(finder)
     return
 
 try:
@@ -79,8 +79,8 @@ except:
     try:
         gams_dir = GamsDirFinder().gams_dir
     except: pass
-    logger.warning("Unable to load gdxcc with default GAMS directory '{}'. ".format(gams_dir) + \
-                   "You may need to explicitly call gdxpds.load_gdxcc(gams_dir) " + \
+    logger.warning(f"Unable to load gdxcc with default GAMS directory '{gams_dir}'. "
+                   "You may need to explicitly call gdxpds.load_gdxcc(gams_dir) "
                    "before importing pandas to avoid a library conflict.")
 
 
