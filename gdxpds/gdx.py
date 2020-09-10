@@ -592,7 +592,8 @@ class GdxSymbol(object):
 
     def get_value_col_default(self,value_col_name):
         if not value_col_name in self.value_col_names:
-            raise Error("{} is not one of the value columns for this GdxSymbol, which is a {}".format(value_col_name,self.data_type))
+            raise Error(f"{value_col_name} is not one of the value columns for "
+                f"this GdxSymbol, which is a {self.data_type}")
         value_col = GamsValueType(value_col_name)
         if self.data_type == GamsDataType.Set:
             assert value_col == GamsValueType.Level
@@ -725,7 +726,6 @@ class GdxSymbol(object):
             raise
 
         if self.data_type == GamsDataType.Set:
-            logger.debug(self._dataframe.head())
             self._fixup_set_value()
         return
 
@@ -738,7 +738,7 @@ class GdxSymbol(object):
 
     def _append_default_values(self,df):
         assert len(df.columns) == self.num_dims
-        logger.debug("Applying default values to create valid dataframe for '{}'.".format(self.name))
+        logger.debug("Applying default values to create valid dataframe for '{self.name}'.")
         for value_col_name in self.value_col_names:
             df[value_col_name] = self.get_value_col_default(value_col_name)
 
@@ -758,7 +758,10 @@ class GdxSymbol(object):
 
         colname = self._dataframe.columns[-1]
         assert colname == self.value_col_names[0], f"Unexpected final column {colname!r} in Set dataframe"
-        replace_df_column(self._dataframe, colname, self._dataframe[colname].fillna(value=True))
+        if self._dataframe[colname].isnull().values.any():
+            logger.warning(f"Filling null values in {self} with True. To be "
+                "filled:\n{self._dataframe[self._dataframe[colname].isnull()]}")
+            replace_df_column(self._dataframe, colname, self._dataframe[colname].fillna(value=True))
         replace_df_column(self._dataframe,colname,self._dataframe[colname].apply(lambda x: c_bool(x)))
         return
 

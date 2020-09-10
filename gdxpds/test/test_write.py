@@ -3,6 +3,7 @@ import copy
 import logging
 import os
 
+import numpy as np
 import pandas as pds
 import pytest
 
@@ -338,10 +339,16 @@ def test_setting_dataframes(manage_rundir):
         assert gdx['sym_17'].num_records == 0
 
 
-def test_numeric_types(manage_rundir):
-    outdir = os.path.join(run_dir,'numeric_types')
+def test_parameter_with_nulls(manage_rundir):
+    outdir = os.path.join(run_dir,'parameter_with_nulls')
     if not os.path.exists(outdir):
         os.mkdir(outdir)
 
     with gdxpds.gdx.GdxFile() as gdx:
-        pass
+        gdx.append(gdxpds.gdx.GdxSymbol('has_nulls',
+            gdxpds.gdx.GamsDataType.Parameter, dims=1))
+        gdx[-1].dataframe = [['A', 1],
+                             ['B', None]]
+        assert gdx[-1].dataframe['Value'].isnull().values.any()
+
+        gdx.write(os.path.join(outdir, 'parameter_with_nulls_test.gdx'))
