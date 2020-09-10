@@ -46,6 +46,7 @@ import sys
 logger = logging.getLogger(__name__)
 
 from gdxpds.tools import Error
+from gdxpds.special import load_specials
 
 def load_gdxcc(gams_dir=None):
     """
@@ -67,6 +68,7 @@ def load_gdxcc(gams_dir=None):
     H = gdxcc.new_gdxHandle_tp()
     rc = gdxcc.gdxCreateD(H,finder.gams_dir,gdxcc.GMS_SSSIZE)
     gdxcc.gdxFree(H)
+    load_specials()
     return
 
 try:
