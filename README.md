@@ -1,17 +1,17 @@
 # gdx-pandas
 [![PyPI](https://img.shields.io/pypi/v/gdxpds.svg)](https://pypi.python.org/pypi/gdxpds/)
-[![Documentation](https://img.shields.io/badge/docs-ready-blue.svg)](http://nrel.github.io/gdx-pandas)
+[![Documentation](https://img.shields.io/badge/docs-ready-blue.svg)](https://nrel.github.io/gdx-pandas)
 
 gdx-pandas is a python package to translate between gdx (GAMS data) and pandas. 
 
-[Install](#install) | [Documentation](http://nrel.github.io/gdx-pandas) | [Uninstall](#uninstall)
+[Install](#install) | [Documentation](https://nrel.github.io/gdx-pandas) | [Uninstall](#uninstall)
 
 ## Install
 
 ### Preliminaries
 
 - Python 3.4 or 3.6 (gdx-pandas support for Python 2.X has been discontinued; GAMS does not yet support Python 3.7)
-- pandas (In general you will want the SciPy stack. Anaconda comes with it, or see [my notes for Windows](http://elainethale.wordpress.com/programming-notes/python-environment-set-up/).)
+- pandas (In general you will want the SciPy stack. Anaconda comes with it, or see [my notes for Windows](https://elainethale.wordpress.com/programming-notes/python-environment-set-up/).)
 - For Python versions < 3.4, enum34. Also **uninstall the enum package** if it is installed.
 - Install [GAMS](https://www.gams.com/download/)
 - Put the GAMS directory in your `PATH` and/or assign it to the `GAMS_DIR` environment variable

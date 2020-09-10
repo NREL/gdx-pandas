@@ -6,13 +6,13 @@ DataFrames or a csv version thereof. Starting with the Version 1.0.0 rewrite,
 there is now a second style of use which involves interfacing with GDX files and 
 symbols via the `gdxpds.gdx.GdxFile` and `gdxpds.gdx.GdxSymbol` classes.
 
-Please visit http://nrel.github.io/gdx-pandas for the latest documentation.
+Please visit https://nrel.github.io/gdx-pandas for the latest documentation.
 
 
 DEPENDENCIES
 
 - Python 3.4 or 3.6 (gdx-pandas support for Python 2.X has been discontinued; GAMS does not yet support Python 3.7)
-- pandas (In general you will want the SciPy stack. Anaconda comes with it, or see [my notes for Windows](http://elainethale.wordpress.com/programming-notes/python-environment-set-up/).)
+- pandas (In general you will want the SciPy stack. Anaconda comes with it, or see [my notes for Windows](https://elainethale.wordpress.com/programming-notes/python-environment-set-up/).)
 - For Python versions < 3.4, enum34. Also **uninstall the enum package** if it is installed.
 - Install [GAMS](https://www.gams.com/download/)
 - Put the GAMS directory in your `PATH` and/or assign it to the `GAMS_DIR` environment variable
