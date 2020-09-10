@@ -80,6 +80,7 @@ class GamsDirFinder(object):
             self.__gams_dir = self.__clean_gams_dir(value)
         if self.__gams_dir is None:
             self.__gams_dir = self.__find_gams()
+        raise Error(f"Unexpected gams_dir type {type(value)}; expected str or None")
             
     def __clean_gams_dir(self,value):
         """
@@ -95,10 +96,11 @@ class GamsDirFinder(object):
     def __find_gams(self):
         """
         For all systems, the first place we examine is the GAMS_DIR environment
-        variable.
+        variable, and the second is GAMSDIR.
 
-        For Windows, the next step is to look for the GAMS directory based on 
-        the default install location (C:/GAMS).
+        For Windows, the next step is to try 'where gams'. Then we look in the 
+        default install location (C:/GAMS), preferring win64 to win32 and the 
+        most recent version.
         
         For all others, the next step is 'which gams'.
         
@@ -109,6 +111,9 @@ class GamsDirFinder(object):
         """
         # check for environment variable
         ret = os.environ.get('GAMS_DIR')
+
+        if ret is None:
+            ret = os.environ.get('GAMSDIR')
 
         if ret is None and os.name == 'nt':
             # windows systems
@@ -155,7 +160,7 @@ class GamsDirFinder(object):
             GamsDirFinder.gams_dir_cache = ret
 
         if ret is None:
-            logger.debug("Did not find GAMS directory. Using cached value {}.".format(self.gams_dir_cache))
+            logger.debug(f"Did not find GAMS directory. Using cached value {self.gams_dir_cache}.")
             ret = GamsDirFinder.gams_dir_cache
             
         return ret
