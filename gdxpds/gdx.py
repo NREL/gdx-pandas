@@ -867,7 +867,7 @@ class GdxSymbol(object):
         for row in special.convert_np_to_gdx_svs(self.dataframe, self.num_dims).itertuples(index=False, name=None):
             dims = [str(x) for x in row[:self.num_dims]]
             vals = row[self.num_dims:]
-            for col_name, col_ind in self.value_cols:
+            for _col_name, col_ind in self.value_cols:
                 values[col_ind] = float(0.0)
                 try:
                     if isinstance(vals[col_ind],Number):
@@ -877,3 +877,96 @@ class GdxSymbol(object):
             gdxcc.gdxDataWriteStr(self.file.H,dims,values)
         gdxcc.gdxDataWriteDone(self.file.H)
         return
+
+
+# ------------------------------------------------------------------------------
+# Helper functions
+# ------------------------------------------------------------------------------
+
+def append_set(gdx_file, set_name, df, cols=None, dim_names=None, 
+        description=None):
+    """
+    Convenience function that appends set_name to gdx_file as a 
+    :class:`GamsDataType.Set <GamsDataType>` :class:`GdxSymbol` using data in 
+    df.
+
+    Parameters
+    ----------
+    gdx_file : :class:`GdxFile`
+        file to which new :class:`GdxSymbol` is to be added
+    set_name : str
+        name of the :class:`GdxSymbol` to be added
+    df : pandas.DataFrame
+        dataframe or data that can be used to construct a dataframe containing 
+        the set data. assumes that all columns define dimensions (there is no 
+        'Value' column)
+    cols : None or list of str
+        if not None, these are the columns in df to be used for the set 
+        definition
+    dim_names : None or list of str
+        if provided, the columns of a copy of df (or of df[cols]) will be renamed
+        to these names, because the dimension names are taken from the final 
+        dataframe, these will also be the dimension names
+    description : None or str
+        passed directly to :class:`GdxSymbol`
+    """
+    # ensure df is DataFrame and not Series
+    logger.debug(f"Defining set {set_name!r} based on:\n{df!r}")
+    tmp = pds.DataFrame(df)
+    # select down to data we actually want
+    if cols is not None:
+        tmp = tmp[cols]
+    if dim_names is not None:
+        tmp.columns = dim_names
+    # define the symbol
+    gdx_file.append(GdxSymbol(set_name, GamsDataType.Set, 
+        dims = list(tmp.columns), description = description))
+    # define the data for the symbol
+    gdx_file[-1].dataframe = tmp
+    # debug description of what happened
+    logger.debug(f"Added set {set_name!r} to {gdx_file!r} using processed data:\n{tmp!r}")
+    return
+
+
+def append_parameter(gdx_file, param_name, df, cols=None, dim_names=None, 
+        description=None):
+    """
+    Convenience function that appends param_name to gdx_file as a 
+    :class:`GamsDataType.Parameter <GamsDataType>` :class:`GdxSymbol` using 
+    data in df.
+
+    Parameters
+    ----------
+    gdx_file : :class:`GdxFile`
+        file to which new :class:`GdxSymbol` is to be added
+    param_name : str
+        name of the :class:`GdxSymbol` to be added
+    df : pandas.DataFrame
+        dataframe or data that can be used to construct a dataframe containing 
+        the parameter data. assumes that the last selected column is the 'Value' 
+        column
+    cols : None or list of str
+        if not None, these are the columns in df to be used for the parameter
+        definition
+    dim_names : None or list of str
+        if provided, the columns of a copy of df (or of df[cols]) will be renamed
+        to these names + ['Value']. because the dimension names are taken from 
+        the final dataframe, these will also be the dimension names
+    description : None or str
+        passed directly to :class:`GdxSymbol`
+    """
+    # pre-process the data
+    logger.debug(f"Defining parameter {param_name!r} based on:\n{df!r}")
+    tmp = df.copy()
+    if cols is not None:
+        tmp = tmp[cols]
+    if dim_names is not None:
+        tmp.columns = dim_names + ['Value']
+    # define the symbol
+    gdx_file.append(GdxSymbol(param_name, GamsDataType.Parameter,
+        dims = list(tmp.columns)[:-1], description = description))
+    # define the data for the symbol
+    gdx_file[-1].dataframe = tmp
+    # debug descripton of what happened
+    logger.debug(f"Added parameter {param_name!r} to {gdx_file!r} using processed data:\n{tmp!r}")
+    return

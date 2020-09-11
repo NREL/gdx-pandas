@@ -280,7 +280,7 @@ def test_setting_dataframes(manage_rundir):
         cols = list(tmp.columns)
         tmp['q'] = 'PV'
         tmp = tmp[['q'] + cols]
-        with pytest.raises(Exception) as e_info:
+        with pytest.raises(Exception) as _excinfo:
             gdx[-1].dataframe = tmp
         #     full dataframe of different number of dims
         gdx.append(gdxpds.gdx.GdxSymbol('sym_21',gdxpds.gdx.GamsDataType.Parameter,
