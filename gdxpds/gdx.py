@@ -156,7 +156,7 @@ class GdxFile(MutableSequence, NeedsGamsDir):
         self.universal_set = GdxSymbol('*',GamsDataType.Set,dims=1,file=None,index=0)
         self.universal_set._file = self
 
-        atexit.register(self.cleanup)
+        atexit.register(gdxcc.gdxFree, self.H)
         return
 
     def cleanup(self):
