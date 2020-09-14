@@ -917,7 +917,10 @@ def append_set(gdx_file, set_name, df, cols=None, dim_names=None,
     if cols is not None:
         tmp = tmp[cols]
     if dim_names is not None:
-        tmp.columns = dim_names
+        if tmp.empty:
+            tmp = pds.DataFrame([], columns = dim_names)
+        else:
+            tmp.columns = dim_names
     # define the symbol
     gdx_file.append(GdxSymbol(set_name, GamsDataType.Set, 
         dims = list(tmp.columns), description = description))
@@ -957,11 +960,14 @@ def append_parameter(gdx_file, param_name, df, cols=None, dim_names=None,
     """
     # pre-process the data
     logger.debug(f"Defining parameter {param_name!r} based on:\n{df!r}")
-    tmp = df.copy()
+    tmp = pds.DataFrame(df)
     if cols is not None:
         tmp = tmp[cols]
     if dim_names is not None:
-        tmp.columns = dim_names + ['Value']
+        if tmp.empty:
+            tmp = pds.DataFrame([], columns = dim_names + ['Value'])
+        else:
+            tmp.columns = dim_names + ['Value']
     # define the symbol
     gdx_file.append(GdxSymbol(param_name, GamsDataType.Parameter,
         dims = list(tmp.columns)[:-1], description = description))
