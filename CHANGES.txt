@@ -1,4 +1,9 @@
-v1.2.0, XX/XX/XX -- TBD
+v1.2.0, 09/18/20 -- search for GAMS in more places, especially on Windows
+                    gdxpds.gdx.GdxSymbol.unload method for user-directed memory managment
+                    convenience functions gdxpds.gdx.append_set and append_parameter
+                    special value handling moved to its own module
+                    clarifying that Python 2.X is not longer supported
+                    general documentation, pylint, and testing improvements
 v1.1.0, 10/09/18 -- fixes to_dataframes and to_gdx memory leaks, respects 
                     GAMS_DIR environment variable, additional bug and warning 
                     fixes. GdxSymbol.dataframe can now be set just using the 
