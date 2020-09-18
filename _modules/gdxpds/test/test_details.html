@@ -1,0 +1,703 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gdxpds.test.test_details &mdash; gdx-pandas 1.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> gdx-pandas
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">gdx-pandas overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../overview.html#direct-conversion">Direct Conversion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../overview.html#backend-classes">Backend Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/gdxpds.html">gdxpds package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gdxpds.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/gdxpds.test.html">gdxpds.test package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gdxpds.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gdxpds.html#module-gdxpds.gdx">gdxpds.gdx module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gdxpds.html#module-gdxpds.read_gdx">gdxpds.read_gdx module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gdxpds.html#module-gdxpds.tools">gdxpds.tools module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gdxpds.html#module-gdxpds.write_gdx">gdxpds.write_gdx module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gdxpds.html#module-gdxpds">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">gdx-pandas</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../gdxpds.html">gdxpds</a> &raquo;</li>
+        
+          <li><a href="../test.html">gdxpds.test</a> &raquo;</li>
+        
+      <li>gdxpds.test.test_details</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for gdxpds.test.test_details</h1><div class="highlight"><pre>
+<span></span><span class="c1"># [LICENSE]</span>
+<span class="c1"># Copyright (c) 2018, Alliance for Sustainable Energy.</span>
+<span class="c1"># All rights reserved.</span>
+<span class="c1"># </span>
+<span class="c1"># Redistribution and use in source and binary forms, </span>
+<span class="c1"># with or without modification, are permitted provided </span>
+<span class="c1"># that the following conditions are met:</span>
+<span class="c1"># </span>
+<span class="c1"># 1. Redistributions of source code must retain the above </span>
+<span class="c1"># copyright notice, this list of conditions and the </span>
+<span class="c1"># following disclaimer.</span>
+<span class="c1"># </span>
+<span class="c1"># 2. Redistributions in binary form must reproduce the </span>
+<span class="c1"># above copyright notice, this list of conditions and the </span>
+<span class="c1"># following disclaimer in the documentation and/or other </span>
+<span class="c1"># materials provided with the distribution.</span>
+<span class="c1"># </span>
+<span class="c1"># 3. Neither the name of the copyright holder nor the </span>
+<span class="c1"># names of its contributors may be used to endorse or </span>
+<span class="c1"># promote products derived from this software without </span>
+<span class="c1"># specific prior written permission.</span>
+<span class="c1"># </span>
+<span class="c1"># THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND </span>
+<span class="c1"># CONTRIBUTORS &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, </span>
+<span class="c1"># INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF </span>
+<span class="c1"># MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE </span>
+<span class="c1"># DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR </span>
+<span class="c1"># CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, </span>
+<span class="c1"># SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, </span>
+<span class="c1"># BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR </span>
+<span class="c1"># SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) </span>
+<span class="c1"># HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN </span>
+<span class="c1"># CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE </span>
+<span class="c1"># OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS</span>
+<span class="c1"># SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</span>
+<span class="c1"># [/LICENSE]</span>
+
+<span class="kn">from</span> <span class="nn">ctypes</span> <span class="k">import</span> <span class="n">c_bool</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">subprocess</span> <span class="k">as</span> <span class="nn">subp</span>
+
+<span class="kn">import</span> <span class="nn">gdxpds.gdx</span>
+<span class="kn">from</span> <span class="nn">gdxpds.test</span> <span class="k">import</span> <span class="n">base_dir</span><span class="p">,</span> <span class="n">run_dir</span>
+<span class="kn">from</span> <span class="nn">gdxpds.test.test_session</span> <span class="k">import</span> <span class="n">manage_rundir</span>
+<span class="kn">from</span> <span class="nn">gdxpds.test.test_conversions</span> <span class="k">import</span> <span class="n">roundtrip_one_gdx</span>
+
+<span class="kn">import</span> <span class="nn">gdxcc</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pds</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<div class="viewcode-block" id="value_column_index"><a class="viewcode-back" href="../../../api/gdxpds.test.html#gdxpds.test.test_details.value_column_index">[docs]</a><span class="k">def</span> <span class="nf">value_column_index</span><span class="p">(</span><span class="n">sym</span><span class="p">,</span><span class="n">gams_value_type</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sym</span><span class="o">.</span><span class="n">value_cols</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">gams_value_type</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+            <span class="k">break</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">sym</span><span class="o">.</span><span class="n">dims</span><span class="p">)</span> <span class="o">+</span> <span class="n">i</span></div>
+
+<div class="viewcode-block" id="test_roundtrip_just_special_values"><a class="viewcode-back" href="../../../api/gdxpds.test.html#gdxpds.test.test_details.test_roundtrip_just_special_values">[docs]</a><span class="k">def</span> <span class="nf">test_roundtrip_just_special_values</span><span class="p">(</span><span class="n">manage_rundir</span><span class="p">):</span>
+    <span class="n">outdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">run_dir</span><span class="p">,</span><span class="s1">&#39;special_values&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outdir</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">outdir</span><span class="p">)</span>
+    <span class="c1"># create gdx file containing all special values</span>
+    <span class="k">with</span> <span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxFile</span><span class="p">()</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pds</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([[</span><span class="s1">&#39;sv&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">f</span><span class="o">.</span><span class="n">special_values</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">gdxcc</span><span class="o">.</span><span class="n">GMS_SVIDX_MAX</span><span class="o">-</span><span class="mi">2</span><span class="p">)],</span>
+                           <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sv&#39;</span><span class="p">,</span><span class="s1">&#39;Value&#39;</span><span class="p">])</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Special values are:</span><span class="se">\n</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">df</span><span class="p">))</span>
+
+        <span class="c1"># save this directly as a GdxSymbol</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span><span class="s1">&#39;direct_write_special_values.gdx&#39;</span><span class="p">)</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">gdxcc</span><span class="o">.</span><span class="n">gdxOpenWrite</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">H</span><span class="p">,</span><span class="n">filename</span><span class="p">,</span><span class="s2">&quot;gdxpds&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ret</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxError</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">H</span><span class="p">,</span><span class="s2">&quot;Could not open </span><span class="si">{}</span><span class="s2"> for writing. Consider cloning this file (.clone()) before trying to write&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">filename</span><span class="p">)))</span>
+        <span class="c1"># set special values</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">gdxcc</span><span class="o">.</span><span class="n">gdxSetSpecialValues</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">H</span><span class="p">,</span><span class="n">f</span><span class="o">.</span><span class="n">special_values</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ret</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxError</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">H</span><span class="p">,</span><span class="s2">&quot;Unable to set special values&quot;</span><span class="p">)</span>
+        <span class="c1"># write the universal set</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">universal_set</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">gdxcc</span><span class="o">.</span><span class="n">gdxDataWriteStrStart</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">H</span><span class="p">,</span>
+                                          <span class="s1">&#39;special_values&#39;</span><span class="p">,</span>
+                                          <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                                          <span class="mi">1</span><span class="p">,</span>
+                                          <span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsDataType</span><span class="o">.</span><span class="n">Parameter</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                                          <span class="mi">0</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxError</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">H</span><span class="p">,</span><span class="s2">&quot;Could not start writing data for symbol special_values&quot;</span><span class="p">)</span>
+        <span class="c1"># set domain information</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">gdxcc</span><span class="o">.</span><span class="n">gdxSymbolSetDomainX</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">H</span><span class="p">,</span><span class="mi">1</span><span class="p">,[</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]]):</span>
+            <span class="k">raise</span> <span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxError</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">H</span><span class="p">,</span><span class="s2">&quot;Could not set domain information for special_values.&quot;</span><span class="p">)</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">gdxcc</span><span class="o">.</span><span class="n">doubleArray</span><span class="p">(</span><span class="n">gdxcc</span><span class="o">.</span><span class="n">GMS_VAL_MAX</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">itertuples</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="n">dims</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[:</span><span class="mi">1</span><span class="p">]]</span>
+            <span class="n">vals</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="k">for</span> <span class="n">col_name</span><span class="p">,</span> <span class="n">col_ind</span> <span class="ow">in</span> <span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GAMS_VALUE_COLS_MAP</span><span class="p">[</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsDataType</span><span class="o">.</span><span class="n">Parameter</span><span class="p">]:</span>
+                <span class="n">values</span><span class="p">[</span><span class="n">col_ind</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">vals</span><span class="p">[</span><span class="n">col_ind</span><span class="p">])</span>
+            <span class="n">gdxcc</span><span class="o">.</span><span class="n">gdxDataWriteStr</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">H</span><span class="p">,</span><span class="n">dims</span><span class="p">,</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">gdxcc</span><span class="o">.</span><span class="n">gdxDataWriteDone</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">H</span><span class="p">)</span>
+        <span class="n">gdxcc</span><span class="o">.</span><span class="n">gdxClose</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">H</span><span class="p">)</span>
+
+    <span class="c1"># general test for expected values</span>
+    <span class="k">def</span> <span class="nf">check_special_values</span><span class="p">(</span><span class="n">gdx_file</span><span class="p">):</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">gdx_file</span><span class="p">[</span><span class="s1">&#39;special_values&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">):</span>
+            <span class="k">assert</span> <span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">gdx_val_equal</span><span class="p">(</span><span class="n">gdx_file</span><span class="o">.</span><span class="n">np_to_gdx_svs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">gdx_file</span><span class="o">.</span><span class="n">special_values</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">gdx_file</span><span class="p">)</span>
+
+    <span class="c1"># now roundtrip it gdx-only</span>
+    <span class="k">with</span> <span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxFile</span><span class="p">(</span><span class="n">lazy_load</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="n">check_special_values</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">f</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span> <span class="k">as</span> <span class="n">g</span><span class="p">:</span>
+            <span class="n">rt_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span><span class="s1">&#39;roundtripped.gdx&#39;</span><span class="p">)</span>
+            <span class="n">g</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">rt_filename</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxFile</span><span class="p">(</span><span class="n">lazy_load</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">g</span><span class="p">:</span>
+        <span class="n">g</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="n">check_special_values</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+
+    <span class="c1"># now roundtrip it through csv</span>
+    <span class="n">roundtripped_gdx</span> <span class="o">=</span> <span class="n">roundtrip_one_gdx</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="s1">&#39;roundtrip_just_special_values&#39;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxFile</span><span class="p">(</span><span class="n">lazy_load</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">h</span><span class="p">:</span>
+        <span class="n">h</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">roundtripped_gdx</span><span class="p">)</span>
+        <span class="n">check_special_values</span><span class="p">(</span><span class="n">h</span><span class="p">)</span></div>
+    
+
+<div class="viewcode-block" id="test_roundtrip_special_values"><a class="viewcode-back" href="../../../api/gdxpds.test.html#gdxpds.test.test_details.test_roundtrip_special_values">[docs]</a><span class="k">def</span> <span class="nf">test_roundtrip_special_values</span><span class="p">(</span><span class="n">manage_rundir</span><span class="p">):</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;OptimalCSPConfig_Out.gdx&#39;</span>
+    <span class="n">original_gdx</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_dir</span><span class="p">,</span><span class="n">filename</span><span class="p">)</span>
+    <span class="n">roundtripped_gdx</span> <span class="o">=</span> <span class="n">roundtrip_one_gdx</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="s1">&#39;roundtrip_special_values&#39;</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">gdx_file</span> <span class="ow">in</span> <span class="p">[</span><span class="n">original_gdx</span><span class="p">,</span> <span class="n">roundtripped_gdx</span><span class="p">]:</span>
+        <span class="k">with</span> <span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxFile</span><span class="p">(</span><span class="n">lazy_load</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">gdx</span><span class="p">:</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">([])</span>
+            <span class="n">gdx</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">gdx_file</span><span class="p">)</span>
+            <span class="n">sym</span> <span class="o">=</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;calculate_capacity_value&#39;</span><span class="p">]</span>
+            <span class="k">assert</span> <span class="n">sym</span><span class="o">.</span><span class="n">data_type</span> <span class="o">==</span> <span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsDataType</span><span class="o">.</span><span class="n">Equation</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">sym</span><span class="o">.</span><span class="n">dataframe</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">value_column_index</span><span class="p">(</span><span class="n">sym</span><span class="p">,</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsValueType</span><span class="o">.</span><span class="n">Marginal</span><span class="p">)]</span>
+            <span class="k">assert</span> <span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">is_np_sv</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+            <span class="n">data</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+            <span class="n">sym</span> <span class="o">=</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;CapacityValue&#39;</span><span class="p">]</span>
+            <span class="k">assert</span> <span class="n">sym</span><span class="o">.</span><span class="n">data_type</span> <span class="o">==</span> <span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsDataType</span><span class="o">.</span><span class="n">Variable</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">sym</span><span class="o">.</span><span class="n">dataframe</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">value_column_index</span><span class="p">(</span><span class="n">sym</span><span class="p">,</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsValueType</span><span class="o">.</span><span class="n">Upper</span><span class="p">)]</span>
+            <span class="k">assert</span> <span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">is_np_sv</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+            <span class="n">data</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">data</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">pt</span><span class="p">)):</span>
+            <span class="k">assert</span> <span class="p">(</span><span class="n">pt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">pt</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">or</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">pt</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">pt</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span></div>
+
+<div class="viewcode-block" id="test_from_scratch_sets"><a class="viewcode-back" href="../../../api/gdxpds.test.html#gdxpds.test.test_details.test_from_scratch_sets">[docs]</a><span class="k">def</span> <span class="nf">test_from_scratch_sets</span><span class="p">(</span><span class="n">manage_rundir</span><span class="p">):</span>
+    <span class="n">outdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">run_dir</span><span class="p">,</span><span class="s1">&#39;from_scratch_sets&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outdir</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">outdir</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxFile</span><span class="p">()</span> <span class="k">as</span> <span class="n">gdx</span><span class="p">:</span>
+        <span class="n">gdx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxSymbol</span><span class="p">(</span><span class="s1">&#39;my_set&#39;</span><span class="p">,</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsDataType</span><span class="o">.</span><span class="n">Set</span><span class="p">,</span><span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">]))</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">pds</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([[</span><span class="s1">&#39;u&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">11</span><span class="p">)])</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">c_bool</span><span class="p">)</span>
+        <span class="n">gdx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxSymbol</span><span class="p">(</span><span class="s1">&#39;my_other_set&#39;</span><span class="p">,</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsDataType</span><span class="o">.</span><span class="n">Set</span><span class="p">,</span><span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">]))</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">pds</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([[</span><span class="s1">&#39;u&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">11</span><span class="p">)],</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">])</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>        
+        <span class="n">gdx</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span><span class="s1">&#39;my_sets.gdx&#39;</span><span class="p">))</span>
+    <span class="k">with</span> <span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxFile</span><span class="p">(</span><span class="n">lazy_load</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">gdx</span><span class="p">:</span>
+        <span class="n">gdx</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span><span class="s1">&#39;my_sets.gdx&#39;</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">sym</span> <span class="ow">in</span> <span class="n">gdx</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">sym</span><span class="o">.</span><span class="n">num_dims</span> <span class="o">==</span> <span class="mi">1</span>
+            <span class="k">assert</span> <span class="n">sym</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;u&#39;</span>
+            <span class="k">assert</span> <span class="n">sym</span><span class="o">.</span><span class="n">data_type</span> <span class="o">==</span> <span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsDataType</span><span class="o">.</span><span class="n">Set</span>
+            <span class="k">assert</span> <span class="n">sym</span><span class="o">.</span><span class="n">num_records</span> <span class="o">==</span> <span class="mi">10</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sym</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="n">sym</span><span class="o">.</span><span class="n">dataframe</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">c_bool</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="test_numpy_eps"><a class="viewcode-back" href="../../../api/gdxpds.test.html#gdxpds.test.test_details.test_numpy_eps">[docs]</a><span class="k">def</span> <span class="nf">test_numpy_eps</span><span class="p">():</span>
+    <span class="k">assert</span><span class="p">(</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">is_np_eps</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">eps</span><span class="p">))</span>
+    <span class="k">assert</span><span class="p">(</span><span class="ow">not</span> <span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">is_np_eps</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)))</span>
+    <span class="k">assert</span><span class="p">(</span><span class="ow">not</span> <span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">is_np_eps</span><span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">eps</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="test_unnamed_dimensions"><a class="viewcode-back" href="../../../api/gdxpds.test.html#gdxpds.test.test_details.test_unnamed_dimensions">[docs]</a><span class="k">def</span> <span class="nf">test_unnamed_dimensions</span><span class="p">(</span><span class="n">manage_rundir</span><span class="p">):</span>
+    <span class="n">outdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">run_dir</span><span class="p">,</span><span class="s1">&#39;unnamed_dimensions&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outdir</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">outdir</span><span class="p">)</span>
+    <span class="c1"># create a gdx file with all symbol types and 4 dimensions named &#39;*&#39;</span>
+    <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;*&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span>
+    <span class="n">some_entries</span> <span class="o">=</span> <span class="n">pds</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([[</span><span class="s1">&#39;tech_1&#39;</span><span class="p">,</span><span class="s1">&#39;year_2&#39;</span><span class="p">,</span><span class="s1">&#39;low&#39;</span><span class="p">,</span><span class="s1">&#39;h1&#39;</span><span class="p">],</span>
+                                  <span class="p">[</span><span class="s1">&#39;tech_1&#39;</span><span class="p">,</span><span class="s1">&#39;year_2&#39;</span><span class="p">,</span><span class="s1">&#39;low&#39;</span><span class="p">,</span><span class="s1">&#39;h2&#39;</span><span class="p">],</span>
+                                  <span class="p">[</span><span class="s1">&#39;tech_1&#39;</span><span class="p">,</span><span class="s1">&#39;year_2&#39;</span><span class="p">,</span><span class="s1">&#39;low&#39;</span><span class="p">,</span><span class="s1">&#39;h3&#39;</span><span class="p">],</span>
+                                  <span class="p">[</span><span class="s1">&#39;tech_1&#39;</span><span class="p">,</span><span class="s1">&#39;year_2&#39;</span><span class="p">,</span><span class="s1">&#39;low&#39;</span><span class="p">,</span><span class="s1">&#39;h4&#39;</span><span class="p">]],</span>
+                                 <span class="n">columns</span> <span class="o">=</span> <span class="n">cols</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxFile</span><span class="p">()</span> <span class="k">as</span> <span class="n">gdx</span><span class="p">:</span>
+        <span class="c1"># Set</span>
+        <span class="n">gdx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxSymbol</span><span class="p">(</span><span class="s1">&#39;star_set&#39;</span><span class="p">,</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsDataType</span><span class="o">.</span><span class="n">Set</span><span class="p">,</span><span class="n">dims</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
+        <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span> <span class="o">=</span> <span class="n">some_entries</span>
+        <span class="c1"># Parmeter</span>
+        <span class="n">a_param</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">some_entries</span><span class="p">)</span>
+        <span class="n">a_param</span><span class="p">[</span><span class="s1">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">2.0</span><span class="p">,</span><span class="mf">3.0</span><span class="p">,</span><span class="mf">4.0</span><span class="p">]</span>
+        <span class="n">gdx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxSymbol</span><span class="p">(</span><span class="s1">&#39;star_param&#39;</span><span class="p">,</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsDataType</span><span class="o">.</span><span class="n">Parameter</span><span class="p">,</span><span class="n">dims</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
+        <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="n">a_param</span>
+        <span class="c1"># Test changing the parameter data</span>
+        <span class="n">a_param</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;tech_2&#39;</span>
+        <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="n">pds</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span><span class="p">,</span><span class="n">a_param</span><span class="p">])</span>
+        <span class="c1"># Variable</span>
+        <span class="n">gdx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxSymbol</span><span class="p">(</span><span class="s1">&#39;star_var&#39;</span><span class="p">,</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsDataType</span><span class="o">.</span><span class="n">Variable</span><span class="p">,</span><span class="n">dims</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                   <span class="n">variable_type</span><span class="o">=</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsVariableType</span><span class="o">.</span><span class="n">Positive</span><span class="p">))</span>
+        <span class="n">a_var</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">some_entries</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">value_col_name</span> <span class="ow">in</span> <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">value_col_names</span><span class="p">:</span>
+            <span class="n">a_var</span><span class="p">[</span><span class="n">value_col_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_value_col_default</span><span class="p">(</span><span class="n">value_col_name</span><span class="p">)</span>
+        <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="n">a_var</span>
+        <span class="c1"># Equation</span>
+        <span class="n">gdx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxSymbol</span><span class="p">(</span><span class="s1">&#39;star_eqn&#39;</span><span class="p">,</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsDataType</span><span class="o">.</span><span class="n">Equation</span><span class="p">,</span><span class="n">dims</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                   <span class="n">equation_type</span><span class="o">=</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsEquationType</span><span class="o">.</span><span class="n">GreaterThan</span><span class="p">))</span>
+        <span class="n">an_eqn</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">some_entries</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">value_col_name</span> <span class="ow">in</span> <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">value_col_names</span><span class="p">:</span>
+            <span class="n">an_eqn</span><span class="p">[</span><span class="n">value_col_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_value_col_default</span><span class="p">(</span><span class="n">value_col_name</span><span class="p">)</span>
+        <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="n">an_eqn</span>
+        <span class="n">gdx</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span><span class="s1">&#39;star_symbols.gdx&#39;</span><span class="p">))</span>
+    <span class="k">with</span> <span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxFile</span><span class="p">(</span><span class="n">lazy_load</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">gdx</span><span class="p">:</span>
+        <span class="n">gdx</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span><span class="s1">&#39;star_symbols.gdx&#39;</span><span class="p">))</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;star_set&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">num_dims</span> <span class="o">==</span> <span class="mi">4</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;star_set&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data_type</span> <span class="o">==</span> <span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsDataType</span><span class="o">.</span><span class="n">Set</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;star_set&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">variable_type</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;star_set&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">equation_type</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;star_param&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">num_dims</span> <span class="o">==</span> <span class="mi">4</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;star_param&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data_type</span> <span class="o">==</span> <span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsDataType</span><span class="o">.</span><span class="n">Parameter</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;star_param&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">variable_type</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;star_param&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">equation_type</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;star_var&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">num_dims</span> <span class="o">==</span> <span class="mi">4</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;star_var&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data_type</span> <span class="o">==</span> <span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsDataType</span><span class="o">.</span><span class="n">Variable</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;star_var&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">variable_type</span> <span class="o">==</span> <span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsVariableType</span><span class="o">.</span><span class="n">Positive</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;star_var&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">equation_type</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;star_eqn&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">num_dims</span> <span class="o">==</span> <span class="mi">4</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;star_eqn&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data_type</span> <span class="o">==</span> <span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsDataType</span><span class="o">.</span><span class="n">Equation</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;star_eqn&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">variable_type</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;star_eqn&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">equation_type</span> <span class="o">==</span> <span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsEquationType</span><span class="o">.</span><span class="n">GreaterThan</span></div>
+
+<div class="viewcode-block" id="test_setting_dataframes"><a class="viewcode-back" href="../../../api/gdxpds.test.html#gdxpds.test.test_details.test_setting_dataframes">[docs]</a><span class="k">def</span> <span class="nf">test_setting_dataframes</span><span class="p">(</span><span class="n">manage_rundir</span><span class="p">):</span>
+    <span class="n">outdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">run_dir</span><span class="p">,</span><span class="s1">&#39;setting_dataframes&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outdir</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">outdir</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxFile</span><span class="p">()</span> <span class="k">as</span> <span class="n">gdx</span><span class="p">:</span>
+        <span class="c1"># reading is tested elsewhere. here go through the different ways to</span>
+        <span class="c1"># set a dataframe. </span>
+        
+        <span class="c1"># start with WAYS THAT WORK:</span>
+        <span class="c1"># 0 dims</span>
+        <span class="c1">#     full dataframe</span>
+        <span class="n">gdx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxSymbol</span><span class="p">(</span><span class="s1">&#39;sym_1&#39;</span><span class="p">,</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsDataType</span><span class="o">.</span><span class="n">Parameter</span><span class="p">))</span>
+        <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="n">pds</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([[</span><span class="mf">2.0</span><span class="p">]])</span>
+        <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;Value&#39;</span><span class="p">]</span>
+        <span class="c1">#     edit initialized dataframe - Parameter</span>
+        <span class="n">gdx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxSymbol</span><span class="p">(</span><span class="s1">&#39;sym_2&#39;</span><span class="p">,</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsDataType</span><span class="o">.</span><span class="n">Parameter</span><span class="p">))</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+        <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="s1">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">5.0</span><span class="p">]</span> <span class="c1"># list is required to specify number of rows to make</span>
+        <span class="k">assert</span> <span class="n">n</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+        <span class="c1">#     list of lists</span>
+        <span class="n">gdx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxSymbol</span><span class="p">(</span><span class="s1">&#39;sym_3&#39;</span><span class="p">,</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsDataType</span><span class="o">.</span><span class="n">Variable</span><span class="p">))</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="mf">3.0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">value_col_name</span> <span class="ow">in</span> <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">value_col_names</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">value_col_name</span> <span class="o">==</span> <span class="s1">&#39;Level&#39;</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_value_col_default</span><span class="p">(</span><span class="n">value_col_name</span><span class="p">))</span>
+        <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="p">[</span><span class="n">values</span><span class="p">]</span>
+        <span class="c1">#     reset with empty list</span>
+        <span class="n">gdx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxSymbol</span><span class="p">(</span><span class="s1">&#39;sym_4&#39;</span><span class="p">,</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsDataType</span><span class="o">.</span><span class="n">Parameter</span><span class="p">))</span>
+        <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="n">pds</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">]])</span>
+        <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">num_records</span> <span class="o">==</span> <span class="mi">0</span>
+
+        <span class="c1"># &gt; 0 dims - GdxSymbol initialized with dims=0</span>
+        <span class="c1">#     full dataframe</span>
+        <span class="n">gdx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxSymbol</span><span class="p">(</span><span class="s1">&#39;sym_5&#39;</span><span class="p">,</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsDataType</span><span class="o">.</span><span class="n">Parameter</span><span class="p">))</span>
+        <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="n">pds</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([[</span><span class="s1">&#39;u1&#39;</span><span class="p">,</span><span class="s1">&#39;CC&#39;</span><span class="p">,</span><span class="mf">8727.2</span><span class="p">],</span>
+                                           <span class="p">[</span><span class="s1">&#39;u2&#39;</span><span class="p">,</span><span class="s1">&#39;CC&#39;</span><span class="p">,</span><span class="mf">7500.2</span><span class="p">],</span>
+                                           <span class="p">[</span><span class="s1">&#39;u3&#39;</span><span class="p">,</span><span class="s1">&#39;CT&#39;</span><span class="p">,</span><span class="mf">9258.0</span><span class="p">]],</span> 
+                                          <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span><span class="s1">&#39;q&#39;</span><span class="p">,</span><span class="s1">&#39;val&#39;</span><span class="p">])</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">num_dims</span> <span class="o">==</span> <span class="mi">2</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">num_records</span> <span class="o">==</span> <span class="mi">3</span>
+        <span class="c1">#     full list of lists</span>
+        <span class="n">gdx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxSymbol</span><span class="p">(</span><span class="s1">&#39;sym_6&#39;</span><span class="p">,</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsDataType</span><span class="o">.</span><span class="n">Parameter</span><span class="p">))</span>
+        <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;u1&#39;</span><span class="p">,</span><span class="s1">&#39;CC&#39;</span><span class="p">,</span><span class="mf">8727.2</span><span class="p">],</span>
+                             <span class="p">[</span><span class="s1">&#39;u2&#39;</span><span class="p">,</span><span class="s1">&#39;CC&#39;</span><span class="p">,</span><span class="mf">7500.2</span><span class="p">],</span>
+                             <span class="p">[</span><span class="s1">&#39;u3&#39;</span><span class="p">,</span><span class="s1">&#39;CT&#39;</span><span class="p">,</span><span class="mf">9258.0</span><span class="p">],</span>
+                             <span class="p">[</span><span class="s1">&#39;u4&#39;</span><span class="p">,</span><span class="s1">&#39;Coal&#39;</span><span class="p">,</span><span class="mf">10100.0</span><span class="p">]]</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">num_dims</span> <span class="o">==</span> <span class="mi">2</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">num_records</span> <span class="o">==</span> <span class="mi">4</span>
+        <span class="c1">#     reset with empty list</span>
+        <span class="n">gdx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxSymbol</span><span class="p">(</span><span class="s1">&#39;sym_7&#39;</span><span class="p">,</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsDataType</span><span class="o">.</span><span class="n">Parameter</span><span class="p">))</span>
+        <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">num_dims</span> <span class="o">==</span> <span class="mi">2</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">num_records</span> <span class="o">==</span> <span class="mi">0</span>
+
+        <span class="c1"># &gt; 0 dims - GdxSymbol initialized with dims=n</span>
+        <span class="c1">#     dataframe of dims</span>
+        <span class="n">gdx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxSymbol</span><span class="p">(</span><span class="s1">&#39;sym_8&#39;</span><span class="p">,</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsDataType</span><span class="o">.</span><span class="n">Variable</span><span class="p">,</span>
+            <span class="n">dims</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">variable_type</span><span class="o">=</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsVariableType</span><span class="o">.</span><span class="n">Positive</span><span class="p">))</span>
+        <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="n">pds</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([[</span><span class="s1">&#39;u0&#39;</span><span class="p">,</span><span class="s1">&#39;BES&#39;</span><span class="p">,</span><span class="s1">&#39;c2&#39;</span><span class="p">],</span>
+                                           <span class="p">[</span><span class="s1">&#39;u0&#39;</span><span class="p">,</span><span class="s1">&#39;BES&#39;</span><span class="p">,</span><span class="s1">&#39;c1&#39;</span><span class="p">],</span>
+                                           <span class="p">[</span><span class="s1">&#39;u1&#39;</span><span class="p">,</span><span class="s1">&#39;BES&#39;</span><span class="p">,</span><span class="s1">&#39;c2&#39;</span><span class="p">]])</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">num_dims</span> <span class="o">==</span> <span class="mi">3</span><span class="p">;</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dims</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;*&#39;</span><span class="p">,</span><span class="s1">&#39;*&#39;</span><span class="p">,</span><span class="s1">&#39;*&#39;</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span>
+        <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsValueType</span><span class="o">.</span><span class="n">Level</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsValueType</span><span class="o">.</span><span class="n">Upper</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="mf">10.0</span>
+        <span class="c1">#     full dataframe</span>
+        <span class="n">gdx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxSymbol</span><span class="p">(</span><span class="s1">&#39;sym_9&#39;</span><span class="p">,</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsDataType</span><span class="o">.</span><span class="n">Parameter</span><span class="p">,</span>
+            <span class="n">dims</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>
+        <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="n">pds</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([[</span><span class="s1">&#39;u0&#39;</span><span class="p">,</span><span class="s1">&#39;BES&#39;</span><span class="p">,</span><span class="s1">&#39;c2&#39;</span><span class="p">,</span><span class="mf">2.0</span><span class="p">],</span>
+                                           <span class="p">[</span><span class="s1">&#39;u0&#39;</span><span class="p">,</span><span class="s1">&#39;BES&#39;</span><span class="p">,</span><span class="s1">&#39;c1&#39;</span><span class="p">,</span><span class="mf">1.0</span><span class="p">],</span>
+                                           <span class="p">[</span><span class="s1">&#39;u1&#39;</span><span class="p">,</span><span class="s1">&#39;BES&#39;</span><span class="p">,</span><span class="s1">&#39;c2&#39;</span><span class="p">,</span><span class="mf">2.0</span><span class="p">]],</span>
+                                          <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span><span class="s1">&#39;q&#39;</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">,</span><span class="s1">&#39;storage_duration_h&#39;</span><span class="p">])</span>
+        <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span><span class="s1">&#39;q&#39;</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">,</span><span class="s1">&#39;Value&#39;</span><span class="p">]</span>
+        <span class="c1">#     list of lists containing dims only</span>
+        <span class="n">gdx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxSymbol</span><span class="p">(</span><span class="s1">&#39;sym_10&#39;</span><span class="p">,</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsDataType</span><span class="o">.</span><span class="n">Equation</span><span class="p">,</span>
+            <span class="n">dims</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="n">equation_type</span><span class="o">=</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsEquationType</span><span class="o">.</span><span class="n">LessThan</span><span class="p">))</span>
+        <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;u0&#39;</span><span class="p">,</span><span class="s1">&#39;PHES&#39;</span><span class="p">,</span><span class="s1">&#39;c0&#39;</span><span class="p">,</span><span class="s1">&#39;1&#39;</span><span class="p">],</span>
+                             <span class="p">[</span><span class="s1">&#39;u0&#39;</span><span class="p">,</span><span class="s1">&#39;PHES&#39;</span><span class="p">,</span><span class="s1">&#39;c0&#39;</span><span class="p">,</span><span class="s1">&#39;2&#39;</span><span class="p">],</span>
+                             <span class="p">[</span><span class="s1">&#39;u0&#39;</span><span class="p">,</span><span class="s1">&#39;PHES&#39;</span><span class="p">,</span><span class="s1">&#39;c0&#39;</span><span class="p">,</span><span class="s1">&#39;3&#39;</span><span class="p">],</span>
+                             <span class="p">[</span><span class="s1">&#39;u0&#39;</span><span class="p">,</span><span class="s1">&#39;PHES&#39;</span><span class="p">,</span><span class="s1">&#39;c0&#39;</span><span class="p">,</span><span class="s1">&#39;4&#39;</span><span class="p">],</span>
+                             <span class="p">[</span><span class="s1">&#39;u0&#39;</span><span class="p">,</span><span class="s1">&#39;PHES&#39;</span><span class="p">,</span><span class="s1">&#39;c0&#39;</span><span class="p">,</span><span class="s1">&#39;5&#39;</span><span class="p">]]</span>
+        <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="s1">&#39;Level&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">15.0</span>
+        <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span><span class="o">.</span><span class="n">columns</span><span class="p">[:</span><span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">num_dims</span><span class="p">])</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;*&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span>
+        <span class="c1">#     full list of lists</span>
+        <span class="n">gdx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxSymbol</span><span class="p">(</span><span class="s1">&#39;sym_11&#39;</span><span class="p">,</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsDataType</span><span class="o">.</span><span class="n">Set</span><span class="p">,</span>
+            <span class="n">dims</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+        <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;PV&#39;</span><span class="p">,</span><span class="s1">&#39;c0&#39;</span><span class="p">,</span><span class="kc">True</span><span class="p">],</span>
+                             <span class="p">[</span><span class="s1">&#39;CSP&#39;</span><span class="p">,</span><span class="s1">&#39;c0&#39;</span><span class="p">,</span><span class="kc">False</span><span class="p">],</span>
+                             <span class="p">[</span><span class="s1">&#39;CSP&#39;</span><span class="p">,</span><span class="s1">&#39;c1&#39;</span><span class="p">,</span><span class="kc">False</span><span class="p">],</span>
+                             <span class="p">[</span><span class="s1">&#39;Wind&#39;</span><span class="p">,</span><span class="s1">&#39;c0&#39;</span><span class="p">,</span><span class="kc">True</span><span class="p">]]</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">num_dims</span> <span class="o">==</span> <span class="mi">2</span>
+        <span class="c1">#     reset with empty list</span>
+        <span class="n">gdx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxSymbol</span><span class="p">(</span><span class="s1">&#39;sym_12&#39;</span><span class="p">,</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsDataType</span><span class="o">.</span><span class="n">Set</span><span class="p">,</span>
+            <span class="n">dims</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+        <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">num_dims</span> <span class="o">==</span> <span class="mi">2</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dims</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;*&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">num_records</span> <span class="o">==</span> <span class="mi">0</span>
+
+        <span class="c1"># &gt; 0 dims - GdxSymbol initialized with dims=[list of actual dims]</span>
+        <span class="c1">#     dataframe of dims</span>
+        <span class="n">gdx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxSymbol</span><span class="p">(</span><span class="s1">&#39;sym_13&#39;</span><span class="p">,</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsDataType</span><span class="o">.</span><span class="n">Variable</span><span class="p">,</span>
+            <span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span><span class="s1">&#39;q&#39;</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">],</span><span class="n">variable_type</span><span class="o">=</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsVariableType</span><span class="o">.</span><span class="n">Positive</span><span class="p">))</span>
+        <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="n">pds</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([[</span><span class="s1">&#39;u0&#39;</span><span class="p">,</span><span class="s1">&#39;BES&#39;</span><span class="p">,</span><span class="s1">&#39;c2&#39;</span><span class="p">],</span>
+                                           <span class="p">[</span><span class="s1">&#39;u0&#39;</span><span class="p">,</span><span class="s1">&#39;BES&#39;</span><span class="p">,</span><span class="s1">&#39;c1&#39;</span><span class="p">],</span>
+                                           <span class="p">[</span><span class="s1">&#39;u1&#39;</span><span class="p">,</span><span class="s1">&#39;BES&#39;</span><span class="p">,</span><span class="s1">&#39;c2&#39;</span><span class="p">]])</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">num_dims</span> <span class="o">==</span> <span class="mi">3</span><span class="p">;</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dims</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span><span class="s1">&#39;q&#39;</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span>
+        <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsValueType</span><span class="o">.</span><span class="n">Level</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsValueType</span><span class="o">.</span><span class="n">Upper</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="mf">10.0</span>
+        <span class="c1">#     full dataframe</span>
+        <span class="n">gdx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxSymbol</span><span class="p">(</span><span class="s1">&#39;sym_14&#39;</span><span class="p">,</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsDataType</span><span class="o">.</span><span class="n">Parameter</span><span class="p">,</span>
+            <span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span><span class="s1">&#39;q&#39;</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">]))</span>
+        <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="n">pds</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([[</span><span class="s1">&#39;u0&#39;</span><span class="p">,</span><span class="s1">&#39;BES&#39;</span><span class="p">,</span><span class="s1">&#39;c2&#39;</span><span class="p">,</span><span class="mf">2.0</span><span class="p">],</span>
+                                           <span class="p">[</span><span class="s1">&#39;u0&#39;</span><span class="p">,</span><span class="s1">&#39;BES&#39;</span><span class="p">,</span><span class="s1">&#39;c1&#39;</span><span class="p">,</span><span class="mf">1.0</span><span class="p">],</span>
+                                           <span class="p">[</span><span class="s1">&#39;u1&#39;</span><span class="p">,</span><span class="s1">&#39;BES&#39;</span><span class="p">,</span><span class="s1">&#39;c2&#39;</span><span class="p">,</span><span class="mf">2.0</span><span class="p">]],</span>
+                                          <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span><span class="s1">&#39;q&#39;</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">,</span><span class="s1">&#39;storage_duration_h&#39;</span><span class="p">])</span>
+        <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span><span class="s1">&#39;q&#39;</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">,</span><span class="s1">&#39;Value&#39;</span><span class="p">]</span>
+        <span class="c1">#     list of lists containing dims only</span>
+        <span class="n">gdx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxSymbol</span><span class="p">(</span><span class="s1">&#39;sym_15&#39;</span><span class="p">,</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsDataType</span><span class="o">.</span><span class="n">Equation</span><span class="p">,</span>
+            <span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span><span class="s1">&#39;q&#39;</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">,</span><span class="s1">&#39;t&#39;</span><span class="p">],</span><span class="n">equation_type</span><span class="o">=</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsEquationType</span><span class="o">.</span><span class="n">LessThan</span><span class="p">))</span>
+        <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;u0&#39;</span><span class="p">,</span><span class="s1">&#39;PHES&#39;</span><span class="p">,</span><span class="s1">&#39;c0&#39;</span><span class="p">,</span><span class="s1">&#39;1&#39;</span><span class="p">],</span>
+                             <span class="p">[</span><span class="s1">&#39;u0&#39;</span><span class="p">,</span><span class="s1">&#39;PHES&#39;</span><span class="p">,</span><span class="s1">&#39;c0&#39;</span><span class="p">,</span><span class="s1">&#39;2&#39;</span><span class="p">],</span>
+                             <span class="p">[</span><span class="s1">&#39;u0&#39;</span><span class="p">,</span><span class="s1">&#39;PHES&#39;</span><span class="p">,</span><span class="s1">&#39;c0&#39;</span><span class="p">,</span><span class="s1">&#39;3&#39;</span><span class="p">],</span>
+                             <span class="p">[</span><span class="s1">&#39;u0&#39;</span><span class="p">,</span><span class="s1">&#39;PHES&#39;</span><span class="p">,</span><span class="s1">&#39;c0&#39;</span><span class="p">,</span><span class="s1">&#39;4&#39;</span><span class="p">],</span>
+                             <span class="p">[</span><span class="s1">&#39;u0&#39;</span><span class="p">,</span><span class="s1">&#39;PHES&#39;</span><span class="p">,</span><span class="s1">&#39;c0&#39;</span><span class="p">,</span><span class="s1">&#39;5&#39;</span><span class="p">]]</span>
+        <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="s1">&#39;Level&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">15.0</span>
+        <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span><span class="o">.</span><span class="n">columns</span><span class="p">[:</span><span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">num_dims</span><span class="p">])</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span><span class="s1">&#39;q&#39;</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">,</span><span class="s1">&#39;t&#39;</span><span class="p">]</span>
+        <span class="c1">#     full list of lists</span>
+        <span class="n">gdx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxSymbol</span><span class="p">(</span><span class="s1">&#39;sym_16&#39;</span><span class="p">,</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsDataType</span><span class="o">.</span><span class="n">Set</span><span class="p">,</span>
+            <span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;q&#39;</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">]))</span>
+        <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;PV&#39;</span><span class="p">,</span><span class="s1">&#39;c0&#39;</span><span class="p">,</span><span class="kc">True</span><span class="p">],</span>
+                             <span class="p">[</span><span class="s1">&#39;CSP&#39;</span><span class="p">,</span><span class="s1">&#39;c0&#39;</span><span class="p">,</span><span class="kc">False</span><span class="p">],</span>
+                             <span class="p">[</span><span class="s1">&#39;CSP&#39;</span><span class="p">,</span><span class="s1">&#39;c1&#39;</span><span class="p">,</span><span class="kc">False</span><span class="p">],</span>
+                             <span class="p">[</span><span class="s1">&#39;Wind&#39;</span><span class="p">,</span><span class="s1">&#39;c0&#39;</span><span class="p">,</span><span class="kc">True</span><span class="p">]]</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">num_dims</span> <span class="o">==</span> <span class="mi">2</span>
+        <span class="c1">#     reset with empty list</span>
+        <span class="n">gdx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxSymbol</span><span class="p">(</span><span class="s1">&#39;sym_17&#39;</span><span class="p">,</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsDataType</span><span class="o">.</span><span class="n">Set</span><span class="p">,</span>
+            <span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;q&#39;</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">]))</span>
+        <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;sym_11&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">num_dims</span> <span class="o">==</span> <span class="mi">2</span>
+        <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span><span class="o">.</span><span class="n">columns</span><span class="p">[:</span><span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">num_dims</span><span class="p">])</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;*&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">num_records</span> <span class="o">==</span> <span class="mi">0</span>
+
+        <span class="c1"># And then document that some ways DO NOT WORK:</span>
+        <span class="c1"># dims=0</span>
+        <span class="c1">#     set value, then try to set different number of dimensions</span>
+        <span class="n">gdx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxSymbol</span><span class="p">(</span><span class="s1">&#39;sym_18&#39;</span><span class="p">,</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsDataType</span><span class="o">.</span><span class="n">Parameter</span><span class="p">,</span>
+            <span class="n">dims</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+        <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">3</span><span class="p">]]</span>
+        <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">Exception</span><span class="p">)</span> <span class="k">as</span> <span class="n">e_info</span><span class="p">:</span>
+            <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dims</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="c1"># dims &gt; 0</span>
+        <span class="c1">#     explicitly set dims to something else</span>
+        <span class="n">gdx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxSymbol</span><span class="p">(</span><span class="s1">&#39;sym_19&#39;</span><span class="p">,</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsDataType</span><span class="o">.</span><span class="n">Parameter</span><span class="p">,</span>
+                   <span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;g&#39;</span><span class="p">,</span><span class="s1">&#39;t&#39;</span><span class="p">]))</span>
+        <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">Exception</span><span class="p">)</span> <span class="k">as</span> <span class="n">e_info</span><span class="p">:</span>
+            <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dims</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;g&#39;</span><span class="p">,</span><span class="s1">&#39;t&#39;</span><span class="p">,</span><span class="s1">&#39;d&#39;</span><span class="p">]</span>
+        <span class="c1">#     dataframe of different number of dims</span>
+        <span class="n">gdx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxSymbol</span><span class="p">(</span><span class="s1">&#39;sym_20&#39;</span><span class="p">,</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsDataType</span><span class="o">.</span><span class="n">Variable</span><span class="p">,</span>
+            <span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;d&#39;</span><span class="p">,</span><span class="s1">&#39;t&#39;</span><span class="p">]))</span>
+        <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;d1&#39;</span><span class="p">,</span><span class="s1">&#39;1&#39;</span><span class="p">],</span>
+                             <span class="p">[</span><span class="s1">&#39;d1&#39;</span><span class="p">,</span><span class="s1">&#39;2&#39;</span><span class="p">],</span>
+                             <span class="p">[</span><span class="s1">&#39;d1&#39;</span><span class="p">,</span><span class="s1">&#39;3&#39;</span><span class="p">]]</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">tmp</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+        <span class="n">tmp</span><span class="p">[</span><span class="s1">&#39;q&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;PV&#39;</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[[</span><span class="s1">&#39;q&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">cols</span><span class="p">]</span>
+        <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">Exception</span><span class="p">)</span> <span class="k">as</span> <span class="n">e_info</span><span class="p">:</span>
+            <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="n">tmp</span>
+        <span class="c1">#     full dataframe of different number of dims</span>
+        <span class="n">gdx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxSymbol</span><span class="p">(</span><span class="s1">&#39;sym_21&#39;</span><span class="p">,</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsDataType</span><span class="o">.</span><span class="n">Parameter</span><span class="p">,</span>
+            <span class="n">dims</span><span class="o">=</span><span class="mi">6</span><span class="p">))</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dims</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;*&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">6</span>
+        <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">Exception</span><span class="p">)</span> <span class="k">as</span> <span class="n">e_info</span><span class="p">:</span>
+            <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="n">pds</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([[</span><span class="s1">&#39;1&#39;</span><span class="p">,</span><span class="mf">6.0</span><span class="p">],</span>
+                                              <span class="p">[</span><span class="s1">&#39;2&#39;</span><span class="p">,</span><span class="mf">7.0</span><span class="p">],</span>
+                                              <span class="p">[</span><span class="s1">&#39;3&#39;</span><span class="p">,</span><span class="o">-</span><span class="mf">12.0</span><span class="p">]])</span>
+        <span class="c1">#     list of lists of varying widths</span>
+        <span class="n">gdx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxSymbol</span><span class="p">(</span><span class="s1">&#39;sym_22&#39;</span><span class="p">,</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsDataType</span><span class="o">.</span><span class="n">Parameter</span><span class="p">,</span>
+            <span class="n">dims</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>
+        <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">Exception</span><span class="p">)</span> <span class="k">as</span> <span class="n">e_info</span><span class="p">:</span>
+            <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">]]</span>
+        <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">Exception</span><span class="p">)</span> <span class="k">as</span> <span class="n">e_info</span><span class="p">:</span>
+            <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;1&#39;</span><span class="p">,</span><span class="mf">2.5</span><span class="p">],</span>
+                                 <span class="p">[</span><span class="s1">&#39;2&#39;</span><span class="p">,</span><span class="o">-</span><span class="mf">30.0</span><span class="p">]]</span>
+        <span class="c1"># TODO: Write test where parameter value ends up as set dimension--does</span>
+        <span class="c1"># an exception get thrown upon writing to GDX?</span>
+        <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">Exception</span><span class="p">)</span> <span class="k">as</span> <span class="n">e_info</span><span class="p">:</span>
+            <span class="n">gdx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;u1&#39;</span><span class="p">,</span><span class="s1">&#39;PV&#39;</span><span class="p">,</span><span class="s1">&#39;c0&#39;</span><span class="p">,</span><span class="s1">&#39;1&#39;</span><span class="p">,</span><span class="mf">2.5</span><span class="p">],</span>
+                                 <span class="p">[</span><span class="s1">&#39;u1&#39;</span><span class="p">,</span><span class="s1">&#39;PV&#39;</span><span class="p">,</span><span class="s1">&#39;c0&#39;</span><span class="p">,</span><span class="s1">&#39;2&#39;</span><span class="p">,</span><span class="o">-</span><span class="mf">30.0</span><span class="p">]]</span>
+
+        <span class="n">gdx</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span><span class="s1">&#39;dataframe_set_tests.gdx&#39;</span><span class="p">))</span>
+    <span class="k">with</span> <span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GdxFile</span><span class="p">(</span><span class="n">lazy_load</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">gdx</span><span class="p">:</span>
+        <span class="n">gdx</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span><span class="s1">&#39;dataframe_set_tests.gdx&#39;</span><span class="p">))</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;sym_1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">num_records</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;sym_2&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">num_records</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;sym_3&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">num_records</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;sym_4&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">num_records</span> <span class="o">==</span> <span class="mi">1</span> <span class="c1"># GAMS defaults empty 0-dim parameter to 0</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;sym_4&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="s1">&#39;Value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mf">0.0</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;sym_5&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dims</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span><span class="s1">&#39;q&#39;</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;sym_5&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">num_records</span> <span class="o">==</span> <span class="mi">3</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;sym_5&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="s1">&#39;Value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mf">7500.2</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;sym_6&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">num_records</span> <span class="o">==</span> <span class="mi">4</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;sym_7&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">num_records</span> <span class="o">==</span> <span class="mi">0</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;sym_8&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dims</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;*&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;sym_8&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsValueType</span><span class="o">.</span><span class="n">Upper</span><span class="o">.</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mf">10.0</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;sym_9&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">num_records</span> <span class="o">==</span> <span class="mi">3</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;sym_10&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">num_dims</span> <span class="o">==</span> <span class="mi">4</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;sym_11&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">num_dims</span> <span class="o">==</span> <span class="mi">2</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;sym_11&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">num_records</span> <span class="o">==</span> <span class="mi">4</span> 
+        <span class="c1"># ETH@20181007 - Tried to test for some values being c_bool(False) in sym_11, but</span>
+        <span class="c1"># c_bool(True) != c_bool(True), so that makes it hard to test such things.</span>
+        <span class="c1"># Also, c_bool(False) appears to be interpreted as True in GDX. Ick and yikes.</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;sym_12&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">num_dims</span> <span class="o">==</span> <span class="mi">2</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;sym_12&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">num_records</span> <span class="o">==</span> <span class="mi">0</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;sym_13&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dims</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span><span class="s1">&#39;q&#39;</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;sym_13&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="n">gdxpds</span><span class="o">.</span><span class="n">gdx</span><span class="o">.</span><span class="n">GamsValueType</span><span class="o">.</span><span class="n">Upper</span><span class="o">.</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mf">10.0</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;sym_14&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">num_records</span> <span class="o">==</span> <span class="mi">3</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;sym_15&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">num_dims</span> <span class="o">==</span> <span class="mi">4</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;sym_16&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">num_dims</span> <span class="o">==</span> <span class="mi">2</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;sym_16&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">num_records</span> <span class="o">==</span> <span class="mi">4</span> 
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;sym_17&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">num_dims</span> <span class="o">==</span> <span class="mi">2</span>
+        <span class="k">assert</span> <span class="n">gdx</span><span class="p">[</span><span class="s1">&#39;sym_17&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">num_records</span> <span class="o">==</span> <span class="mi">0</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Alliance for Sustainable Energy.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.1.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
+      });
+  </script> 
+
+</body>
+</html>

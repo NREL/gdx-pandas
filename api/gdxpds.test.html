@@ -1,0 +1,394 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gdxpds.test package &mdash; gdx-pandas 1.2.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="gdxpds package" href="gdxpds.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> gdx-pandas
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">gdx-pandas overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../overview.html#direct-conversion">Direct Conversion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../overview.html#backend-classes">Backend Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="modules.html">gdx-pandas</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="gdxpds.html">gdxpds package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="gdxpds.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gdxpds.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gdxpds.html#module-gdxpds.gdx">gdxpds.gdx module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gdxpds.html#module-gdxpds.read_gdx">gdxpds.read_gdx module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gdxpds.html#module-gdxpds.special">gdxpds.special module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gdxpds.html#module-gdxpds.tools">gdxpds.tools module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gdxpds.html#module-gdxpds.write_gdx">gdxpds.write_gdx module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gdxpds.html#module-gdxpds">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="gdxpds.html">gdxpds package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="gdxpds.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">gdxpds.test package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="gdxpds.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdxpds.html#module-gdxpds.gdx">gdxpds.gdx module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdxpds.html#module-gdxpds.read_gdx">gdxpds.read_gdx module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdxpds.html#module-gdxpds.special">gdxpds.special module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdxpds.html#module-gdxpds.tools">gdxpds.tools module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdxpds.html#module-gdxpds.write_gdx">gdxpds.write_gdx module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdxpds.html#module-gdxpds">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">gdx-pandas</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../api.html">API</a> &raquo;</li>
+        
+          <li><a href="modules.html">gdx-pandas</a> &raquo;</li>
+        
+          <li><a href="gdxpds.html">gdxpds package</a> &raquo;</li>
+        
+      <li>gdxpds.test package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/gdxpds.test.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="gdxpds-test-package">
+<h1>gdxpds.test package<a class="headerlink" href="#gdxpds-test-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-gdxpds.test.conftest">
+<span id="gdxpds-test-conftest-module"></span><h2>gdxpds.test.conftest module<a class="headerlink" href="#module-gdxpds.test.conftest" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="gdxpds.test.conftest.pytest_addoption">
+<code class="sig-prename descclassname">gdxpds.test.conftest.</code><code class="sig-name descname">pytest_addoption</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parser</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/test/conftest.html#pytest_addoption"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.test.conftest.pytest_addoption" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="gdxpds.test.conftest.clean_up">
+<code class="sig-prename descclassname">gdxpds.test.conftest.</code><code class="sig-name descname">clean_up</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/test/conftest.html#clean_up"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.test.conftest.clean_up" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-gdxpds.test.test_conversions">
+<span id="gdxpds-test-test-conversions-module"></span><h2>gdxpds.test.test_conversions module<a class="headerlink" href="#module-gdxpds.test.test_conversions" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="gdxpds.test.test_conversions.roundtrip_one_gdx">
+<code class="sig-prename descclassname">gdxpds.test.test_conversions.</code><code class="sig-name descname">roundtrip_one_gdx</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">dirname</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/test/test_conversions.html#roundtrip_one_gdx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.test.test_conversions.roundtrip_one_gdx" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="gdxpds.test.test_conversions.test_gdx_roundtrip">
+<code class="sig-prename descclassname">gdxpds.test.test_conversions.</code><code class="sig-name descname">test_gdx_roundtrip</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">manage_rundir</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/test/test_conversions.html#test_gdx_roundtrip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.test.test_conversions.test_gdx_roundtrip" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="gdxpds.test.test_conversions.test_csv_roundtrip">
+<code class="sig-prename descclassname">gdxpds.test.test_conversions.</code><code class="sig-name descname">test_csv_roundtrip</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">manage_rundir</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/test/test_conversions.html#test_csv_roundtrip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.test.test_conversions.test_csv_roundtrip" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-gdxpds.test.test_read">
+<span id="gdxpds-test-test-read-module"></span><h2>gdxpds.test.test_read module<a class="headerlink" href="#module-gdxpds.test.test_read" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="gdxpds.test.test_read.test_read">
+<code class="sig-prename descclassname">gdxpds.test.test_read.</code><code class="sig-name descname">test_read</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/test/test_read.html#test_read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.test.test_read.test_read" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="gdxpds.test.test_read.test_read_none">
+<code class="sig-prename descclassname">gdxpds.test.test_read.</code><code class="sig-name descname">test_read_none</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/test/test_read.html#test_read_none"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.test.test_read.test_read_none" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="gdxpds.test.test_read.test_read_path">
+<code class="sig-prename descclassname">gdxpds.test.test_read.</code><code class="sig-name descname">test_read_path</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/test/test_read.html#test_read_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.test.test_read.test_read_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="gdxpds.test.test_read.test_unload">
+<code class="sig-prename descclassname">gdxpds.test.test_read.</code><code class="sig-name descname">test_unload</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/test/test_read.html#test_unload"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.test.test_read.test_unload" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-gdxpds.test.test_session">
+<span id="gdxpds-test-test-session-module"></span><h2>gdxpds.test.test_session module<a class="headerlink" href="#module-gdxpds.test.test_session" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="gdxpds.test.test_session.manage_rundir">
+<code class="sig-prename descclassname">gdxpds.test.test_session.</code><code class="sig-name descname">manage_rundir</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">clean_up</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/test/test_session.html#manage_rundir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.test.test_session.manage_rundir" title="Permalink to this definition">¶</a></dt>
+<dd><p>At the beginning of the session, creates the test run_dir. If test.clean_up,
+deletes this folder after the tests have finished running.</p>
+<p>Arguments
+- request contains the pytest session, including collected tests</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-gdxpds.test.test_specials">
+<span id="gdxpds-test-test-specials-module"></span><h2>gdxpds.test.test_specials module<a class="headerlink" href="#module-gdxpds.test.test_specials" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="gdxpds.test.test_specials.value_column_index">
+<code class="sig-prename descclassname">gdxpds.test.test_specials.</code><code class="sig-name descname">value_column_index</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sym</span></em>, <em class="sig-param"><span class="n">gams_value_type</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/test/test_specials.html#value_column_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.test.test_specials.value_column_index" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="gdxpds.test.test_specials.test_roundtrip_just_special_values">
+<code class="sig-prename descclassname">gdxpds.test.test_specials.</code><code class="sig-name descname">test_roundtrip_just_special_values</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">manage_rundir</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/test/test_specials.html#test_roundtrip_just_special_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.test.test_specials.test_roundtrip_just_special_values" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="gdxpds.test.test_specials.test_roundtrip_special_values">
+<code class="sig-prename descclassname">gdxpds.test.test_specials.</code><code class="sig-name descname">test_roundtrip_special_values</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">manage_rundir</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/test/test_specials.html#test_roundtrip_special_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.test.test_specials.test_roundtrip_special_values" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="gdxpds.test.test_specials.test_special_integrity">
+<code class="sig-prename descclassname">gdxpds.test.test_specials.</code><code class="sig-name descname">test_special_integrity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/test/test_specials.html#test_special_integrity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.test.test_specials.test_special_integrity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check that the special values line up</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="gdxpds.test.test_specials.test_numpy_eps">
+<code class="sig-prename descclassname">gdxpds.test.test_specials.</code><code class="sig-name descname">test_numpy_eps</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/test/test_specials.html#test_numpy_eps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.test.test_specials.test_numpy_eps" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-gdxpds.test.test_write">
+<span id="gdxpds-test-test-write-module"></span><h2>gdxpds.test.test_write module<a class="headerlink" href="#module-gdxpds.test.test_write" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="gdxpds.test.test_write.test_from_scratch_sets">
+<code class="sig-prename descclassname">gdxpds.test.test_write.</code><code class="sig-name descname">test_from_scratch_sets</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">manage_rundir</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/test/test_write.html#test_from_scratch_sets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.test.test_write.test_from_scratch_sets" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="gdxpds.test.test_write.test_unnamed_dimensions">
+<code class="sig-prename descclassname">gdxpds.test.test_write.</code><code class="sig-name descname">test_unnamed_dimensions</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">manage_rundir</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/test/test_write.html#test_unnamed_dimensions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.test.test_write.test_unnamed_dimensions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="gdxpds.test.test_write.test_setting_dataframes">
+<code class="sig-prename descclassname">gdxpds.test.test_write.</code><code class="sig-name descname">test_setting_dataframes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">manage_rundir</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/test/test_write.html#test_setting_dataframes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.test.test_write.test_setting_dataframes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="gdxpds.test.test_write.test_parameter_with_nulls">
+<code class="sig-prename descclassname">gdxpds.test.test_write.</code><code class="sig-name descname">test_parameter_with_nulls</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">manage_rundir</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/test/test_write.html#test_parameter_with_nulls"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.test.test_write.test_parameter_with_nulls" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-gdxpds.test">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-gdxpds.test" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="gdxpds.test.apply_dirname">
+<code class="sig-prename descclassname">gdxpds.test.</code><code class="sig-name descname">apply_dirname</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">f</span></em>, <em class="sig-param"><span class="n">num_times</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/test.html#apply_dirname"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.test.apply_dirname" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="gdxpds.html" class="btn btn-neutral" title="gdxpds package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Alliance for Sustainable Energy.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.2.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/language_data.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
+      });
+  </script> 
+
+</body>
+</html>

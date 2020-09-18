@@ -1,0 +1,1120 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gdxpds package &mdash; gdx-pandas 1.2.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="gdxpds.test package" href="gdxpds.test.html" />
+    <link rel="prev" title="gdx-pandas" href="modules.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> gdx-pandas
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">gdx-pandas overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../overview.html#direct-conversion">Direct Conversion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../overview.html#backend-classes">Backend Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="modules.html">gdx-pandas</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">gdxpds package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-gdxpds.gdx">gdxpds.gdx module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-gdxpds.read_gdx">gdxpds.read_gdx module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-gdxpds.special">gdxpds.special module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-gdxpds.tools">gdxpds.tools module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-gdxpds.write_gdx">gdxpds.write_gdx module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-gdxpds">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">gdxpds package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gdxpds.test.html">gdxpds.test package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-gdxpds.gdx">gdxpds.gdx module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-gdxpds.read_gdx">gdxpds.read_gdx module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-gdxpds.special">gdxpds.special module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-gdxpds.tools">gdxpds.tools module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-gdxpds.write_gdx">gdxpds.write_gdx module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-gdxpds">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">gdx-pandas</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../api.html">API</a> &raquo;</li>
+        
+          <li><a href="modules.html">gdx-pandas</a> &raquo;</li>
+        
+      <li>gdxpds package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/gdxpds.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="gdxpds-package">
+<h1>gdxpds package<a class="headerlink" href="#gdxpds-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="gdxpds.test.html">gdxpds.test package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gdxpds.test.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gdxpds.test.html#module-gdxpds.test.conftest">gdxpds.test.conftest module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gdxpds.test.html#module-gdxpds.test.test_conversions">gdxpds.test.test_conversions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gdxpds.test.html#module-gdxpds.test.test_read">gdxpds.test.test_read module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gdxpds.test.html#module-gdxpds.test.test_session">gdxpds.test.test_session module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gdxpds.test.html#module-gdxpds.test.test_specials">gdxpds.test.test_specials module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gdxpds.test.html#module-gdxpds.test.test_write">gdxpds.test.test_write module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gdxpds.test.html#module-gdxpds.test">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-gdxpds.gdx">
+<span id="gdxpds-gdx-module"></span><h2>gdxpds.gdx module<a class="headerlink" href="#module-gdxpds.gdx" title="Permalink to this headline">¶</a></h2>
+<p>Backend functionality for reading and writing GDX files.
+The GdxFile and GdxSymbol classes are full-featured interfaces
+for going between the GDX format and pandas DataFrames,
+including translation between GDX and numpy special values.</p>
+<dl class="py function">
+<dt id="gdxpds.gdx.replace_df_column">
+<code class="sig-prename descclassname">gdxpds.gdx.</code><code class="sig-name descname">replace_df_column</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">colname</span></em>, <em class="sig-param"><span class="n">new_col</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/gdx.html#replace_df_column"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.gdx.replace_df_column" title="Permalink to this definition">¶</a></dt>
+<dd><p>Utility function that replaces df[colname] with new_col. Special
+care is taken for the case when df has multiple columns named ‘*’,
+since this causes pandas to crash.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pandas.DataFrame</em>) – edited in place by this function</p></li>
+<li><p><strong>colname</strong> (<em>str</em>) – name of column in df whose data is to be replaced</p></li>
+<li><p><strong>new_col</strong> (<em>vector</em><em>, </em><em>list</em><em>, </em><em>pandas.Series</em>) – new column data for df[colname]</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="gdxpds.gdx.GdxError">
+<em class="property">exception </em><code class="sig-prename descclassname">gdxpds.gdx.</code><code class="sig-name descname">GdxError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">H</span></em>, <em class="sig-param"><span class="n">msg</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/gdx.html#GdxError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.gdx.GdxError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gdxpds.tools.Error" title="gdxpds.tools.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">gdxpds.tools.Error</span></code></a></p>
+<p>Pulls information from gdxcc about the last encountered error and appends
+it to msg.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>H</strong> (<em>pointer</em><em> or </em><em>None</em>) – SWIG binding pointer to a GDX object</p></li>
+<li><p><strong>msg</strong> (<em>str</em>) – gdxpds error message</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="gdxpds.gdx.GdxError.msg">
+<code class="sig-name descname">msg</code><a class="headerlink" href="#gdxpds.gdx.GdxError.msg" title="Permalink to this definition">¶</a></dt>
+<dd><p>msg that is passed in with a gdxErrorStr appended</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="gdxpds.gdx.GdxFile">
+<em class="property">class </em><code class="sig-prename descclassname">gdxpds.gdx.</code><code class="sig-name descname">GdxFile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gams_dir</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">lazy_load</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/gdx.html#GdxFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.gdx.GdxFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.MutableSequence</span></code>, <a class="reference internal" href="#gdxpds.tools.NeedsGamsDir" title="gdxpds.tools.NeedsGamsDir"><code class="xref py py-class docutils literal notranslate"><span class="pre">gdxpds.tools.NeedsGamsDir</span></code></a></p>
+<p>Initializes a GdxFile object by connecting to GAMS and creating a pointer.</p>
+<p>Throws a GdxError if either of those operations fail.</p>
+<dl class="py method">
+<dt id="gdxpds.gdx.GdxFile.cleanup">
+<code class="sig-name descname">cleanup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/gdx.html#GdxFile.cleanup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.gdx.GdxFile.cleanup" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gdxpds.gdx.GdxFile.clone">
+<code class="sig-name descname">clone</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/gdx.html#GdxFile.clone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.gdx.GdxFile.clone" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a new GdxFile containing clones of the GdxSymbols in this
+GdxFile. The clone will not be associated with a filename. The clone’s
+GdxSymbols will not have indexes. The clone will be ready to write to
+a new file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gdxpds.gdx.GdxFile.empty">
+<em class="property">property </em><code class="sig-name descname">empty</code><a class="headerlink" href="#gdxpds.gdx.GdxFile.empty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if this GdxFile object contains any symbols.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gdxpds.gdx.GdxFile.H">
+<em class="property">property </em><code class="sig-name descname">H</code><a class="headerlink" href="#gdxpds.gdx.GdxFile.H" title="Permalink to this definition">¶</a></dt>
+<dd><p>GDX object handle</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gdxpds.gdx.GdxFile.filename">
+<em class="property">property </em><code class="sig-name descname">filename</code><a class="headerlink" href="#gdxpds.gdx.GdxFile.filename" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gdxpds.gdx.GdxFile.version">
+<em class="property">property </em><code class="sig-name descname">version</code><a class="headerlink" href="#gdxpds.gdx.GdxFile.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>GDX file version</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gdxpds.gdx.GdxFile.producer">
+<em class="property">property </em><code class="sig-name descname">producer</code><a class="headerlink" href="#gdxpds.gdx.GdxFile.producer" title="Permalink to this definition">¶</a></dt>
+<dd><p>What program wrote the GDX file</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gdxpds.gdx.GdxFile.num_elements">
+<em class="property">property </em><code class="sig-name descname">num_elements</code><a class="headerlink" href="#gdxpds.gdx.GdxFile.num_elements" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gdxpds.gdx.GdxFile.read">
+<code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/gdx.html#GdxFile.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.gdx.GdxFile.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Opens gdx file at filename and reads meta-data. If not self.lazy_load,
+also loads all symbols.</p>
+<p>Throws an Error if not self.empty.</p>
+<p>Throws a GdxError if any calls to gdxcc fail.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gdxpds.gdx.GdxFile.write">
+<code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/gdx.html#GdxFile.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.gdx.GdxFile.write" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gdxpds.gdx.GdxFile.insert">
+<code class="sig-name descname">insert</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">key</span></em>, <em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/gdx.html#GdxFile.insert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.gdx.GdxFile.insert" title="Permalink to this definition">¶</a></dt>
+<dd><p>S.insert(index, value) – insert value before index</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gdxpds.gdx.GdxFile.keys">
+<code class="sig-name descname">keys</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/gdx.html#GdxFile.keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.gdx.GdxFile.keys" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="gdxpds.gdx.GamsDataType">
+<em class="property">class </em><code class="sig-prename descclassname">gdxpds.gdx.</code><code class="sig-name descname">GamsDataType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/gdx.html#GamsDataType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.gdx.GamsDataType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<p>An enumeration.</p>
+<dl class="py attribute">
+<dt id="gdxpds.gdx.GamsDataType.Set">
+<code class="sig-name descname">Set</code><em class="property"> = 0</em><a class="headerlink" href="#gdxpds.gdx.GamsDataType.Set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gdxpds.gdx.GamsDataType.Parameter">
+<code class="sig-name descname">Parameter</code><em class="property"> = 1</em><a class="headerlink" href="#gdxpds.gdx.GamsDataType.Parameter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gdxpds.gdx.GamsDataType.Variable">
+<code class="sig-name descname">Variable</code><em class="property"> = 2</em><a class="headerlink" href="#gdxpds.gdx.GamsDataType.Variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gdxpds.gdx.GamsDataType.Equation">
+<code class="sig-name descname">Equation</code><em class="property"> = 3</em><a class="headerlink" href="#gdxpds.gdx.GamsDataType.Equation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gdxpds.gdx.GamsDataType.Alias">
+<code class="sig-name descname">Alias</code><em class="property"> = 4</em><a class="headerlink" href="#gdxpds.gdx.GamsDataType.Alias" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="gdxpds.gdx.GamsVariableType">
+<em class="property">class </em><code class="sig-prename descclassname">gdxpds.gdx.</code><code class="sig-name descname">GamsVariableType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/gdx.html#GamsVariableType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.gdx.GamsVariableType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<p>An enumeration.</p>
+<dl class="py attribute">
+<dt id="gdxpds.gdx.GamsVariableType.Unknown">
+<code class="sig-name descname">Unknown</code><em class="property"> = 0</em><a class="headerlink" href="#gdxpds.gdx.GamsVariableType.Unknown" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gdxpds.gdx.GamsVariableType.Binary">
+<code class="sig-name descname">Binary</code><em class="property"> = 1</em><a class="headerlink" href="#gdxpds.gdx.GamsVariableType.Binary" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gdxpds.gdx.GamsVariableType.Integer">
+<code class="sig-name descname">Integer</code><em class="property"> = 2</em><a class="headerlink" href="#gdxpds.gdx.GamsVariableType.Integer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gdxpds.gdx.GamsVariableType.Positive">
+<code class="sig-name descname">Positive</code><em class="property"> = 3</em><a class="headerlink" href="#gdxpds.gdx.GamsVariableType.Positive" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gdxpds.gdx.GamsVariableType.Negative">
+<code class="sig-name descname">Negative</code><em class="property"> = 4</em><a class="headerlink" href="#gdxpds.gdx.GamsVariableType.Negative" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gdxpds.gdx.GamsVariableType.Free">
+<code class="sig-name descname">Free</code><em class="property"> = 5</em><a class="headerlink" href="#gdxpds.gdx.GamsVariableType.Free" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gdxpds.gdx.GamsVariableType.SOS1">
+<code class="sig-name descname">SOS1</code><em class="property"> = 6</em><a class="headerlink" href="#gdxpds.gdx.GamsVariableType.SOS1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gdxpds.gdx.GamsVariableType.SOS2">
+<code class="sig-name descname">SOS2</code><em class="property"> = 7</em><a class="headerlink" href="#gdxpds.gdx.GamsVariableType.SOS2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gdxpds.gdx.GamsVariableType.Semicont">
+<code class="sig-name descname">Semicont</code><em class="property"> = 8</em><a class="headerlink" href="#gdxpds.gdx.GamsVariableType.Semicont" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gdxpds.gdx.GamsVariableType.Semiint">
+<code class="sig-name descname">Semiint</code><em class="property"> = 9</em><a class="headerlink" href="#gdxpds.gdx.GamsVariableType.Semiint" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="gdxpds.gdx.GamsEquationType">
+<em class="property">class </em><code class="sig-prename descclassname">gdxpds.gdx.</code><code class="sig-name descname">GamsEquationType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/gdx.html#GamsEquationType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.gdx.GamsEquationType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<p>An enumeration.</p>
+<dl class="py attribute">
+<dt id="gdxpds.gdx.GamsEquationType.Equality">
+<code class="sig-name descname">Equality</code><em class="property"> = 53</em><a class="headerlink" href="#gdxpds.gdx.GamsEquationType.Equality" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gdxpds.gdx.GamsEquationType.GreaterThan">
+<code class="sig-name descname">GreaterThan</code><em class="property"> = 54</em><a class="headerlink" href="#gdxpds.gdx.GamsEquationType.GreaterThan" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gdxpds.gdx.GamsEquationType.LessThan">
+<code class="sig-name descname">LessThan</code><em class="property"> = 55</em><a class="headerlink" href="#gdxpds.gdx.GamsEquationType.LessThan" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gdxpds.gdx.GamsEquationType.NothingEnforced">
+<code class="sig-name descname">NothingEnforced</code><em class="property"> = 56</em><a class="headerlink" href="#gdxpds.gdx.GamsEquationType.NothingEnforced" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gdxpds.gdx.GamsEquationType.External">
+<code class="sig-name descname">External</code><em class="property"> = 57</em><a class="headerlink" href="#gdxpds.gdx.GamsEquationType.External" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gdxpds.gdx.GamsEquationType.Conic">
+<code class="sig-name descname">Conic</code><em class="property"> = 58</em><a class="headerlink" href="#gdxpds.gdx.GamsEquationType.Conic" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="gdxpds.gdx.GamsValueType">
+<em class="property">class </em><code class="sig-prename descclassname">gdxpds.gdx.</code><code class="sig-name descname">GamsValueType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/gdx.html#GamsValueType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.gdx.GamsValueType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<p>An enumeration.</p>
+<dl class="py attribute">
+<dt id="gdxpds.gdx.GamsValueType.Level">
+<code class="sig-name descname">Level</code><em class="property"> = 0</em><a class="headerlink" href="#gdxpds.gdx.GamsValueType.Level" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gdxpds.gdx.GamsValueType.Marginal">
+<code class="sig-name descname">Marginal</code><em class="property"> = 1</em><a class="headerlink" href="#gdxpds.gdx.GamsValueType.Marginal" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gdxpds.gdx.GamsValueType.Lower">
+<code class="sig-name descname">Lower</code><em class="property"> = 2</em><a class="headerlink" href="#gdxpds.gdx.GamsValueType.Lower" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gdxpds.gdx.GamsValueType.Upper">
+<code class="sig-name descname">Upper</code><em class="property"> = 3</em><a class="headerlink" href="#gdxpds.gdx.GamsValueType.Upper" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="gdxpds.gdx.GamsValueType.Scale">
+<code class="sig-name descname">Scale</code><em class="property"> = 4</em><a class="headerlink" href="#gdxpds.gdx.GamsValueType.Scale" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="gdxpds.gdx.GdxSymbol">
+<em class="property">class </em><code class="sig-prename descclassname">gdxpds.gdx.</code><code class="sig-name descname">GdxSymbol</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">data_type</span></em>, <em class="sig-param"><span class="n">dims</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">file</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">index</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">description</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">variable_type</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">equation_type</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/gdx.html#GdxSymbol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.gdx.GdxSymbol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="gdxpds.gdx.GdxSymbol.clone">
+<code class="sig-name descname">clone</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/gdx.html#GdxSymbol.clone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.gdx.GdxSymbol.clone" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gdxpds.gdx.GdxSymbol.name">
+<em class="property">property </em><code class="sig-name descname">name</code><a class="headerlink" href="#gdxpds.gdx.GdxSymbol.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gdxpds.gdx.GdxSymbol.data_type">
+<em class="property">property </em><code class="sig-name descname">data_type</code><a class="headerlink" href="#gdxpds.gdx.GdxSymbol.data_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gdxpds.gdx.GdxSymbol.variable_type">
+<em class="property">property </em><code class="sig-name descname">variable_type</code><a class="headerlink" href="#gdxpds.gdx.GdxSymbol.variable_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gdxpds.gdx.GdxSymbol.equation_type">
+<em class="property">property </em><code class="sig-name descname">equation_type</code><a class="headerlink" href="#gdxpds.gdx.GdxSymbol.equation_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gdxpds.gdx.GdxSymbol.value_cols">
+<em class="property">property </em><code class="sig-name descname">value_cols</code><a class="headerlink" href="#gdxpds.gdx.GdxSymbol.value_cols" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns list of (name, GamsValueType.value) tuples that describe the
+value columns in the dataframe, that is, those columns that follow the
+self.dims.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gdxpds.gdx.GdxSymbol.value_col_names">
+<em class="property">property </em><code class="sig-name descname">value_col_names</code><a class="headerlink" href="#gdxpds.gdx.GdxSymbol.value_col_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gdxpds.gdx.GdxSymbol.get_value_col_default">
+<code class="sig-name descname">get_value_col_default</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value_col_name</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/gdx.html#GdxSymbol.get_value_col_default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.gdx.GdxSymbol.get_value_col_default" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gdxpds.gdx.GdxSymbol.file">
+<em class="property">property </em><code class="sig-name descname">file</code><a class="headerlink" href="#gdxpds.gdx.GdxSymbol.file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gdxpds.gdx.GdxSymbol.index">
+<em class="property">property </em><code class="sig-name descname">index</code><a class="headerlink" href="#gdxpds.gdx.GdxSymbol.index" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gdxpds.gdx.GdxSymbol.loaded">
+<em class="property">property </em><code class="sig-name descname">loaded</code><a class="headerlink" href="#gdxpds.gdx.GdxSymbol.loaded" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gdxpds.gdx.GdxSymbol.full_typename">
+<em class="property">property </em><code class="sig-name descname">full_typename</code><a class="headerlink" href="#gdxpds.gdx.GdxSymbol.full_typename" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gdxpds.gdx.GdxSymbol.dims">
+<em class="property">property </em><code class="sig-name descname">dims</code><a class="headerlink" href="#gdxpds.gdx.GdxSymbol.dims" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gdxpds.gdx.GdxSymbol.num_dims">
+<em class="property">property </em><code class="sig-name descname">num_dims</code><a class="headerlink" href="#gdxpds.gdx.GdxSymbol.num_dims" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gdxpds.gdx.GdxSymbol.dataframe">
+<em class="property">property </em><code class="sig-name descname">dataframe</code><a class="headerlink" href="#gdxpds.gdx.GdxSymbol.dataframe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gdxpds.gdx.GdxSymbol.num_records">
+<em class="property">property </em><code class="sig-name descname">num_records</code><a class="headerlink" href="#gdxpds.gdx.GdxSymbol.num_records" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gdxpds.gdx.GdxSymbol.load">
+<code class="sig-name descname">load</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/gdx.html#GdxSymbol.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.gdx.GdxSymbol.load" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gdxpds.gdx.GdxSymbol.unload">
+<code class="sig-name descname">unload</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/gdx.html#GdxSymbol.unload"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.gdx.GdxSymbol.unload" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gdxpds.gdx.GdxSymbol.write">
+<code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">index</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/gdx.html#GdxSymbol.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.gdx.GdxSymbol.write" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="gdxpds.gdx.append_set">
+<code class="sig-prename descclassname">gdxpds.gdx.</code><code class="sig-name descname">append_set</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gdx_file</span></em>, <em class="sig-param"><span class="n">set_name</span></em>, <em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">cols</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">dim_names</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">description</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/gdx.html#append_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.gdx.append_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience function that appends set_name to gdx_file as a
+<a class="reference internal" href="#gdxpds.gdx.GamsDataType" title="gdxpds.gdx.GamsDataType"><code class="xref py py-class docutils literal notranslate"><span class="pre">GamsDataType.Set</span></code></a> <a class="reference internal" href="#gdxpds.gdx.GdxSymbol" title="gdxpds.gdx.GdxSymbol"><code class="xref py py-class docutils literal notranslate"><span class="pre">GdxSymbol</span></code></a> using data in
+df.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gdx_file</strong> (<a class="reference internal" href="#gdxpds.gdx.GdxFile" title="gdxpds.gdx.GdxFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">GdxFile</span></code></a>) – file to which new <a class="reference internal" href="#gdxpds.gdx.GdxSymbol" title="gdxpds.gdx.GdxSymbol"><code class="xref py py-class docutils literal notranslate"><span class="pre">GdxSymbol</span></code></a> is to be added</p></li>
+<li><p><strong>set_name</strong> (<em>str</em>) – name of the <a class="reference internal" href="#gdxpds.gdx.GdxSymbol" title="gdxpds.gdx.GdxSymbol"><code class="xref py py-class docutils literal notranslate"><span class="pre">GdxSymbol</span></code></a> to be added</p></li>
+<li><p><strong>df</strong> (<em>pandas.DataFrame</em>) – dataframe or data that can be used to construct a dataframe containing
+the set data. assumes that all columns define dimensions (there is no
+‘Value’ column)</p></li>
+<li><p><strong>cols</strong> (<em>None</em><em> or </em><em>list of str</em>) – if not None, these are the columns in df to be used for the set
+definition</p></li>
+<li><p><strong>dim_names</strong> (<em>None</em><em> or </em><em>list of str</em>) – if provided, the columns of a copy of df (or of df[cols]) will be renamed
+to these names, because the dimension names are taken from the final
+dataframe, these will also be the dimension names</p></li>
+<li><p><strong>description</strong> (<em>None</em><em> or </em><em>str</em>) – passed directly to <a class="reference internal" href="#gdxpds.gdx.GdxSymbol" title="gdxpds.gdx.GdxSymbol"><code class="xref py py-class docutils literal notranslate"><span class="pre">GdxSymbol</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="gdxpds.gdx.append_parameter">
+<code class="sig-prename descclassname">gdxpds.gdx.</code><code class="sig-name descname">append_parameter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gdx_file</span></em>, <em class="sig-param"><span class="n">param_name</span></em>, <em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">cols</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">dim_names</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">description</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/gdx.html#append_parameter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.gdx.append_parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience function that appends param_name to gdx_file as a
+<a class="reference internal" href="#gdxpds.gdx.GamsDataType" title="gdxpds.gdx.GamsDataType"><code class="xref py py-class docutils literal notranslate"><span class="pre">GamsDataType.Parameter</span></code></a> <a class="reference internal" href="#gdxpds.gdx.GdxSymbol" title="gdxpds.gdx.GdxSymbol"><code class="xref py py-class docutils literal notranslate"><span class="pre">GdxSymbol</span></code></a> using
+data in df.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gdx_file</strong> (<a class="reference internal" href="#gdxpds.gdx.GdxFile" title="gdxpds.gdx.GdxFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">GdxFile</span></code></a>) – file to which new <a class="reference internal" href="#gdxpds.gdx.GdxSymbol" title="gdxpds.gdx.GdxSymbol"><code class="xref py py-class docutils literal notranslate"><span class="pre">GdxSymbol</span></code></a> is to be added</p></li>
+<li><p><strong>param_name</strong> (<em>str</em>) – name of the <a class="reference internal" href="#gdxpds.gdx.GdxSymbol" title="gdxpds.gdx.GdxSymbol"><code class="xref py py-class docutils literal notranslate"><span class="pre">GdxSymbol</span></code></a> to be added</p></li>
+<li><p><strong>df</strong> (<em>pandas.DataFrame</em>) – dataframe or data that can be used to construct a dataframe containing
+the parameter data. assumes that the last selected column is the ‘Value’
+column</p></li>
+<li><p><strong>cols</strong> (<em>None</em><em> or </em><em>list of str</em>) – if not None, these are the columns in df to be used for the parameter
+definition</p></li>
+<li><p><strong>dim_names</strong> (<em>None</em><em> or </em><em>list of str</em>) – if provided, the columns of a copy of df (or of df[cols]) will be renamed
+to these names + [‘Value’]. because the dimension names are taken from
+the final dataframe, these will also be the dimension names</p></li>
+<li><p><strong>description</strong> (<em>None</em><em> or </em><em>str</em>) – passed directly to <a class="reference internal" href="#gdxpds.gdx.GdxSymbol" title="gdxpds.gdx.GdxSymbol"><code class="xref py py-class docutils literal notranslate"><span class="pre">GdxSymbol</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-gdxpds.read_gdx">
+<span id="gdxpds-read-gdx-module"></span><h2>gdxpds.read_gdx module<a class="headerlink" href="#module-gdxpds.read_gdx" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gdxpds.read_gdx.Translator">
+<em class="property">class </em><code class="sig-prename descclassname">gdxpds.read_gdx.</code><code class="sig-name descname">Translator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gdx_file</span></em>, <em class="sig-param"><span class="n">gams_dir</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">lazy_load</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/read_gdx.html#Translator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.read_gdx.Translator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="gdxpds.read_gdx.Translator.gams_dir">
+<em class="property">property </em><code class="sig-name descname">gams_dir</code><a class="headerlink" href="#gdxpds.read_gdx.Translator.gams_dir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gdxpds.read_gdx.Translator.gdx_file">
+<em class="property">property </em><code class="sig-name descname">gdx_file</code><a class="headerlink" href="#gdxpds.read_gdx.Translator.gdx_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gdxpds.read_gdx.Translator.gdx">
+<em class="property">property </em><code class="sig-name descname">gdx</code><a class="headerlink" href="#gdxpds.read_gdx.Translator.gdx" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gdxpds.read_gdx.Translator.dataframes">
+<em class="property">property </em><code class="sig-name descname">dataframes</code><a class="headerlink" href="#gdxpds.read_gdx.Translator.dataframes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gdxpds.read_gdx.Translator.symbols">
+<em class="property">property </em><code class="sig-name descname">symbols</code><a class="headerlink" href="#gdxpds.read_gdx.Translator.symbols" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gdxpds.read_gdx.Translator.dataframe">
+<code class="sig-name descname">dataframe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">symbol_name</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/read_gdx.html#Translator.dataframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.read_gdx.Translator.dataframe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="gdxpds.read_gdx.to_dataframes">
+<code class="sig-prename descclassname">gdxpds.read_gdx.</code><code class="sig-name descname">to_dataframes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gdx_file</span></em>, <em class="sig-param"><span class="n">gams_dir</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/read_gdx.html#to_dataframes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.read_gdx.to_dataframes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Primary interface for converting a GAMS GDX file to pandas DataFrames.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gdx_file</strong> (<em>-</em>) – path to a GDX file</p></li>
+<li><p><strong>gams_dir</strong> (<em>-</em>) – optional path to GAMS directory</p></li>
+</ul>
+</dd>
+</dl>
+<p>Returns a dict of Pandas DataFrames, one item for each symbol in the GDX
+file, keyed with the symbol name.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="gdxpds.read_gdx.list_symbols">
+<code class="sig-prename descclassname">gdxpds.read_gdx.</code><code class="sig-name descname">list_symbols</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gdx_file</span></em>, <em class="sig-param"><span class="n">gams_dir</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/read_gdx.html#list_symbols"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.read_gdx.list_symbols" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the list of symbols available in gdx_file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gdx_file</strong> (<em>-</em>) – path to a GDX file</p></li>
+<li><p><strong>gams_dir</strong> (<em>-</em>) – optional path to GAMS directory</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="gdxpds.read_gdx.to_dataframe">
+<code class="sig-prename descclassname">gdxpds.read_gdx.</code><code class="sig-name descname">to_dataframe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gdx_file</span></em>, <em class="sig-param"><span class="n">symbol_name</span></em>, <em class="sig-param"><span class="n">gams_dir</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">old_interface</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/read_gdx.html#to_dataframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.read_gdx.to_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interface for getting the { symbol_name: pandas.DataFrame } dict for a
+single symbol.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gdx_file</strong> (<em>-</em>) – path to a GDX file</p></li>
+<li><p><strong>symbol_name</strong> (<em>-</em>) – symbol whose pandas.DataFrame is being requested</p></li>
+<li><p><strong>gams_dir</strong> (<em>-</em>) – optional path to GAMS directory</p></li>
+</ul>
+</dd>
+</dl>
+<p>Returns a dict with a single entry, where the key is symbol_name and the
+value is the corresponding pandas.DataFrame.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-gdxpds.special">
+<span id="gdxpds-special-module"></span><h2>gdxpds.special module<a class="headerlink" href="#module-gdxpds.special" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="gdxpds.special.convert_gdx_to_np_svs">
+<code class="sig-prename descclassname">gdxpds.special.</code><code class="sig-name descname">convert_gdx_to_np_svs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">num_dims</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/special.html#convert_gdx_to_np_svs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.special.convert_gdx_to_np_svs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts GDX special values to the corresponding numpy versions.</p>
+<dl class="simple">
+<dt>df<span class="classifier">pandas.DataFrame</span></dt><dd><p>a GdxSymbol DataFrame as it was read directly from GDX</p>
+</dd>
+<dt>num_dims<span class="classifier">int</span></dt><dd><p>the number of columns in df that list the dimension values for which the
+symbol value is non-zero / non-default</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>copy of df for which all GDX special values have been converted to
+their numpy equivalents</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="gdxpds.special.is_np_eps">
+<code class="sig-prename descclassname">gdxpds.special.</code><code class="sig-name descname">is_np_eps</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/special.html#is_np_eps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.special.is_np_eps" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>val</strong> (<em>numeric</em>) – value to test</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if val is equal to eps (np.finfo(float).eps), False otherwise</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="gdxpds.special.is_np_sv">
+<code class="sig-prename descclassname">gdxpds.special.</code><code class="sig-name descname">is_np_sv</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/special.html#is_np_sv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.special.is_np_sv" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>val</strong> (<em>numeric</em>) – value to test</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if val is NaN, eps, or is in NUMPY_SPECIAL_VALUES; False otherwise</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="gdxpds.special.convert_np_to_gdx_svs">
+<code class="sig-prename descclassname">gdxpds.special.</code><code class="sig-name descname">convert_np_to_gdx_svs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">num_dims</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/special.html#convert_np_to_gdx_svs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.special.convert_np_to_gdx_svs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts numpy special values to the corresponding GDX versions.</p>
+<dl class="simple">
+<dt>df<span class="classifier">pandas.DataFrame</span></dt><dd><p>a GdxSymbol DataFrame in pandas/numpy form</p>
+</dd>
+<dt>num_dims<span class="classifier">int</span></dt><dd><p>the number of columns in df that list the dimension values for which the
+symbol value is non-zero / non-default</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>copy of df for which all numpy special values have been converted to
+their GDX equivalents</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="gdxpds.special.pd_isnan">
+<code class="sig-prename descclassname">gdxpds.special.</code><code class="sig-name descname">pd_isnan</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/special.html#pd_isnan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.special.pd_isnan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Utility function for identifying None or NaN (which are indistinguishable in pandas).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>val</strong> (<em>numeric</em>) – value to test</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if val is a GDX encoded special value that maps to None or numpy.nan;
+False otherwise</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="gdxpds.special.pd_val_equal">
+<code class="sig-prename descclassname">gdxpds.special.</code><code class="sig-name descname">pd_val_equal</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val1</span></em>, <em class="sig-param"><span class="n">val2</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/special.html#pd_val_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.special.pd_val_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Utility function used to test special value conversions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>val1</strong> (<em>float</em><em> or </em><em>None</em>) – first value to compare</p></li>
+<li><p><strong>val2</strong> (<em>float</em><em> or </em><em>None</em>) – second value to compare</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if val1 and val2 are equal in the sense of == or they are
+both NaN/None. The values that map to None and np.nan are assumed
+to be equal because pandas cannot be relied upon to make the
+distinction.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="gdxpds.special.gdx_isnan">
+<code class="sig-prename descclassname">gdxpds.special.</code><code class="sig-name descname">gdx_isnan</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val</span></em>, <em class="sig-param"><span class="n">gdxf</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/special.html#gdx_isnan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.special.gdx_isnan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Utility function for equating the GDX special values that map to None or NaN
+(which are indistinguishable in pandas).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>val</strong> (<em>numeric</em>) – value to test</p></li>
+<li><p><strong>gdxf</strong> (<a class="reference internal" href="#gdxpds.gdx.GdxFile" title="gdxpds.gdx.GdxFile"><em>GdxFile</em></a>) – GDX file containing the value. Provides np_to_gdx_svs map.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if val is a GDX encoded special value that maps to None or numpy.nan;
+False otherwise</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="gdxpds.special.gdx_val_equal">
+<code class="sig-prename descclassname">gdxpds.special.</code><code class="sig-name descname">gdx_val_equal</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val1</span></em>, <em class="sig-param"><span class="n">val2</span></em>, <em class="sig-param"><span class="n">gdxf</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/special.html#gdx_val_equal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.special.gdx_val_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Utility function used to test special value conversions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>val1</strong> (<em>float</em><em> or </em><em>GDX special value</em>) – first value to compare</p></li>
+<li><p><strong>val2</strong> (<em>float</em><em> or </em><em>GDX special value</em>) – second value to compare</p></li>
+<li><p><strong>gdxf</strong> (<a class="reference internal" href="#gdxpds.gdx.GdxFile" title="gdxpds.gdx.GdxFile"><em>GdxFile</em></a>) – GDX file containing val1 and val2</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if val1 and val2 are equal in the sense of == or they are
+equivalent GDX-format special values. The values that map to None
+and np.nan are assumed to be equal because pandas cannot be relied
+upon to make the distinction.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="gdxpds.special.load_specials">
+<code class="sig-prename descclassname">gdxpds.special.</code><code class="sig-name descname">load_specials</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gams_dir_finder</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/special.html#load_specials"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.special.load_specials" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load special values</p>
+<p>Needs to be called after gdxcc is loaded. Populates the module attributes
+SPECIAL_VALUES, GDX_TO_NP_SVS, and NP_TO_GDX_SVS.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>gams_dir_finder</strong> (<a class="reference internal" href="#gdxpds.tools.GamsDirFinder" title="gdxpds.tools.GamsDirFinder"><code class="xref py py-class docutils literal notranslate"><span class="pre">gdxpds.tools.GamsDirFinder</span></code></a>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-gdxpds.tools">
+<span id="gdxpds-tools-module"></span><h2>gdxpds.tools module<a class="headerlink" href="#module-gdxpds.tools" title="Permalink to this headline">¶</a></h2>
+<dl class="py exception">
+<dt id="gdxpds.tools.Error">
+<em class="property">exception </em><code class="sig-prename descclassname">gdxpds.tools.</code><code class="sig-name descname">Error</code><a class="reference internal" href="../_modules/gdxpds/tools.html#Error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.tools.Error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Base class for all Exceptions raised by this package.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="gdxpds.tools.GamsDirFinder">
+<em class="property">class </em><code class="sig-prename descclassname">gdxpds.tools.</code><code class="sig-name descname">GamsDirFinder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gams_dir</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/tools.html#GamsDirFinder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.tools.GamsDirFinder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for finding and accessing the system’s GAMS directory.</p>
+<p>The find function first looks for the ‘GAMS_DIR’ environment variable. If
+that is unsuccessful, it next uses ‘which gams’ for POSIX systems, and the
+default install location, ‘C:/GAMS’, for Windows systems. In the latter case
+it prefers the largest version number.</p>
+<p>You can always specify the GAMS directory directly, and this class will attempt
+to clean up your input. (Even on Windows, the GAMS path must use ‘/’ rather than
+‘’.)</p>
+<dl class="py attribute">
+<dt id="gdxpds.tools.GamsDirFinder.gams_dir_cache">
+<code class="sig-name descname">gams_dir_cache</code><em class="property"> = 'C:/GAMS/win64/25.1'</em><a class="headerlink" href="#gdxpds.tools.GamsDirFinder.gams_dir_cache" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gdxpds.tools.GamsDirFinder.gams_dir">
+<em class="property">property </em><code class="sig-name descname">gams_dir</code><a class="headerlink" href="#gdxpds.tools.GamsDirFinder.gams_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>The GAMS directory on this system.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="gdxpds.tools.NeedsGamsDir">
+<em class="property">class </em><code class="sig-prename descclassname">gdxpds.tools.</code><code class="sig-name descname">NeedsGamsDir</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gams_dir</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/tools.html#NeedsGamsDir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.tools.NeedsGamsDir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Mix-in class that asserts that a GAMS directory is needed and provides the
+methods required to find and access it.</p>
+<dl class="py attribute">
+<dt id="gdxpds.tools.NeedsGamsDir.gams_dir">
+<code class="sig-name descname">gams_dir</code><a class="headerlink" href="#gdxpds.tools.NeedsGamsDir.gams_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>The GAMS directory whose value has either been directly set or has been
+found using the GamsDirFinder class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id0">
+<em class="property">property </em><code class="sig-name descname">gams_dir</code><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-gdxpds.write_gdx">
+<span id="gdxpds-write-gdx-module"></span><h2>gdxpds.write_gdx module<a class="headerlink" href="#module-gdxpds.write_gdx" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gdxpds.write_gdx.Translator">
+<em class="property">class </em><code class="sig-prename descclassname">gdxpds.write_gdx.</code><code class="sig-name descname">Translator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataframes</span></em>, <em class="sig-param"><span class="n">gams_dir</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/write_gdx.html#Translator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.write_gdx.Translator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="gdxpds.write_gdx.Translator.dataframes">
+<em class="property">property </em><code class="sig-name descname">dataframes</code><a class="headerlink" href="#gdxpds.write_gdx.Translator.dataframes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gdxpds.write_gdx.Translator.gams_dir">
+<em class="property">property </em><code class="sig-name descname">gams_dir</code><a class="headerlink" href="#gdxpds.write_gdx.Translator.gams_dir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gdxpds.write_gdx.Translator.gdx">
+<em class="property">property </em><code class="sig-name descname">gdx</code><a class="headerlink" href="#gdxpds.write_gdx.Translator.gdx" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="gdxpds.write_gdx.Translator.save_gdx">
+<code class="sig-name descname">save_gdx</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="n">gams_dir</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/write_gdx.html#Translator.save_gdx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.write_gdx.Translator.save_gdx" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="gdxpds.write_gdx.to_gdx">
+<code class="sig-prename descclassname">gdxpds.write_gdx.</code><code class="sig-name descname">to_gdx</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataframes</span></em>, <em class="sig-param"><span class="n">path</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">gams_dir</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds/write_gdx.html#to_gdx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.write_gdx.to_gdx" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataframes</strong> (<em>-</em>) – symbol name to pandas.DataFrame
+dict to be compiled into a single gdx file. Each DataFrame is assumed to
+represent a single set or parameter. The last column must be the parameter’s
+value, or the set’s listing of True/False, and must be labeled as (case
+insensitive) ‘value’.</p></li>
+<li><p><strong>path</strong> (<em>-</em>) – if provided, the gdx file will be written
+to this path</p></li>
+</ul>
+</dd>
+</dl>
+<p>Returns a gdxdict.gdxdict, which is defined in [py-gdx](<a class="reference external" href="https://github.com/geoffleyland/py-gdx">https://github.com/geoffleyland/py-gdx</a>).</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-gdxpds">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-gdxpds" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="gdxpds.load_gdxcc">
+<code class="sig-prename descclassname">gdxpds.</code><code class="sig-name descname">load_gdxcc</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gams_dir</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gdxpds.html#load_gdxcc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gdxpds.load_gdxcc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to initialize GAMS, especially to load required libraries that can
+sometimes conflict with other packages.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>gams_dir</strong> (<em>None</em><em> or </em><em>str</em>) – if not None, directory containing the GAMS executable</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="gdxpds.test.html" class="btn btn-neutral float-right" title="gdxpds.test package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="modules.html" class="btn btn-neutral" title="gdx-pandas" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Alliance for Sustainable Energy.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.2.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/language_data.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
+      });
+  </script> 
+
+</body>
+</html>
