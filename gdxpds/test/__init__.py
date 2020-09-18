@@ -45,7 +45,7 @@ run_dir = os.path.join(base_dir, 'output')
 
 def apply_dirname(f, num_times):
     ret = f
-    for i in range(num_times):
+    for _i in range(num_times):
         ret = os.path.dirname(ret)
     return ret
 

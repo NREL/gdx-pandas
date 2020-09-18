@@ -48,6 +48,9 @@ logger = logging.getLogger(__name__)
 from gdxpds.tools import Error
 from gdxpds.special import load_specials
 
+from ._version import __version__
+
+
 def load_gdxcc(gams_dir=None):
     """
     Method to initialize GAMS, especially to load required libraries that can 
@@ -66,7 +69,7 @@ def load_gdxcc(gams_dir=None):
     from gdxpds.tools import GamsDirFinder
     finder = GamsDirFinder(gams_dir=gams_dir)
     H = gdxcc.new_gdxHandle_tp()
-    rc = gdxcc.gdxCreateD(H,finder.gams_dir,gdxcc.GMS_SSSIZE)
+    _rc = gdxcc.gdxCreateD(H,finder.gams_dir,gdxcc.GMS_SSSIZE)
     gdxcc.gdxFree(H)
     load_specials(finder)
     return
