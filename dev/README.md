@@ -31,7 +31,7 @@ The documentation is built with [Sphinx](http://sphinx-doc.org/index.html). Ther
 
 ### Markdown to reStructuredText
 
-Markdown files are registered in `docs/source/md_files.txt`. Paths in that file should be relative to the docs folder and should exclude the file extension. For every file listed there, the `dev/md_to_rst.py` utility will expect to find a markdown (`.md`) file, and will look for an optional `.postfix` file, which is expected to contain `.rst` code to be appended to the `.rst` file created by converting the input `.md` file. Thus, running `dev/md_to_rst.py` on the `doc/source/md_files.txt` file will create revised `.rst` files, one for each entry listed in the registry. In summary:
+Markdown files are registered in `doc/source/md_files.txt`. Paths in that file should be relative to the docs folder and should exclude the file extension. For every file listed there, the `dev/md_to_rst.py` utility will expect to find a markdown (`.md`) file, and will look for an optional `.postfix` file, which is expected to contain `.rst` code to be appended to the `.rst` file created by converting the input `.md` file. Thus, running `dev/md_to_rst.py` on the `doc/source/md_files.txt` file will create revised `.rst` files, one for each entry listed in the registry. In summary:
 
 ```
 cd doc/source
