@@ -88,6 +88,8 @@ class GamsDirFinder(object):
         """
         Cleans up the path string.
         """
+        if value is None:
+            return None
         assert(isinstance(value, str))
         ret = os.path.realpath(value)
         if not os.path.exists(ret):
@@ -113,9 +115,11 @@ class GamsDirFinder(object):
         """
         # check for environment variable
         ret = os.environ.get('GAMS_DIR')
+        ret = self.__clean_gams_dir(ret)
 
         if ret is None:
             ret = os.environ.get('GAMSDIR')
+            ret = self.__clean_gams_dir(ret)
 
         if ret is None and os.name == 'nt':
             # windows systems
@@ -123,6 +127,7 @@ class GamsDirFinder(object):
                 ret = os.path.dirname(subp.check_output(['where', 'gams']).decode().split("\n")[0])
             except:
                 ret = None
+            ret = self.__clean_gams_dir(ret)
 
         if ret is None and os.name == 'nt':
             # search in default installation location
@@ -149,6 +154,7 @@ class GamsDirFinder(object):
                     elif len(dirs) > 0:
                         ret = os.path.join(cur_dir, dirs[0])
                     break
+            ret = self.__clean_gams_dir(ret)
 
         if ret is None and os.name != 'nt':
             # posix systems
@@ -156,9 +162,9 @@ class GamsDirFinder(object):
                 ret = os.path.dirname(subp.check_output(['which', 'gams'])).decode()
             except:
                 ret = None
+            ret = self.__clean_gams_dir(ret)
                 
         if ret is not None:
-            ret = self.__clean_gams_dir(ret)
             GamsDirFinder.gams_dir_cache = ret
 
         if ret is None:
