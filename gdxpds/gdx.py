@@ -490,19 +490,22 @@ class GdxSymbol(object):
         self._index = index
         self._loaded = False
         self._num_records = None
-        if (dataframe is not None):
-            # Writing symbol
+        if dataframe is not None:
+            # Load symbol from dataframe
             if dims is not None or num_records is not None:
                 raise ValueError("Do not pass both 'dataframe' and 'dims'/'num_records'")
             self.dataframe = dataframe
         else:
-            # Reading symbol
-            # Do so lazily
+            # Can't load symbol from dataframe, for now lazy load
+            # Can assign to .dataframe later or .load() from file
             self.dims = dims
             self._num_records = num_records
 
     @classmethod
     def from_gdx(cls, file, index):
+        """
+        Helper function safely constructing a GdxSymbol from a file
+        """
         # ... for the symbols
         ret, name, dims, data_type = gdxcc.gdxSymbolInfo(file.H, index)
         if ret != 1:
@@ -537,10 +540,20 @@ class GdxSymbol(object):
         return symbol
 
     @classmethod
-    def from_df(cls, symbol_name, df):
+    def from_df(cls, symbol_name, df, description='', variable_type=None, equation_type=None):
+        """
+        Helper function constructing a GdxSymbol from a Pandas DataFrame
+        """
         data_type, num_dims = infer_data_type(symbol_name, df)
         logger.info("Inferred data type of {} to be {}.".format(symbol_name,data_type.name))
-        symbol = GdxSymbol(symbol_name,data_type,dataframe=df)
+        symbol = GdxSymbol(
+            symbol_name,
+            data_type,
+            dataframe=df,
+            description=description,
+            variable_type=variable_type,
+            equation_type=equation_type,
+        )
         return symbol
 
     def clone(self):
