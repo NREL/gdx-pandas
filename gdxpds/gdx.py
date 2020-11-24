@@ -305,6 +305,9 @@ class GdxFile(MutableSequence, NeedsGamsDir):
         self._filename = filename
         
         # write the universal set
+        # This package currently can't recalculate the universal set yet
+        # Therefore unload empty set
+        self.universal_set.dataframe = pds.DataFrame({"*": [], "Value": []})
         self.universal_set.write()
 
         for i, symbol in enumerate(self,start=1):
@@ -485,7 +488,7 @@ class GdxSymbol(object):
         self._dataframe = None; self._dims = None
         self._file = file
         self._index = index
-        self._loaded = index == 0  # Universal set is always loaded
+        self._loaded = False
         self._num_records = None
         if (dataframe is not None):
             # Writing symbol
@@ -810,6 +813,9 @@ class GdxSymbol(object):
         self.dataframe['Value'] = True.
         """
         assert self.data_type == GamsDataType.Set
+        if not self.loaded:
+            # Nothing to fixup
+            return
 
         colname = self._dataframe.columns[-1]
         assert colname == self.value_col_names[0], f"Unexpected final column {colname!r} in Set dataframe"
