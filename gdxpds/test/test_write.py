@@ -229,7 +229,6 @@ def test_setting_dataframes(manage_rundir):
         #     reset with empty list
         gdx.append(gdxpds.gdx.GdxSymbol('sym_12',gdxpds.gdx.GamsDataType.Set,
             dims=2))
-        gdx[-1].dataframe = gdx[-1].dataframe.copy()
         gdx[-1].dataframe = []
         assert gdx[-1].num_dims == 2
         assert gdx[-1].dims == ['*'] * 2
