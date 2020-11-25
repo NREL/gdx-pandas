@@ -71,14 +71,20 @@ def test_unload():
     with gdxpds.gdx.GdxFile() as f:
         f.read(gdx_file)
         assert not f['startupfuel'].loaded
-        assert not f['startupfuel'].dataframe.empty  # loads df
+        with pytest.raises(gdxpds.gdx.Error):
+            print(f['startupfuel'].dataframe)
+
+        f['startupfuel'].load()
         assert f['startupfuel'].loaded
+        assert not f['startupfuel'].dataframe.empty
         assert 'CC' in f['startupfuel'].dataframe['*'].tolist()
 
         f['startupfuel'].unload()
         assert not f['startupfuel'].loaded
-
-        f['startupfuel'].load()  # explicitly load this time
+        with pytest.raises(gdxpds.gdx.Error):
+            print(f['startupfuel'].dataframe)
+        
+        f['startupfuel'].load()
         assert f['startupfuel'].loaded
         assert not f['startupfuel'].dataframe.empty
         assert 'CC' in f['startupfuel'].dataframe['*'].tolist()
