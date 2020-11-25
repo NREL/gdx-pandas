@@ -891,7 +891,7 @@ class GdxSymbol(object):
         return
 
     def unload(self):
-        self.dataframe = None
+        self._dataframe = None
 
     def write(self,index=None): 
         if not self.loaded:
