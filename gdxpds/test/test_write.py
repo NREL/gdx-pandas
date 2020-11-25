@@ -151,17 +151,21 @@ def test_setting_dataframes(manage_rundir):
         # start with WAYS THAT WORK:
         # 0 dims
         #     full dataframe
-        gdx.append(gdxpds.gdx.GdxSymbol('sym_1', gdxpds.gdx.GamsDataType.Parameter, dataframe=pds.DataFrame([[2.0]])))
+        gdx.append(gdxpds.gdx.GdxSymbol('sym_1',gdxpds.gdx.GamsDataType.Parameter))
+        gdx[-1].dataframe = pds.DataFrame([[2.0]])
         assert list(gdx[-1].dataframe.columns) == ['Value']
-        #     edit initialized dataframe - Parameter
-        gdx.append(
-            gdxpds.gdx.GdxSymbol('sym_2', gdxpds.gdx.GamsDataType.Parameter, dataframe=pds.DataFrame({'Value': [5.0]}))
-        )
         #     list of lists
-        df = {key: [default] for key, default in gdxpds.gdx.GAMS_VALUE_DEFAULTS.items()}
-        gdx.append(gdxpds.gdx.GdxSymbol('sym_3',gdxpds.gdx.GamsDataType.Variable, dataframe=df))
-        #     empty list
-        gdx.append(gdxpds.gdx.GdxSymbol('sym_4',gdxpds.gdx.GamsDataType.Parameter, dataframe=pds.DataFrame({'Value': []})))
+        gdx.append(gdxpds.gdx.GdxSymbol('sym_3',gdxpds.gdx.GamsDataType.Variable))
+        values = [3.0]
+        for value_col_name in gdx[-1].value_col_names:
+            if value_col_name == 'Level':
+                continue
+            values.append(gdx[-1].get_value_col_default(value_col_name))
+        gdx[-1].dataframe = [values]
+        #     reset with empty list
+        gdx.append(gdxpds.gdx.GdxSymbol('sym_4',gdxpds.gdx.GamsDataType.Parameter))
+        gdx[-1].dataframe = pds.DataFrame([[1.0]])
+        gdx[-1].dataframe = []
         assert gdx[-1].num_records == 0
 
         # > 0 dims - GdxSymbol initialized with dims=0
@@ -339,7 +343,6 @@ def test_setting_dataframes(manage_rundir):
     with gdxpds.gdx.GdxFile(lazy_load=False) as gdx:
         gdx.read(os.path.join(outdir,'dataframe_set_tests.gdx'))
         assert gdx['sym_1'].num_records == 1
-        assert gdx['sym_2'].num_records == 1
         assert gdx['sym_3'].num_records == 1
         assert gdx['sym_4'].num_records == 1 # GAMS defaults empty 0-dim parameter to 0
         assert gdx['sym_4'].dataframe['Value'].values[0] == 0.0
