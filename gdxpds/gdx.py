@@ -488,7 +488,6 @@ class GdxSymbol(object):
         self._dataframe = None; self._dims = None
         self._file = file
         self._index = index
-        self._loaded = False
         self._num_records = None
         if dataframe is not None:
             # Load symbol from dataframe
@@ -687,7 +686,7 @@ class GdxSymbol(object):
 
     @property
     def loaded(self):
-        return self._loaded
+        return self._dataframe is not None
 
     @property
     def full_typename(self):
@@ -791,7 +790,6 @@ class GdxSymbol(object):
                 self._append_default_values(df)
             df.columns = self.dims + self.value_col_names
             self._dataframe = df
-            self._loaded = True
         except Exception:
             logger.error("Unable to set dataframe for {} to\n{}\n\nIn process dataframe: {}".format(self,data,self._dataframe))
             raise
@@ -876,7 +874,6 @@ class GdxSymbol(object):
 
         if self.data_type == GamsDataType.Parameter and HAVE_GDX2PY:
             self.dataframe = gdx2py.par2list(self.file.filename,self.name) 
-            self._loaded = True
             return
 
         data = []
@@ -891,12 +888,10 @@ class GdxSymbol(object):
         self.dataframe = data
         if not self.data_type == GamsDataType.Set:
             self.dataframe = special.convert_gdx_to_np_svs(self.dataframe, self.num_dims)
-        self._loaded = True
         return
 
     def unload(self):
         self.dataframe = None
-        self._loaded = False
 
     def write(self,index=None): 
         if not self.loaded:
