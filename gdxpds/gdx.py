@@ -478,7 +478,7 @@ GAMS_VARIABLE_DEFAULT_LOWER_UPPER_BOUNDS = {
 }
 
 class GdxSymbol(object): 
-    def __init__(self,name,data_type,dims=None,num_records=None,dataframe=None,file=None,index=None,
+    def __init__(self,name,data_type,dims=None,num_records=None,file=None,index=None,
                  description='',variable_type=None,equation_type=None): 
         self._name = name
         self.description = description
@@ -488,17 +488,9 @@ class GdxSymbol(object):
         self._dataframe = None; self._dims = None
         self._file = file
         self._index = index
-        self._num_records = None
-        if dataframe is not None:
-            # Load symbol from dataframe
-            if dims is not None or num_records is not None:
-                raise ValueError("Do not pass both 'dataframe' and 'dims'/'num_records'")
-            self.dataframe = dataframe
-        else:
-            # Can't load symbol from dataframe, for now lazy load
-            # Can assign to .dataframe later or .load() from file
-            self.dims = dims
-            self._num_records = num_records
+        self.dims = dims
+        self._num_records = num_records
+        # Can now assign to .dataframe or .load() from file
 
     @classmethod
     def from_gdx(cls, file, index):
@@ -548,11 +540,11 @@ class GdxSymbol(object):
         symbol = GdxSymbol(
             symbol_name,
             data_type,
-            dataframe=df,
             description=description,
             variable_type=variable_type,
             equation_type=equation_type,
         )
+        symbol.dataframe = df
         return symbol
 
     def clone(self):
