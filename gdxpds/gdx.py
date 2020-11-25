@@ -591,7 +591,6 @@ class GdxSymbol(object):
         self._data_type = GamsDataType(value)
         self.variable_type = None
         self.equation_type = None
-        self._init_dataframe()
         return
 
     @property
@@ -712,7 +711,6 @@ class GdxSymbol(object):
             return
         if isinstance(value, int):
             self._dims = ['*'] * value
-            self._init_dataframe()
             return
         if not isinstance(value, list):
             raise Error('dims must be an int or a list. Was passed {} of type {}.'.format(value, type(value)))
@@ -724,7 +722,6 @@ class GdxSymbol(object):
         if self.loaded and self.num_records > 0:
             self._dataframe.columns = self.dims + self.value_col_names
             return
-        self._init_dataframe()
 
     @property
     def num_dims(self):
@@ -796,13 +793,6 @@ class GdxSymbol(object):
 
         if self.data_type == GamsDataType.Set:
             self._fixup_set_value()
-        return
-
-    def _init_dataframe(self):
-        self._dataframe = pds.DataFrame([],columns=self.dims + self.value_col_names)
-        if self.data_type == GamsDataType.Set:
-            colname = self._dataframe.columns[-1]
-            replace_df_column(self._dataframe,colname,self._dataframe[colname].astype(c_bool))
         return
 
     def _append_default_values(self,df):
