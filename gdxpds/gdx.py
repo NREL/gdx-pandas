@@ -327,9 +327,14 @@ class GdxFile(MutableSequence, NeedsGamsDir):
     def insert(self,key,value):
         self._check_insert_setitem(key, value)
         value._file = self
-        data = [(symbol.name, symbol) for symbol in self]
-        data.insert(key,(value.name,value))
-        self._symbols = OrderedDict(data)
+        if key == len(self) and value.name not in self._symbols:
+            # We can safely append the symbol. This is fast (O(log(n)) complexity)
+            self._symbols[value.name] = value
+        else:
+            # Need to insert inside the sequence. This is slow (O(n) complexity)
+            data = [(symbol.name, symbol) for symbol in self]
+            data.insert(key,(value.name,value))
+            self._symbols = OrderedDict(data)
         return
 
     def __contains__(self,key):
@@ -805,15 +810,16 @@ class GdxSymbol(object):
             self._loaded = True
             return
 
-        data = []
         _ret, records = gdxcc.gdxDataReadStrStart(self.file.H,self.index)
-        for _i in range(records):
-            _ret, elements, values, _afdim = gdxcc.gdxDataReadStr(self.file.H)
-            # make sure we pick value columns up correctly
-            data.append(elements + [values[col_ind] for col_name, col_ind in self.value_cols])
-            if self.data_type == GamsDataType.Set:
-                data[-1][-1] = True
-                # gdxdict called gdxGetElemText here, but I do not currently see value in doing that
+
+        def reader():
+            handle = self.file.H
+            for i in range(records):
+                yield gdxcc.gdxDataReadStr(handle)
+
+        vc = self.value_cols  # do this for speed in the next line
+        data = [elements + [values[col_ind] for col_name, col_ind in vc] for ret, elements, values, afdim in reader()]
+        # gdxdict called gdxGetElemText here, but I do not currently see value in doing that
         self.dataframe = data
         if not self.data_type == GamsDataType.Set:
             self.dataframe = special.convert_gdx_to_np_svs(self.dataframe, self.num_dims)
