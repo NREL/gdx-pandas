@@ -3,9 +3,36 @@ import logging
 import os
 from subprocess import call, list2cmdline
 
-from layerstack import start_console_log
-
 logger = logging.getLogger(__name__)
+
+
+DEFAULT_LOG_FORMAT = '%(asctime)s|%(levelname)s|%(name)s|\n\t%(message)s'
+
+
+def start_console_log(log_level=logging.WARN,log_format=DEFAULT_LOG_FORMAT):
+    """
+    Starts logging to the console.
+    Parameters
+    ----------
+    log_level : enum
+        logging package log level, i.e. logging.ERROR, logging.WARN, 
+        logging.INFO or logging.DEBUG
+    log_format : str
+        format string to use with the logging package
+    
+    Returns
+    -------
+    logging.StreamHandler
+        console_handler
+    """
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(log_level)
+    logformat = logging.Formatter(log_format)
+    console_handler.setFormatter(logformat)
+    logging.getLogger().setLevel(log_level)
+    logging.getLogger().addHandler(console_handler)
+    return console_handler    
+
 
 def convert_files(file_registry):
     # registry is expected to contain paths relative to its location
@@ -46,6 +73,7 @@ def convert_files(file_registry):
                         rst.write("\n")
                         with open(p_postfix,'r') as postfix:
                             rst.write(postfix.read())
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="""Utility to convert Markdown 
