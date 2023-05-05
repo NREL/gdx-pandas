@@ -42,7 +42,6 @@ setup(
         'bin/gdx_to_csv.py'
     ],
     install_requires=[
-        "enum34; python_version < '3.4'",
         "gdxcc",
         "pandas>=0.20.1",
         "numpy>=1.7"

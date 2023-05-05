@@ -1,4 +1,0 @@
-enum34; python_version < '3.4'
-gdxcc
-pandas>=0.20.1
-numpy>=1.7
