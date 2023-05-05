@@ -1,5 +1,5 @@
 # [LICENSE]
-# Copyright (c) 2020, Alliance for Sustainable Energy.
+# Copyright (c) 2023, Alliance for Sustainable Energy.
 # All rights reserved.
 # 
 # Redistribution and use in source and binary forms, 
@@ -165,5 +165,4 @@ def test_numpy_eps():
     assert(gdxpds.special.is_np_eps(np.finfo(float).eps))
     assert(not gdxpds.special.is_np_eps(float(0.0)))
     assert(not gdxpds.special.is_np_eps(2.0 * np.finfo(float).eps))
-
-
+    

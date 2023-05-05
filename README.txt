@@ -11,16 +11,14 @@ Please visit https://nrel.github.io/gdx-pandas for the latest documentation.
 
 DEPENDENCIES
 
-- Python 3.4 or 3.6 (gdx-pandas support for Python 2.X has been discontinued; GAMS does not yet support Python 3.7)
+- Python 3.7 or higher (exact compatibility might depend on which GAMS version you are using)
 - pandas (In general you will want the SciPy stack. Anaconda comes with it, or see [my notes for Windows](https://elainethale.wordpress.com/programming-notes/python-environment-set-up/).)
-- For Python versions < 3.4, enum34. Also **uninstall the enum package** if it is installed.
 - Install [GAMS](https://www.gams.com/download/)
 - Put the GAMS directory in your `PATH` and/or assign it to the `GAMS_DIR` environment variable
 - GAMS Python bindings
-    - See GAMS/win64/XX.X/apifiles/readme.txt on Windows, 
-      GAMS/gamsXX.X_osx_x64_64_sfx/apifiles/readme.txt on Mac, or 
-      /opt/gams/gamsXX.X_linux_x64_64_sfx/apifiles/readme.txt on Linux
-    - Run the following for the correct version of the Python bindings
+    - See GAMS/**/apifiles/readme.txt on Windows and Mac, or 
+      /opt/gams/**/apifiles/readme.txt on Linux
+    - Run the following for the correct version of the Python bindings (e.g., from the GAMS/**/apifiles/Python/api_39 folder):
         
         ```bash
         python setup.py install
@@ -29,16 +27,11 @@ DEPENDENCIES
         or 
 
         ```bash
-        python setup.py build --build-base=/path/to/somwhere/you/have/write/access install
+        python setup.py build --build-base={temporary-path-where-you-have-write-access} install
         ```
 
         with the latter being for the case when you can install packages into 
         Python but don't have GAMS directory write access.
-
-    - For Python 3.X, use 
-      .../apifiles/Python/api_XX/setup.py. For Python 3.X in particular you will 
-      need GAMS version >= 24.5.1 (Python 3.4, Windows and Linux), 
-      24.7.4 (Python 3.4, Mac OS X), or >= 24.8.4 (Python 3.6)
 
 
 TESTING

@@ -29,7 +29,7 @@ import gdxpds
 gdx_file = 'C:\path_to_my_gdx\data.gdx'
 dataframes = gdxpds.to_dataframes(gdx_file)
 for symbol_name, df in dataframes.items():
-    print("Doing work with {}.".format(symbol_name))
+    print(f"Doing work with {symbol_name}\n{df}.")
 ```
 
 And vice-versa:
@@ -77,7 +77,7 @@ with gdxpds.gdx.GdxFile(lazy_load=False) as f:
     for symbol in f:
         symbol_name = symbol.name
         df = symbol.dataframe
-        print("Doing work with {}:\n{}".format(symbol_name,df.head()))
+        print(f"Doing work with {symbol_name}:\n{df}")
 ```
 
 The backend especially gives more control over creating new data in GDX format. 

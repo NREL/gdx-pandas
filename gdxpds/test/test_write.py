@@ -1,5 +1,5 @@
 # [LICENSE]
-# Copyright (c) 2020, Alliance for Sustainable Energy.
+# Copyright (c) 2023, Alliance for Sustainable Energy.
 # All rights reserved.
 # 
 # Redistribution and use in source and binary forms, 
@@ -66,7 +66,7 @@ def test_from_scratch_sets(manage_rundir):
         gdx.append(gdxpds.gdx.GdxSymbol('my_other_set',gdxpds.gdx.GamsDataType.Set,dims=['u']))
         data = pds.DataFrame([['u' + str(i)] for i in range(1,11)],columns=['u'])
         data['Value'] = True
-        gdx[-1].dataframe = gdx[-1].dataframe.append(data)        
+        gdx[-1].dataframe = pds.concat([gdx[-1].dataframe,data])
         gdx.write(os.path.join(outdir,'my_sets.gdx'))
 
     with gdxpds.gdx.GdxFile(lazy_load=False) as gdx:
