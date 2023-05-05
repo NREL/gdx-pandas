@@ -135,7 +135,7 @@ class Translator(object):
         # Parameter or set
         num_dims = len(df_col_names) - 1
         if len(df.index) > 0:
-            if isinstance(df.loc[df.index[0],df.columns[-1]],Number):
+            if isinstance(df.iloc[0,-1],Number):
                 return GamsDataType.Parameter, num_dims
         return GamsDataType.Set, num_dims
 
