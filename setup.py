@@ -1,62 +1,54 @@
-# [LICENSE]
-# Copyright (c) 2020, Alliance for Sustainable Energy.
-# All rights reserved.
-# 
-# Redistribution and use in source and binary forms, 
-# with or without modification, are permitted provided 
-# that the following conditions are met:
-# 
-# 1. Redistributions of source code must retain the above 
-# copyright notice, this list of conditions and the 
-# following disclaimer.
-# 
-# 2. Redistributions in binary form must reproduce the 
-# above copyright notice, this list of conditions and the 
-# following disclaimer in the documentation and/or other 
-# materials provided with the distribution.
-# 
-# 3. Neither the name of the copyright holder nor the 
-# names of its contributors may be used to endorse or 
-# promote products derived from this software without 
-# specific prior written permission.
-# 
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
-# CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
-# INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
-# MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
-# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
-# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
-# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-# BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR 
-# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
-# HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
-# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
-# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-# [/LICENSE]
+from pathlib import Path
+from setuptools import setup, find_packages
 
-from distutils.core import setup
-import os
+here = Path(__file__).parent.resolve()
+metadata = {}
 
-here = os.path.abspath(os.path.dirname(__file__))
+with open(here / "gdxpds" / "_version.py", encoding='utf-8') as f:
+    exec(f.read(), None, metadata)
 
-with open(os.path.join(here, 'gdxpds', '_version.py'), encoding='utf-8') as f:
-    version = f.read()
+with open(here / "README.txt", encoding="utf-8") as f:
+    readme = f.read()
 
-version = version.split()[2].strip('"').strip("'")
+test_requires = [
+    "pytest"
+]
+
+admin_requires = [
+    "ghp-import",
+    "numpydoc",
+    "pandoc",
+    "sphinx",
+    "sphinx_rtd_theme",
+    "twine",
+    "setuptools",
+    "wheel",
+]
 
 setup(
-    name = 'gdxpds',
-    version = version,
-    author = 'Elaine T. Hale',
-    author_email = 'elaine.hale@nrel.gov',
-    packages = ['gdxpds', 'gdxpds.test'],
-    scripts = ['bin/csv_to_gdx.py', 'bin/gdx_to_csv.py'],
-    url = 'https://github.com/NREL/gdx-pandas',
-    description = 'Python package to translate between gdx (GAMS data) and pandas.',
-    long_description=open('README.txt').read(),
+    name = metadata["__title__"],
+    version = metadata["__version__"],
+    author = metadata["__author__"],
+    author_email = metadata["__author_email__"],
+    url = metadata["__url__"],
+    description = metadata["__description__"],
+    long_description=readme,
+    packages=find_packages(),
     package_data={
         'gdxpds.test': ['*.csv','*.gdx']
     },
-    install_requires=open('requirements.txt').read()
+    scripts = [
+        'bin/csv_to_gdx.py', 
+        'bin/gdx_to_csv.py'
+    ],
+    install_requires=[
+        "enum34; python_version < '3.4'",
+        "gdxcc",
+        "pandas>=0.20.1",
+        "numpy>=1.7"
+    ],
+    extras_require={
+        "test": test_requires,
+        "admin": test_requires + admin_requires
+    },
 )
