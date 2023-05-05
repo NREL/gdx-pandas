@@ -244,7 +244,8 @@ class GdxFile(MutableSequence, NeedsGamsDir):
         if ret != 1: 
             raise GdxError(self.H,"Could not get file version")
         ret, symbol_count, element_count = gdxcc.gdxSystemInfo(self.H)
-        logger.debug("Opening '{}' with {} symbols and {} elements with lazy_load = {}.".format(filename,symbol_count,element_count,self.lazy_load))
+        logger.debug(f"Opening '{filename}' with {symbol_count} symbols and "
+                     f"{element_count} elements with lazy_load = {self.lazy_load}.")
         # ... for the symbols
         ret, name, dims, data_type = gdxcc.gdxSymbolInfo(self.H,0)
         if ret != 1:
@@ -254,8 +255,12 @@ class GdxFile(MutableSequence, NeedsGamsDir):
             index = i + 1
             ret, name, dims, data_type = gdxcc.gdxSymbolInfo(self.H,index)
             if ret != 1:
-                raise GdxError(self.H,"Could not get symbol info for symbol {}".format(index))
-            self.append(GdxSymbol(name,data_type,dims=dims,file=self,index=index))
+                raise GdxError(self.H,f"Could not get symbol info for symbol {index}")
+            try:
+                sym = GdxSymbol(name,data_type,dims=dims,file=self,index=index)
+                self.append(sym)
+            except Exception as e:
+                logger.error(f"Unable to initialize GdxSymbol {name!r}, because {e}. SKIPPING.")
 
         # read all symbols if not lazy_load
         if not self.lazy_load:
