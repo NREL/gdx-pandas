@@ -37,9 +37,6 @@
 
 import os
 
-# if True, test products will be deleted on tear down
-clean_up = True
-
 base_dir = os.path.dirname(__file__)
 run_dir = os.path.join(base_dir, 'output')
 
