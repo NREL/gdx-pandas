@@ -69,11 +69,7 @@ def convert_gdx_to_np_svs(df, num_dims):
     """
 
     # create clean copy of df
-    try:
-        tmp = copy.deepcopy(df)
-    except:
-        logger.warning("Unable to deepcopy:\n{}".format(df))
-        tmp = copy.copy(df)
+    tmp = df.copy()
 
     # apply the map to the value columns and merge with the dimensional information
     tmp = (tmp.iloc[:, :num_dims]).merge(tmp.iloc[:, num_dims:].replace(GDX_TO_NP_SVS),
@@ -139,11 +135,7 @@ def convert_np_to_gdx_svs(df, num_dims):
         return value
 
     # get a clean copy of df
-    try:
-        tmp = copy.deepcopy(df)
-    except:
-        logger.warning("Unable to deepcopy:\n{}".format(df))
-        tmp = copy.copy(df)
+    tmp = df.copy()
 
     # fillna and apply map to value columns, then merge with dimensional columns
     try:
