@@ -166,3 +166,12 @@ def test_numpy_eps():
     assert(not gdxpds.special.is_np_eps(float(0.0)))
     assert(not gdxpds.special.is_np_eps(2.0 * np.finfo(float).eps))
     
+def test_convert_np_to_gdx_svs_eps():
+    test_df = pds.DataFrame([["a", np.finfo(float).eps],
+                             ["b", 0.0],
+                             ["c", 2.0 * np.finfo(float).eps]],
+                            columns=["A", "Value"])
+    result_df = gdxpds.special.convert_np_to_gdx_svs(test_df, num_dims=1)
+    expected_df = pds.Series([gdxpds.special.SPECIAL_VALUES[4], 0.0, 2.0 * np.finfo(float).eps])
+    assert result_df["Value"].equals(expected_df)
+    

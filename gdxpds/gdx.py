@@ -826,7 +826,7 @@ class GdxSymbol(object):
         data = [elements + [values[col_ind] for col_name, col_ind in vc] for ret, elements, values, afdim in reader()]
         # gdxdict called gdxGetElemText here, but I do not currently see value in doing that
         self.dataframe = data
-        if not self.data_type == GamsDataType.Set:
+        if not self.data_type in (GamsDataType.Set, GamsDataType.Alias):
             self.dataframe = special.convert_gdx_to_np_svs(self.dataframe, self.num_dims)
         self._loaded = True
         return
@@ -875,7 +875,10 @@ class GdxSymbol(object):
         values = gdxcc.doubleArray(gdxcc.GMS_VAL_MAX)
         # make sure index is clean -- needed for merging in convert_np_to_gdx_svs
         self.dataframe = self.dataframe.reset_index(drop=True)
-        for row in special.convert_np_to_gdx_svs(self.dataframe, self.num_dims).itertuples(index=False, name=None):
+        # convert special numeric values if appropriate
+        to_write = self.dataframe.copy() if (self.data_type in (GamsDataType.Set, GamsDataType.Alias)) else special.convert_np_to_gdx_svs(self.dataframe, self.num_dims)
+        # write each row
+        for row in to_write.itertuples(index=False, name=None):
             dims = [str(x) for x in row[:self.num_dims]]
             vals = row[self.num_dims:]
             for _col_name, col_ind in self.value_cols:
