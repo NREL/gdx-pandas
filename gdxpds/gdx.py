@@ -826,7 +826,7 @@ class GdxSymbol(object):
         data = [elements + [values[col_ind] for col_name, col_ind in vc] for ret, elements, values, afdim in reader()]
         # gdxdict called gdxGetElemText here, but I do not currently see value in doing that
         self.dataframe = data
-        if not self.data_type == GamsDataType.Set:
+        if not self.data_type in (GamsDataType.Set, GamsDataType.Alias):
             self.dataframe = special.convert_gdx_to_np_svs(self.dataframe, self.num_dims)
         self._loaded = True
         return
