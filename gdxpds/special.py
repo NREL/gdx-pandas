@@ -4,12 +4,14 @@ import logging
 import gdxcc
 import numpy as np
 
+logger = logging.getLogger(__name__)
 
-# List of numpy special values in gdxGetSpecialValues order
+
 #                      1E300,  2E300,  3E300,   4E300,               5E300
 NUMPY_SPECIAL_VALUES = [None, np.nan, np.inf, -np.inf, np.finfo(float).eps]
-
-logger = logging.getLogger(__name__)
+"""List of numpy special values in gdxGetSpecialValues order, i.e., 
+[None, np.nan, np.inf, -np.inf, np.finfo(float).eps]
+"""
 
 
 def convert_gdx_to_np_svs(df, num_dims):

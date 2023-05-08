@@ -44,6 +44,7 @@ python ../../dev/md_to_rst.py md_files.txt
 - Delete the contents of `source/api`.
 - Run `sphinx-apidoc -o source/api ..` from the `doc` folder.
 - Compare `source/api/modules.rst` to `source/api.rst`. Delete `setup.rst` and references to it.
+- Copy-paste the text in `gdxpds.postfix` at the bottom of `gdxpds.rst`
 - 'git push' changes to the documentation source code as needed.
 - Make the documentation per below
 

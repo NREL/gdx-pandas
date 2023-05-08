@@ -137,21 +137,22 @@ class GamsDirFinder(object):
         return ret
         
 class NeedsGamsDir(object):
-    """
-    Mix-in class that asserts that a GAMS directory is needed and provides the
-    methods required to find and access it.
+    """Mix-in class that asserts that a GAMS directory is needed and provides the methods 
+    required to find and access it."""
 
-    Attributes
-    ----------
-    gams_dir : str
-        The GAMS directory whose value has either been directly set or has been 
-        found using the GamsDirFinder class.
-    """
     def __init__(self,gams_dir=None):
         self.gams_dir = gams_dir
         
     @property
     def gams_dir(self):
+        """
+        The GAMS directory whose value has either been directly set or has been found using 
+        the GamsDirFinder class.
+
+        Returns
+        -------
+        str    
+        """
         return self.__gams_dir
         
     @gams_dir.setter

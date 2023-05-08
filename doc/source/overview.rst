@@ -1,12 +1,12 @@
-gdx-pandas overview
-===================
+Overview
+========
 
 There are two main ways to use gdxpds. The first use case is the one
 that was initially supported: direct conversion between GDX files on
 disk and pandas DataFrames or a csv version thereof. Starting with the
 Version 1.0.0 rewrite, there is now a second style of use which involves
-interfacing with GDX files and symbols via the ``gdxpds.gdx.GdxFile``
-and ``gdxpds.gdx.GdxSymbol`` classes.
+interfacing with GDX files and symbols via the :py:class:`gdxpds.gdx.GdxFile`
+and :py:class:`gdxpds.gdx.GdxSymbol` classes.
 
 `Direct Conversion <#direct-conversion>`__ \| `Backend
 Classes <#backend-classes>`__
@@ -20,14 +20,14 @@ pandas.DataFrame}, where each pandas.DataFrame contains data for a
 single set, parameter, equation, or variable. For sets and parameters,
 the last column of the DataFrame is assumed to contain the value of the
 element, which for sets should be ``True``, and for parameters should be
-a ``float`` (or one of the ``gdxpds.gdx.NUMPY_SPECIAL_VALUES``).
+a ``float`` (or one of the :py:const:`gdxpds.special.NUMPY_SPECIAL_VALUES`).
 Equations and variables have additional ‘value’ columns, in particular a
 level, a marginal value, a lower bound, an upper bound, and a scale, as
-enumerated in ``gdxpds.gdx.GamsValueType``. These values are all assumed
+enumerated in :py:class:`gdxpds.gdx.GamsValueType`. These values are all assumed
 to be found in the last five columns of the DataFrame, also see
-``gdxpds.gdx.GAMS_VALUE_COLS_MAP``.
+:py:data:`gdxpds.gdx.GAMS_VALUE_COLS_MAP`.
 
-The basic interface to convert from GDX to DataFrames is:
+The basic interface to convert from GDX to DataFrames is :py:func:`gdxpds.to_dataframes`:
 
 .. code:: python
 
@@ -38,7 +38,7 @@ The basic interface to convert from GDX to DataFrames is:
    for symbol_name, df in dataframes.items():
        print(f"Doing work with {symbol_name}\n{df}.")
 
-And vice-versa:
+And vice-versa we have :py:func:`gdxpds.to_gdx`:
 
 .. code:: python
 
@@ -50,13 +50,13 @@ And vice-versa:
    gdx_file = 'C:\path_to_my_output_gdx\data_to_send_to_gams.gdx'
    gdx = gdxpds.to_gdx(data_ready_for_GAMS, gdx_file)
 
-Note that providing a gdx_file is optional, and the returned gdx is an
-object of type ``gdxpds.gdx.GdxFile``.
+Note that providing a gdx_file path is optional. In either case the in-memory gdx file is 
+returned as an object of type :py:class:`gdxpds.gdx.GdxFile`.
 
 Additional functions include:
 
--  ``gdxpds.list_symbols``
--  ``gdxpds.to_dataframe`` (If the call to this method includes
+-  :py:func:`gdxpds.list_symbols`
+-  :py:func:`gdxpds.to_dataframe` (If the call to this method includes
    old_interface=False, then the return value will be a plain DataFrame,
    not a {‘symbol_name’: df} dict.)
 

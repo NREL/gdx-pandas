@@ -170,9 +170,10 @@ texinfo_documents = [
 
 # -- Extension configuration -------------------------------------------------
 
-autoclass_content = 'both'
-autodoc_member_order = 'bysource'
-# Uncomment when https://github.com/sphinx-doc/sphinx/pull/4076 is 
-# released.
-#autodoc_special_members = ['__getitem__', '__setitem__','__iter__']
+autodoc_default_options = {
+    'autoclass_content': 'both',
+    'member-order': 'bysource',
+    'special-members': '__getitem__, __setitem__, __iter__',
+    'undoc-members': True,
+}
 numpy_show_class_member = True

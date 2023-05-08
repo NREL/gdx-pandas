@@ -374,6 +374,7 @@ class GamsEquationType(Enum):
     External = 53 + gdxcc.GMS_EQUTYPE_X
     Conic = 53 + gdxcc.GMS_EQUTYPE_C
 
+
 class GamsValueType(Enum):
     Level = gdxcc.GMS_VAL_LEVEL       # .l
     Marginal = gdxcc.GMS_VAL_MARGINAL # .m
@@ -393,6 +394,9 @@ class GamsValueType(Enum):
 
 
 GAMS_VALUE_COLS_MAP = defaultdict(lambda : [('Value',GamsValueType.Level.value)])
+"""
+List of value columns provided for each :py:attr:`GamsValueType`
+"""
 GAMS_VALUE_COLS_MAP[GamsDataType.Variable] = [(value_type.name, value_type.value) for value_type in GamsValueType]
 GAMS_VALUE_COLS_MAP[GamsDataType.Equation] = GAMS_VALUE_COLS_MAP[GamsDataType.Variable]
 
@@ -404,6 +408,7 @@ GAMS_VALUE_DEFAULTS = {
     GamsValueType.Upper: np.inf,
     GamsValueType.Scale: 1.0
 }
+
 
 GAMS_VARIABLE_DEFAULT_LOWER_UPPER_BOUNDS = {
     GamsVariableType.Unknown: (-np.inf,np.inf),
@@ -417,6 +422,7 @@ GAMS_VARIABLE_DEFAULT_LOWER_UPPER_BOUNDS = {
     GamsVariableType.Semicont: (1.0,np.inf),
     GamsVariableType.Semiint: (1.0,np.inf)
 }
+
 
 class GdxSymbol(object): 
     def __init__(self,name,data_type,dims=0,file=None,index=None,
