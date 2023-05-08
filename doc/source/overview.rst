@@ -31,24 +31,24 @@ The basic interface to convert from GDX to DataFrames is:
 
 .. code:: python
 
-    import gdxpds
+   import gdxpds
 
-    gdx_file = 'C:\path_to_my_gdx\data.gdx'
-    dataframes = gdxpds.to_dataframes(gdx_file)
-    for symbol_name, df in dataframes.items():
-        print("Doing work with {}.".format(symbol_name))
+   gdx_file = 'C:\path_to_my_gdx\data.gdx'
+   dataframes = gdxpds.to_dataframes(gdx_file)
+   for symbol_name, df in dataframes.items():
+       print(f"Doing work with {symbol_name}\n{df}.")
 
 And vice-versa:
 
 .. code:: python
 
-    import gdxpds
+   import gdxpds
 
-    # assume we have a DataFrame df with last column 'value'
-    data_ready_for_GAMS = { 'symbol_name': df }
+   # assume we have a DataFrame df with last column 'value'
+   data_ready_for_GAMS = { 'symbol_name': df }
 
-    gdx_file = 'C:\path_to_my_output_gdx\data_to_send_to_gams.gdx'
-    gdx = gdxpds.to_gdx(data_ready_for_GAMS, gdx_file)
+   gdx_file = 'C:\path_to_my_output_gdx\data_to_send_to_gams.gdx'
+   gdx = gdxpds.to_gdx(data_ready_for_GAMS, gdx_file)
 
 Note that providing a gdx_file is optional, and the returned gdx is an
 object of type ``gdxpds.gdx.GdxFile``.
@@ -65,8 +65,8 @@ GDX and CSV, see
 
 .. code:: bash
 
-    python C:\your_python_path\Scripts\gdx_to_csv.py --help
-    python C:\your_python_path\Scripts\csv_to_gdx.py --help
+   python C:\your_python_path\Scripts\gdx_to_csv.py --help
+   python C:\your_python_path\Scripts\csv_to_gdx.py --help
 
 Backend Classes
 ~~~~~~~~~~~~~~~
@@ -77,36 +77,36 @@ duplicate the GDX read functionality shown above one would write:
 
 .. code:: python
 
-    import gdxpds
+   import gdxpds
 
-    gdx_file = 'C:\path_to_my_gdx\data.gdx'
-    with gdxpds.gdx.GdxFile(lazy_load=False) as f:
-        f.read(gdx_file)
-        for symbol in f:
-            symbol_name = symbol.name
-            df = symbol.dataframe
-            print("Doing work with {}:\n{}".format(symbol_name,df.head()))
+   gdx_file = 'C:\path_to_my_gdx\data.gdx'
+   with gdxpds.gdx.GdxFile(lazy_load=False) as f:
+       f.read(gdx_file)
+       for symbol in f:
+           symbol_name = symbol.name
+           df = symbol.dataframe
+           print(f"Doing work with {symbol_name}:\n{df}")
 
 The backend especially gives more control over creating new data in GDX
 format. For example:
 
 .. code:: python
 
-    import gdxpds
+   import gdxpds
 
-    out_file = 'my_new_gdx_data.gdx'
-    with gdxpds.gdx.GdxFile() as gdx:
-        # Create a new set with one dimension
-        gdx.append(gdxpds.gdx.GdxSymbol('my_set',gdxpds.gdx.GamsDataType.Set,dims=['u']))
-        data = pds.DataFrame([['u' + str(i)] for i in range(1,11)])
-        data['Value'] = True
-        gdx[-1].dataframe = data
-        # Create a new parameter with one dimension
-        gdx.append(gdxpds.gdx.GdxSymbol('my_parameter',gdxpds.gdx.GamsDataType.Parameter,dims=['u']))
-        data = pds.DataFrame([['u' + str(i), i*100] for i in range(1,11)],
-                             columns=(gdx[-1].dims + gdx[-1].value_col_names))
-        gdx[-1].dataframe = data
-        gdx.write(out_file)
+   out_file = 'my_new_gdx_data.gdx'
+   with gdxpds.gdx.GdxFile() as gdx:
+       # Create a new set with one dimension
+       gdx.append(gdxpds.gdx.GdxSymbol('my_set',gdxpds.gdx.GamsDataType.Set,dims=['u']))
+       data = pds.DataFrame([['u' + str(i)] for i in range(1,11)])
+       data['Value'] = True
+       gdx[-1].dataframe = data
+       # Create a new parameter with one dimension
+       gdx.append(gdxpds.gdx.GdxSymbol('my_parameter',gdxpds.gdx.GamsDataType.Parameter,dims=['u']))
+       data = pds.DataFrame([['u' + str(i), i*100] for i in range(1,11)],
+                            columns=(gdx[-1].dims + gdx[-1].value_col_names))
+       gdx[-1].dataframe = data
+       gdx.write(out_file)
 
 Starting with Version 1.1.0, gdxpds does not allow GdxSymbol.dims to
 change once they have been firmly established (as evidenced by
