@@ -4,7 +4,7 @@ import logging
 import os
 
 import numpy as np
-import pandas as pds
+import pandas as pd
 import pytest
 
 import gdxpds.gdx
@@ -22,14 +22,14 @@ def test_from_scratch_sets(manage_rundir):
 
     with gdxpds.gdx.GdxFile() as gdx:
         gdx.append(gdxpds.gdx.GdxSymbol('my_set',gdxpds.gdx.GamsDataType.Set,dims=['u']))
-        data = pds.DataFrame([['u' + str(i)] for i in range(1,11)])
+        data = pd.DataFrame([['u' + str(i)] for i in range(1,11)])
         data['Value'] = True
         gdx[-1].dataframe = data
         assert isinstance(gdx[-1].dataframe[gdx[-1].dataframe.columns[-1]].values[0], c_bool)
         gdx.append(gdxpds.gdx.GdxSymbol('my_other_set',gdxpds.gdx.GamsDataType.Set,dims=['u']))
-        data = pds.DataFrame([['u' + str(i)] for i in range(1,11)],columns=['u'])
+        data = pd.DataFrame([['u' + str(i)] for i in range(1,11)],columns=['u'])
         data['Value'] = True
-        gdx[-1].dataframe = pds.concat([gdx[-1].dataframe,data])
+        gdx[-1].dataframe = pd.concat([gdx[-1].dataframe,data])
         gdx.write(os.path.join(outdir,'my_sets.gdx'))
 
     with gdxpds.gdx.GdxFile(lazy_load=False) as gdx:
@@ -43,12 +43,13 @@ def test_from_scratch_sets(manage_rundir):
 
 
 def test_unnamed_dimensions(manage_rundir):
-    outdir = os.path.join(run_dir,'unnamed_dimensions')
-    if not os.path.exists(outdir):
-        os.mkdir(outdir)
+    from pathlib import Path
+    outdir = Path(run_dir) / 'unnamed_dimensions'
+    if not outdir.exists():
+        outdir.mkdir()
     # create a gdx file with all symbol types and 4 dimensions named '*'
     cols = ['*'] * 4
-    some_entries = pds.DataFrame([['tech_1','year_2','low','h1'],
+    some_entries = pd.DataFrame([['tech_1','year_2','low','h1'],
                                   ['tech_1','year_2','low','h2'],
                                   ['tech_1','year_2','low','h3'],
                                   ['tech_1','year_2','low','h4']],
@@ -65,7 +66,7 @@ def test_unnamed_dimensions(manage_rundir):
         gdx[-1].dataframe = a_param
         # Test changing the parameter data
         a_param.iloc[:,0] = 'tech_2'
-        gdx[-1].dataframe = pds.concat([gdx[-1].dataframe,a_param])
+        gdx[-1].dataframe = pd.concat([gdx[-1].dataframe,a_param])
         # Variable
         gdx.append(gdxpds.gdx.GdxSymbol('star_var',gdxpds.gdx.GamsDataType.Variable,dims=4,
                    variable_type=gdxpds.gdx.GamsVariableType.Positive))
@@ -80,10 +81,10 @@ def test_unnamed_dimensions(manage_rundir):
         for value_col_name in gdx[-1].value_col_names:
             an_eqn[value_col_name] = gdx[-1].get_value_col_default(value_col_name)
         gdx[-1].dataframe = an_eqn
-        gdx.write(os.path.join(outdir,'star_symbols.gdx'))
+        gdx.write(outdir / 'star_symbols.gdx')
         
     with gdxpds.gdx.GdxFile(lazy_load=False) as gdx:
-        gdx.read(os.path.join(outdir,'star_symbols.gdx'))
+        gdx.read(outdir / 'star_symbols.gdx')
         assert gdx['star_set'].num_dims == 4
         assert gdx['star_set'].data_type == gdxpds.gdx.GamsDataType.Set
         assert gdx['star_set'].variable_type is None
@@ -115,7 +116,7 @@ def test_setting_dataframes(manage_rundir):
         # 0 dims
         #     full dataframe
         gdx.append(gdxpds.gdx.GdxSymbol('sym_1',gdxpds.gdx.GamsDataType.Parameter))
-        gdx[-1].dataframe = pds.DataFrame([[2.0]])
+        gdx[-1].dataframe = pd.DataFrame([[2.0]])
         assert list(gdx[-1].dataframe.columns) == ['Value']
         #     edit initialized dataframe - Parameter
         gdx.append(gdxpds.gdx.GdxSymbol('sym_2',gdxpds.gdx.GamsDataType.Parameter))
@@ -132,14 +133,14 @@ def test_setting_dataframes(manage_rundir):
         gdx[-1].dataframe = [values]
         #     reset with empty list
         gdx.append(gdxpds.gdx.GdxSymbol('sym_4',gdxpds.gdx.GamsDataType.Parameter))
-        gdx[-1].dataframe = pds.DataFrame([[1.0]])
+        gdx[-1].dataframe = pd.DataFrame([[1.0]])
         gdx[-1].dataframe = []
         assert gdx[-1].num_records == 0
 
         # > 0 dims - GdxSymbol initialized with dims=0
         #     full dataframe
         gdx.append(gdxpds.gdx.GdxSymbol('sym_5',gdxpds.gdx.GamsDataType.Parameter))
-        gdx[-1].dataframe = pds.DataFrame([['u1','CC',8727.2],
+        gdx[-1].dataframe = pd.DataFrame([['u1','CC',8727.2],
                                            ['u2','CC',7500.2],
                                            ['u3','CT',9258.0]], 
                                           columns=['u','q','val'])
@@ -164,7 +165,7 @@ def test_setting_dataframes(manage_rundir):
         #     dataframe of dims
         gdx.append(gdxpds.gdx.GdxSymbol('sym_8',gdxpds.gdx.GamsDataType.Variable,
             dims=3,variable_type=gdxpds.gdx.GamsVariableType.Positive))
-        gdx[-1].dataframe = pds.DataFrame([['u0','BES','c2'],
+        gdx[-1].dataframe = pd.DataFrame([['u0','BES','c2'],
                                            ['u0','BES','c1'],
                                            ['u1','BES','c2']])
         assert gdx[-1].num_dims == 3
@@ -175,7 +176,7 @@ def test_setting_dataframes(manage_rundir):
         #     full dataframe
         gdx.append(gdxpds.gdx.GdxSymbol('sym_9',gdxpds.gdx.GamsDataType.Parameter,
             dims=3))
-        gdx[-1].dataframe = pds.DataFrame([['u0','BES','c2',2.0],
+        gdx[-1].dataframe = pd.DataFrame([['u0','BES','c2',2.0],
                                            ['u0','BES','c1',1.0],
                                            ['u1','BES','c2',2.0]],
                                           columns=['u','q','c','storage_duration_h'])
@@ -211,7 +212,7 @@ def test_setting_dataframes(manage_rundir):
         #     dataframe of dims
         gdx.append(gdxpds.gdx.GdxSymbol('sym_13',gdxpds.gdx.GamsDataType.Variable,
             dims=['u','q','c'],variable_type=gdxpds.gdx.GamsVariableType.Positive))
-        gdx[-1].dataframe = pds.DataFrame([['u0','BES','c2'],
+        gdx[-1].dataframe = pd.DataFrame([['u0','BES','c2'],
                                            ['u0','BES','c1'],
                                            ['u1','BES','c2']])
         assert gdx[-1].num_dims == 3
@@ -222,7 +223,7 @@ def test_setting_dataframes(manage_rundir):
         #     full dataframe
         gdx.append(gdxpds.gdx.GdxSymbol('sym_14',gdxpds.gdx.GamsDataType.Parameter,
             dims=['u','q','c']))
-        gdx[-1].dataframe = pds.DataFrame([['u0','BES','c2',2.0],
+        gdx[-1].dataframe = pd.DataFrame([['u0','BES','c2',2.0],
                                            ['u0','BES','c1',1.0],
                                            ['u1','BES','c2',2.0]],
                                           columns=['u','q','c','storage_duration_h'])
@@ -287,7 +288,7 @@ def test_setting_dataframes(manage_rundir):
             dims=6))
         assert gdx[-1].dims == ['*'] * 6
         with pytest.raises(Exception) as e_info:
-            gdx[-1].dataframe = pds.DataFrame([['1',6.0],
+            gdx[-1].dataframe = pd.DataFrame([['1',6.0],
                                               ['2',7.0],
                                               ['3',-12.0]])
         #     list of lists of varying widths

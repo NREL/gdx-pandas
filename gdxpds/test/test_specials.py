@@ -10,7 +10,7 @@ from gdxpds.test.test_conversions import roundtrip_one_gdx
 
 import gdxcc
 import numpy as np
-import pandas as pds
+import pandas as pd
 import pytest
 
 logger = logging.getLogger(__name__)
@@ -29,7 +29,7 @@ def test_roundtrip_just_special_values(manage_rundir):
         os.mkdir(outdir)
     # create gdx file containing all special values
     with gdxpds.gdx.GdxFile() as f:
-        df = pds.DataFrame([['sv' + str(i+1), gdxpds.special.SPECIAL_VALUES[i]] for i in range(gdxcc.GMS_SVIDX_MAX-2)],
+        df = pd.DataFrame([['sv' + str(i+1), gdxpds.special.SPECIAL_VALUES[i]] for i in range(gdxcc.GMS_SVIDX_MAX-2)],
                            columns=['sv','Value'])
         logger.info("Special values are:\n{}".format(df))
 
@@ -130,11 +130,11 @@ def test_numpy_eps():
     assert(not gdxpds.special.is_np_eps(2.0 * np.finfo(float).eps))
     
 def test_convert_np_to_gdx_svs_eps():
-    test_df = pds.DataFrame([["a", np.finfo(float).eps],
+    test_df = pd.DataFrame([["a", np.finfo(float).eps],
                              ["b", 0.0],
                              ["c", 2.0 * np.finfo(float).eps]],
                             columns=["A", "Value"])
     result_df = gdxpds.special.convert_np_to_gdx_svs(test_df, num_dims=1)
-    expected_df = pds.Series([gdxpds.special.SPECIAL_VALUES[4], 0.0, 2.0 * np.finfo(float).eps])
+    expected_df = pd.Series([gdxpds.special.SPECIAL_VALUES[4], 0.0, 2.0 * np.finfo(float).eps])
     assert result_df["Value"].equals(expected_df)
     

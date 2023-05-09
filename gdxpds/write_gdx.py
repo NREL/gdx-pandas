@@ -6,7 +6,7 @@ from numbers import Number
 from gdxpds.tools import Error
 from gdxpds.gdx import GdxFile, GdxSymbol, GAMS_VALUE_COLS_MAP, GamsDataType
 
-import pandas as pds
+import pandas as pd
 
 logger = logging.getLogger(__name__)
 
@@ -33,7 +33,7 @@ class Translator(object):
         try:
             for symbol_name, df in value.items():
                 if not isinstance(symbol_name, str): raise Error(err_msg)
-                if not isinstance(df, pds.DataFrame): raise Error(err_msg)
+                if not isinstance(df, pd.DataFrame): raise Error(err_msg)
         except AttributeError: raise Error(err_msg)
         self.__dataframes = value
         self.__gdx = None
@@ -105,16 +105,22 @@ class Translator(object):
 
 def to_gdx(dataframes,path=None,gams_dir=None):
     """
-    Parameters:
-      - dataframes (map of pandas.DataFrame): symbol name to pandas.DataFrame
-        dict to be compiled into a single gdx file. Each DataFrame is assumed to
-        represent a single set or parameter. The last column must be the parameter's
-        value, or the set's listing of True/False, and must be labeled as (case
-        insensitive) 'value'.
-      - path (optional string): if provided, the gdx file will be written
-        to this path
+    Creates a :py:class:`gdxpds.gdx.GdxFile` from dataframes and optionally writes it to path
 
-    Returns a gdxdict.gdxdict, which is defined in [py-gdx](https://github.com/geoffleyland/py-gdx).
+    Parameters
+    ----------
+    dataframes : dict of str to pd.DataFrame
+        symbol name to pd.DataFrame dict to be compiled into a single gdx file. Each DataFrame 
+        is assumed to represent a single set or parameter. The last column must be the parameter's
+        value, or the set's listing of True/False, and must be labeled as (case insensitive) 
+        'value'.
+    path : None or pathlib.Path or str
+        If provided, the gdx file will be written to this path
+    gams_dir : None or pathlib.Path or str
+
+    Returns
+    -------
+    :py:class:`gdxpds.gdx.GdxFile`
     """
     translator = Translator(dataframes,gams_dir=gams_dir)
     if path is not None:

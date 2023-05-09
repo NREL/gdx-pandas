@@ -72,7 +72,7 @@ Backend Classes
 ~~~~~~~~~~~~~~~
 
 The basic functionalities described above can also be achieved with
-direct use of the backend classes now available in ``gdxpds.gdx``. To
+direct use of the backend classes available in :py:mod:`gdxpds.gdx`. To
 duplicate the GDX read functionality shown above one would write:
 
 .. code:: python
@@ -87,26 +87,73 @@ duplicate the GDX read functionality shown above one would write:
            df = symbol.dataframe
            print(f"Doing work with {symbol_name}:\n{df}")
 
-The backend especially gives more control over creating new data in GDX
-format. For example:
+This interface also provides more precise control over what data is 
+loaded at any particular time:
 
 .. code:: python
 
    import gdxpds
 
+   gdx_file = 'C:\path_to_my_gdx\data.gdx'
+   with gdxpds.gdx.GdxFile() as f: # lazy_load defaults to True
+       f.read(gdx_file)
+       
+       f['param_1'].load()
+       df_1 = f['param_1'].dataframe
+       f['param_1'].unload()
+       
+       f['param_12'].load()
+       df_12 = f['param_12'].dataframe
+       f['param_12'].unload()
+
+And enables more transparent creation of new GDX files:
+
+.. code:: python
+
+   from itertools import product
+
+   from gdxpds.gdx import GdxFile, GdxSymbol, GamsDataType, append_set, append_paramter
+   import pandas as pd
+
    out_file = 'my_new_gdx_data.gdx'
-   with gdxpds.gdx.GdxFile() as gdx:
+   with GdxFile() as gdx:
+       
        # Create a new set with one dimension
-       gdx.append(gdxpds.gdx.GdxSymbol('my_set',gdxpds.gdx.GamsDataType.Set,dims=['u']))
-       data = pds.DataFrame([['u' + str(i)] for i in range(1,11)])
+       gdx.append(GdxSymbol('my_set',GamsDataType.Set,dims=['u']))
+       data = pd.DataFrame([['u' + str(i)] for i in range(1,11)])
        data['Value'] = True
        gdx[-1].dataframe = data
+       
        # Create a new parameter with one dimension
-       gdx.append(gdxpds.gdx.GdxSymbol('my_parameter',gdxpds.gdx.GamsDataType.Parameter,dims=['u']))
-       data = pds.DataFrame([['u' + str(i), i*100] for i in range(1,11)],
-                            columns=(gdx[-1].dims + gdx[-1].value_col_names))
+       gdx.append(GdxSymbol('my_parameter',GamsDataType.Parameter,dims=['u']))
+       data = pd.DataFrame([['u' + str(i), i*100] for i in range(1,11)],
+                           columns=(gdx[-1].dims + gdx[-1].value_col_names))
        gdx[-1].dataframe = data
+       
+       # Create new sets with convenience function append_set
+       append_set(gdx, "my_other_set", pd.DataFrame(
+         [['v' + str(i)] for i in range(1,6)], columns = ['v'])
+       )
+       append_set(gdx, "my_combo_set", pd.DataFrame(
+         product(['u' + str(i) for i in range(1,11)], ['v' + str(i) for i in range(1,6)]), 
+         columns = ['u', 'v'])
+       )
+
+       # Create a new parameter with convenience function append_parameter
+       df = gdx[-1].dataframe.copy()
+       df.loc[:,'Value'] = 1.0
+       append_parameter(gdx, 'my_other_paramter', df)
+
+       # Write the file to disk
        gdx.write(out_file)
+
+The key classes and functions for directly using the backend are:
+
+-  :py:class:`gdxpds.gdx.GdxFile`
+-  :py:class:`gdxpds.gdx.GdxSymbol`
+-  :py:class:`gdxpds.gdx.GamsDataType`
+-  :py:func:`gdxpds.gdx.append_set`
+-  :py:func:`gdxpds.gdx.append_parameter`
 
 Starting with Version 1.1.0, gdxpds does not allow GdxSymbol.dims to
 change once they have been firmly established (as evidenced by

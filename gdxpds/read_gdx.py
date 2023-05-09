@@ -69,12 +69,18 @@ def to_dataframes(gdx_file,gams_dir=None):
     """
     Primary interface for converting a GAMS GDX file to pandas DataFrames.
 
-    Parameters:
-      - gdx_file (string): path to a GDX file
-      - gams_dir (string): optional path to GAMS directory
+    Parameters
+    ----------
+    gdx_file : pathlib.Path or str
+        Path to the GDX file to read
+    gams_dir : None or pathlib.Path or str
+        optional path to GAMS directory
 
-    Returns a dict of Pandas DataFrames, one item for each symbol in the GDX
-    file, keyed with the symbol name.
+    Returns
+    -------
+    dict of str to pd.DataFrame
+        Returns a dict of Pandas DataFrames, one item for each symbol in the GDX
+        file, keyed with the symbol name.
     """
     dfs = Translator(gdx_file,gams_dir=gams_dir).dataframes
     return dfs
@@ -83,25 +89,44 @@ def list_symbols(gdx_file,gams_dir=None):
     """
     Returns the list of symbols available in gdx_file.
 
-    Parameters:
-      - gdx_file (string): path to a GDX file
-      - gams_dir (string): optional path to GAMS directory
+    Parameters
+    ----------
+    gdx_file : pathlib.Path or str
+        Path to the GDX file to read
+    gams_dir : None or pathlib.Path or str
+        optional path to GAMS directory
+
+    Returns
+    -------
+    list of str
+        List of symbol names
     """
     symbols = Translator(gdx_file,gams_dir=gams_dir,lazy_load=True).symbols
     return symbols
 
 def to_dataframe(gdx_file,symbol_name,gams_dir=None,old_interface=True):
     """
-    Interface for getting the { symbol_name: pandas.DataFrame } dict for a
-    single symbol.
+    Interface for getting the data for a single symbol
 
-    Parameters:
-      - gdx_file (string): path to a GDX file
-      - symbol_name (string): symbol whose pandas.DataFrame is being requested
-      - gams_dir (string): optional path to GAMS directory
-
-    Returns a dict with a single entry, where the key is symbol_name and the
-    value is the corresponding pandas.DataFrame.
+    Parameters
+    ----------
+    gdx_file : pathlib.Path or str
+        Path to the GDX file to read
+    symbol_name : str
+        Name of the symbol whose data are to be read
+    gams_dir : None or pathlib.Path or str
+        optional path to GAMS directory
+    old_interface : bool
+        Whether to use the old interface and return a dict, or the new interface, 
+        and simply return a pd.DataFrame
+    
+    Returns
+    -------
+    dict of str to pd.DataFrame OR pd.DataFrame
+        If old_interface (the default), returns a dict with a single entry, 
+        where the key is symbol_name and the value is the corresponding 
+        pd.DataFrame. Otherwise (if not old_interface), returns just the 
+        pd.DataFrame.
     """
     df = Translator(gdx_file,gams_dir=gams_dir,lazy_load=True).dataframe(symbol_name)
     return {symbol_name: df} if old_interface else df

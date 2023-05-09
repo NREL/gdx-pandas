@@ -5,7 +5,7 @@ import gdxpds.gdx
 from gdxpds.test import base_dir, run_dir
 from gdxpds.test.test_session import manage_rundir
 
-import pandas as pds
+import pandas as pd
 
 def roundtrip_one_gdx(filename,dirname):
     # load gdx, make map of symbols and number of records
@@ -79,7 +79,7 @@ def test_csv_roundtrip(manage_rundir):
     num_records = {}
     total_records = 0
     for csv in csvs:
-        df = pds.read_csv(csv, index_col = None)
+        df = pd.read_csv(csv, index_col = None)
         num_records[os.path.splitext(os.path.basename(csv))[0]] = len(df.index)
         total_records += len(df.index)
     assert total_records > 0
@@ -104,7 +104,7 @@ def test_csv_roundtrip(manage_rundir):
     for csv_name, records in num_records.items():
         csv_file = os.path.join(out_dir, csv_name + '.csv')
         assert os.path.isfile(csv_file)
-        df = pds.read_csv(csv_file, index_col = None)
+        df = pd.read_csv(csv_file, index_col = None)
         assert len(df.index) == records
 
     cnt = 0

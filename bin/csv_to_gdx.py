@@ -5,7 +5,7 @@ import os
 # Linux that causes a segmentation fault.
 import gdxpds
 
-import pandas as pds
+import pandas as pd
 
 def convert_csv_to_gdx(input_files, output_file, gams_dir=None):
     # check input files
@@ -38,7 +38,7 @@ def convert_csv_to_gdx(input_files, output_file, gams_dir=None):
     dataframes = {}
     for ifile in ifiles:
         dataframes[os.path.splitext(os.path.basename(ifile))[0]] = \
-            pds.read_csv(ifile,index_col=None)
+            pd.read_csv(ifile,index_col=None)
             
     gdxpds.to_gdx(dataframes, output_file, gams_dir)
     

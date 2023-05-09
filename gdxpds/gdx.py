@@ -37,7 +37,7 @@ from gdxpds.tools import NeedsGamsDir
 
 import gdxcc
 import numpy as np
-import pandas as pds
+import pandas as pd
 
 import gdxpds.special as special
 # Import some things for backward compatibility
@@ -107,6 +107,16 @@ class GdxFile(MutableSequence, NeedsGamsDir):
         Initializes a GdxFile object by connecting to GAMS and creating a pointer.
 
         Throws a GdxError if either of those operations fail.
+
+        Parameters
+        ----------
+        gams_dir : None or str
+        lazy_load : bool
+            If True, :py:class:`GdxSymbol` data are not automatically loaded when the 
+            symbols are initially :py:meth:`read`. Individual data tables can only be 
+            accessed later after the corresponding calls to :py:meth:`GdxSymbol.load`. 
+            If False, all data are automatically loaded and the full GDX file is 
+            available in memory after the call to :py:meth:`read`.
         """
         self.lazy_load = lazy_load
         self._version = None
@@ -140,6 +150,10 @@ class GdxFile(MutableSequence, NeedsGamsDir):
         GdxFile. The clone will not be associated with a filename. The clone's
         GdxSymbols will not have indexes. The clone will be ready to write to 
         a new file.
+
+        Returns
+        -------
+        :py:class:`GdxFile`
         """
         result = GdxFile(gams_dir=self.gams_dir,lazy_load=False)
         for symbol in self:
@@ -150,7 +164,11 @@ class GdxFile(MutableSequence, NeedsGamsDir):
     @property
     def empty(self):
         """
-        Returns True if this GdxFile object contains any symbols.
+        Returns True if this GdxFile object does not contain any symbols.
+
+        Returns
+        -------
+        bool
         """
         return len(self) == 0
 
@@ -163,6 +181,13 @@ class GdxFile(MutableSequence, NeedsGamsDir):
 
     @property
     def filename(self):
+        """
+        Filename this :py:class:`GdxFile` is associated with, if any
+
+        Returns
+        -------
+        None or str
+        """
         return self._filename
 
     @property
@@ -181,6 +206,13 @@ class GdxFile(MutableSequence, NeedsGamsDir):
 
     @property
     def num_elements(self):
+        """
+        Total number of records present in this file, summed over all symbols.
+
+        Returns
+        -------
+        int
+        """
         return sum([symbol.num_records for symbol in self])
 
     def read(self,filename):
@@ -191,6 +223,10 @@ class GdxFile(MutableSequence, NeedsGamsDir):
         Throws an Error if not self.empty.
 
         Throws a GdxError if any calls to gdxcc fail.
+
+        Parameters
+        ----------
+        filename : pathlib.Path or str
         """
         if not self.empty:
             raise Error("GdxFile.read can only be used if the GdxFile is .empty")
@@ -232,6 +268,13 @@ class GdxFile(MutableSequence, NeedsGamsDir):
         return
 
     def write(self,filename):
+        """
+        Writes this :py:class:`GdxFile` to filename
+
+        Parameters
+        ----------
+        filename : pathlib.Path or str
+        """
         # only write if all symbols loaded
         for symbol in self:
             if not symbol.loaded:
@@ -271,10 +314,29 @@ class GdxFile(MutableSequence, NeedsGamsDir):
     def __getitem__(self,key):
         """
         Supports list-like indexing and symbol-based indexing
+
+        Parameters
+        ----------
+        key : int or str
+            If int, the index into the list of symbols. If str, the name of the symbol to 
+            be accessed.
+
+        Returns
+        -------
+        :py:class:`GdxSymbol`
         """
         return self._symbols[self._name_key(key)]
 
     def __setitem__(self,key,value):
+        """
+        Supports overwriting or adding a :py:class:`GdxSymbol` via a list-like interface
+
+        Parameters
+        ----------
+        key : int
+            Must be an index into the list of symbols, within range(len(self)+1)
+        value : :py:class:`GdxSymbol`
+        """
         self._check_insert_setitem(key, value)
         value._file = self
         if key < len(self):
@@ -286,13 +348,34 @@ class GdxFile(MutableSequence, NeedsGamsDir):
         return
 
     def __delitem__(self,key):
+        """
+        Deletes a symbol from this :py:class:`GdxFile`'s collection
+
+        Parameters
+        ----------
+        key : int or str
+            If int, the index into the list of symbols. If str, the name of the symbol to 
+            be accessed.
+        """
         del self._symbols[self._name_key(key)]
         return
 
     def __len__(self):
+        """
+        Number of :py:class:`GdxSymbol`s in this :py:class:`GdxFile`
+        """
         return len(self._symbols)
 
     def insert(self,key,value):
+        """
+        Inserts value at position key
+
+        Parameters
+        ----------
+        key : int
+            Must be an index into the list of symbols, within range(len(self)+1)
+        value : :py:class:`GdxSymbol`
+        """
         self._check_insert_setitem(key, value)
         value._file = self
         if key == len(self) and value.name not in self._symbols:
@@ -316,6 +399,13 @@ class GdxFile(MutableSequence, NeedsGamsDir):
             return False
 
     def keys(self):
+        """
+        List of symbol names obtained by iterating through this :py:class:`GdxFile`
+
+        Returns
+        -------
+        list of str
+        """
         return [symbol.name for symbol in self]
 
     def _name_key(self,key):
@@ -408,7 +498,9 @@ GAMS_VALUE_DEFAULTS = {
     GamsValueType.Upper: np.inf,
     GamsValueType.Scale: 1.0
 }
-
+"""
+Default values for each :py:class:`GamsValueType`
+"""
 
 GAMS_VARIABLE_DEFAULT_LOWER_UPPER_BOUNDS = {
     GamsVariableType.Unknown: (-np.inf,np.inf),
@@ -422,11 +514,38 @@ GAMS_VARIABLE_DEFAULT_LOWER_UPPER_BOUNDS = {
     GamsVariableType.Semicont: (1.0,np.inf),
     GamsVariableType.Semiint: (1.0,np.inf)
 }
+"""
+Default lower and upper bounds for each :py:class:`GamsVariableType`
+"""
 
 
 class GdxSymbol(object): 
     def __init__(self,name,data_type,dims=0,file=None,index=None,
                  description='',variable_type=None,equation_type=None): 
+        """
+        In-memory representation of a GAMS GDX Symbol
+
+        Parameters
+        ----------
+        name : str
+        data_type : :py:class:`GamsDataType`
+        dims : int or list of str
+            If dims is set to an int, then that number of dimensions will be created, each 
+            indicated with the wildcard name '*'. Otherwise, a list of strings is expected, 
+            each string being a dimension name.
+        file : None or :py:class:`GdxFile`
+            Users should not set file. File is set by, e.g., :py:meth:`GdxFile.read` and
+            :py:meth:`GdxFile.append`.
+        index : None or int
+            Users should not set file. File is set by, e.g., :py:meth:`GdxFile.read` and
+            :py:meth:`GdxFile.append`.
+        description : str
+            Human readable description for this :py:class:`GdxSymbol`
+        variable_type : None or :py:class:`GamsVariableType`
+            Only expected if data_type == :py:attr:`GamsDataType.Variable`
+        equation_type : None or :py:class:`GamsEquationType`
+            Only expected if data_type == :py:attr:`GamsDataType.Equation`
+        """
         self._name = name
         self.description = description
         self._loaded = False
@@ -468,6 +587,13 @@ class GdxSymbol(object):
         return
 
     def clone(self):
+        """
+        Create a copy of this :py:class:`GdxSymbol`
+
+        Returns
+        -------
+        :py:class:`GdxSymbol`
+        """
         if not self.loaded:
             raise Error("Symbol {} cannot be cloned because it is not yet loaded.".format(repr(self.name)))
 
@@ -483,6 +609,13 @@ class GdxSymbol(object):
 
     @property
     def name(self):
+        """
+        Name of this :py:class:`GdxSymbol`
+
+        Returns
+        -------
+        str
+        """
         return self._name
 
     @name.setter
@@ -494,6 +627,13 @@ class GdxSymbol(object):
 
     @property
     def data_type(self):
+        """
+        GAMS data type of this :py:class:`GdxSymbol`
+
+        Returns
+        -------
+        :py:class:`GamsDataType`
+        """
         return self._data_type
 
     @data_type.setter
@@ -508,6 +648,13 @@ class GdxSymbol(object):
 
     @property
     def variable_type(self):
+        """
+        Only not none if :py:attr:`data_type` == :py:attr:`GamsDataType.Variable`
+
+        Returns
+        -------
+        None or :py:attr:`GamsDataType.Variable`
+        """
         return self._variable_type
 
     @variable_type.setter
@@ -533,6 +680,13 @@ class GdxSymbol(object):
 
     @property
     def equation_type(self):
+        """
+        Only not none if :py:attr:`data_type` == :py:attr:`GamsDataType.Equation`
+
+        Returns
+        -------
+        None or :py:attr:`GamsDataType.Equation`
+        """
         return self._equation_type
 
     @equation_type.setter
@@ -559,14 +713,25 @@ class GdxSymbol(object):
     @property
     def value_cols(self):
         """
-        Returns list of (name, GamsValueType.value) tuples that describe the 
-        value columns in the dataframe, that is, those columns that follow the 
-        self.dims.
+        List of (name, GamsValueType.value) tuples that describe the 
+        value columns in the dataframe, that is, the columns that follow the 
+        self.dims columns.
+
+        Returns
+        -------
+        list of (str, int)
         """
         return GAMS_VALUE_COLS_MAP[self.data_type]
 
     @property
     def value_col_names(self):
+        """
+        List of value column names, that is, the columns that follow the self.dims columns.
+
+        Returns
+        -------
+        list of str
+        """
         return [col_name for col_name, col_ind in self.value_cols]    
 
     def get_value_col_default(self,value_col_name):
@@ -590,14 +755,35 @@ class GdxSymbol(object):
 
     @property
     def file(self):
+        """
+        :py:class:`GdxFile` file that contains this :py:class:`GdxSymbol`, if any
+
+        Returns
+        -------
+        None or :py:class:`GdxFile`
+        """
         return self._file
 
     @property
     def index(self):
+        """
+        Index of this :py:class:`GdxSymbol` in its :py:class:`GdxFile`, if any
+
+        Returns
+        -------
+        None or int
+        """
         return self._index
 
     @property
     def loaded(self):
+        """
+        Whether the data for this symbol has been loaded
+
+        Returns
+        -------
+        bool
+        """
         return self._loaded
 
     @property
@@ -610,6 +796,15 @@ class GdxSymbol(object):
 
     @property
     def dims(self):
+        """
+        List of dimension names over which this symbol is defined. If the :py:class:`GdxSymbol` was 
+        constructed with dims set to an integer, all dimension names will be the wildcard '*'.
+
+        Returns
+        -------
+        list of str
+            length of list is equal to :py:attr:`num_dims`
+        """
         return self._dims
 
     @dims.setter
@@ -636,25 +831,39 @@ class GdxSymbol(object):
 
     @property
     def num_dims(self):
+        """
+        Number of dimensions over which this symbol is defined
+
+        Returns
+        -------
+        int
+        """
         return len(self.dims)        
 
     @property
     def dataframe(self):
+        """
+        Data table for this symbol. Dim columns are followed by value columns, left to right.
+        
+        Returns
+        -------
+        pd.DataFrame
+        """
         return self._dataframe
 
     @dataframe.setter
     def dataframe(self, data):
         try:        
             # get data in common format and start dealing with dimensions    
-            if isinstance(data, pds.DataFrame):
+            if isinstance(data, pd.DataFrame):
                 df = data.copy()
                 has_col_names = True
             else:
-                df = pds.DataFrame(data)
+                df = pd.DataFrame(data)
                 has_col_names = False
                 if df.empty:
                     # clarify dimensionality, as needed for loading empty GdxSymbols
-                    df = pds.DataFrame(data,columns=self.dims + self.value_cols)
+                    df = pd.DataFrame(data,columns=self.dims + self.value_cols)
             
             # finish handling dimensions
             n = len(df.columns)
@@ -709,7 +918,7 @@ class GdxSymbol(object):
         return
 
     def _init_dataframe(self):
-        self._dataframe = pds.DataFrame([],columns=self.dims + self.value_col_names)
+        self._dataframe = pd.DataFrame([],columns=self.dims + self.value_col_names)
         if self.data_type == GamsDataType.Set:
             colname = self._dataframe.columns[-1]
             replace_df_column(self._dataframe,colname,self._dataframe[colname].astype(c_bool))
@@ -746,6 +955,13 @@ class GdxSymbol(object):
 
     @property
     def num_records(self):
+        """
+        Number of rows in the data table, per the DataFrame if :py:attr:`loaded`, or per GAMS.
+
+        Returns
+        -------
+        int
+        """
         if self.loaded:
             return len(self.dataframe.index)
         return self._num_records
@@ -771,6 +987,9 @@ class GdxSymbol(object):
         return s
 
     def load(self):
+        """
+        Loads this :py:class:`GdxSymbol` from its :py:attr:`file`
+        """
         if self.loaded:
             logger.info("Nothing to do. Symbol already loaded.")
             return
@@ -801,12 +1020,20 @@ class GdxSymbol(object):
         return
 
     def unload(self):
+        """
+        Drops this :py:class:`GdxSymbol`'s :py:attr:`dataframe`
+        """
         self.dataframe = None
         self._loaded = False
 
     def write(self,index=None): 
+        """
+        Writes this :py:class:`GdxSymbol` to its :py:attr:`file`
+        """
         if not self.loaded:
-            raise Error("Cannot write unloaded symbol {}.".format(repr(self.name)))
+            raise Error(f"Cannot write unloaded symbol {self.name!r}.")
+        if self.file is None:
+            raise Error(f"Cannot write {self!r} because there is no file pointer")
 
         if self.data_type == GamsDataType.Set:
             self._fixup_set_value()
@@ -895,13 +1122,13 @@ def append_set(gdx_file, set_name, df, cols=None, dim_names=None,
     """
     # ensure df is DataFrame and not Series
     logger.debug(f"Defining set {set_name!r} based on:\n{df!r}")
-    tmp = pds.DataFrame(df)
+    tmp = pd.DataFrame(df)
     # select down to data we actually want
     if cols is not None:
         tmp = tmp[cols]
     if dim_names is not None:
         if tmp.empty:
-            tmp = pds.DataFrame([], columns = dim_names)
+            tmp = pd.DataFrame([], columns = dim_names)
         else:
             tmp.columns = dim_names
     # define the symbol
@@ -933,7 +1160,7 @@ def append_parameter(gdx_file, param_name, df, cols=None, dim_names=None,
         column
     cols : None or list of str
         if not None, these are the columns in df to be used for the parameter
-        definition
+        definition (dimension columns followed by value column)
     dim_names : None or list of str
         if provided, the columns of a copy of df (or of df[cols]) will be renamed
         to these names + ['Value']. because the dimension names are taken from 
@@ -943,12 +1170,12 @@ def append_parameter(gdx_file, param_name, df, cols=None, dim_names=None,
     """
     # pre-process the data
     logger.debug(f"Defining parameter {param_name!r} based on:\n{df!r}")
-    tmp = pds.DataFrame(df)
+    tmp = pd.DataFrame(df)
     if cols is not None:
         tmp = tmp[cols]
     if dim_names is not None:
         if tmp.empty:
-            tmp = pds.DataFrame([], columns = dim_names + ['Value'])
+            tmp = pd.DataFrame([], columns = dim_names + ['Value'])
         else:
             tmp.columns = dim_names + ['Value']
     # define the symbol
