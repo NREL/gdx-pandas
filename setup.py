@@ -33,6 +33,7 @@ setup(
     url = metadata["__url__"],
     description = metadata["__description__"],
     long_description=readme,
+    long_description_content_type='text/markdown',
     packages=find_packages(),
     package_data={
         'gdxpds.test': ['*.csv','*.gdx']
