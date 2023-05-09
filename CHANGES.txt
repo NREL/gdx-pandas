@@ -1,3 +1,9 @@
+v1.3.0, 05/09/23 -- performance improvements (faster read and write)
+                    GAMS directory finder improvements
+                    documentation improvements
+                    skip over individual GdxSymbols that fail to load
+                    drop support for Python versions < 3.7
+                    various minor improvements and bug fixes                                        
 v1.2.0, 09/18/20 -- search for GAMS in more places, especially on Windows
                     gdxpds.gdx.GdxSymbol.unload method for user-directed memory managment
                     convenience functions gdxpds.gdx.append_set and append_parameter
