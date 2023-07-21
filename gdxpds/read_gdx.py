@@ -4,7 +4,7 @@ import logging
 # gdxpds needs to be imported before pandas to try to avoid library conflict on 
 # Linux that causes a segmentation fault.
 from gdxpds.tools import Error
-from gdxpds.gdx import GdxFile
+from gdxpds.gdx import GdxFile, GamsDataType
 
 logger = logging.getLogger(__name__)
 
@@ -47,7 +47,7 @@ class Translator(object):
     def dataframes(self):
         if self.__dataframes is None:
             self.__dataframes = OrderedDict()
-            for symbol in self.__gdx:
+            for symbol in self.gdx:
                 if not symbol.loaded:
                     symbol.load()
                 self.__dataframes[symbol.name] = symbol.dataframe.copy()
@@ -55,7 +55,11 @@ class Translator(object):
 
     @property
     def symbols(self):
-        return [symbol_name for symbol_name in self.gdx]
+        return [symbol.name for symbol in self.gdx]
+    
+    @property
+    def data_types(self):
+        return {symbol.name: symbol.data_type for symbol in self.gdx}
 
     def dataframe(self, symbol_name, load_set_text=False):
         if not symbol_name in self.gdx:
@@ -116,8 +120,27 @@ def list_symbols(gdx_file,gams_dir=None):
     list of str
         List of symbol names
     """
-    symbols = Translator(gdx_file,gams_dir=gams_dir,lazy_load=True).symbols
-    return symbols
+    return Translator(gdx_file,gams_dir=gams_dir,lazy_load=True).symbols
+
+
+def get_data_types(gdx_file,gams_dir=None):
+    """
+    Returns a dict of the symbols' :py:class:`GamsDataTypes <GamsDataType>`.
+    
+    Parameters
+    ----------
+    gdx_file : pathlib.Path or str
+        Path to the GDX file to read
+    gams_dir : None or pathlib.Path or str
+        optional path to GAMS directory
+
+    Returns
+    -------
+    dict of str to :py:class:GamsDataType`
+        Map of symbol names to the corresponding :py:class:GamsDataType`
+    """
+    return Translator(gdx_file,gams_dir=gams_dir,lazy_load=True).data_types
+
 
 
 def to_dataframe(gdx_file,symbol_name,gams_dir=None,old_interface=True,load_set_text=False):
