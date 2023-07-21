@@ -56,6 +56,7 @@ returned as an object of type :py:class:`gdxpds.gdx.GdxFile`.
 Additional functions include:
 
 -  :py:func:`gdxpds.list_symbols`
+-  :py:func:`gdxpds.get_data_types`
 -  :py:func:`gdxpds.to_dataframe` (If the call to this method includes
    old_interface=False, then the return value will be a plain DataFrame,
    not a {‘symbol_name’: df} dict.)

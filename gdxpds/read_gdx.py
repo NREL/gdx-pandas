@@ -90,8 +90,8 @@ def to_dataframes(gdx_file,gams_dir=None,load_set_text=False):
     gams_dir : None or pathlib.Path or str
         optional path to GAMS directory
     load_set_text : bool
-        If True (default is False) and symbol_name is a Set, loads the GDX Text 
-        field into the dataframe rather than a `c_bool`.
+        If True (default is False), then for every symbol that is a Set, loads 
+        the GDX Text field into the dataframe rather than a `c_bool`.
 
     Returns
     -------

@@ -1,3 +1,5 @@
+v1.4.0, 07/21/23 -- add get_data_types function that maps symbol name to gdx.GamsDataType; 
+                    add load_set_text kwarg to gdx.GdxSymbol.load, to_dataframe, and to_dataframes
 v1.3.0, 05/09/23 -- performance improvements (faster read and write)
                     GAMS directory finder improvements
                     documentation improvements
