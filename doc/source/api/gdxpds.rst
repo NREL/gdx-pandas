@@ -66,4 +66,6 @@ Module contents
 
 .. autofunction:: gdxpds.list_symbols
 
+.. autofunction:: gdxpds.get_data_types
+
 .. autofunction:: gdxpds.to_gdx
