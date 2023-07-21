@@ -259,7 +259,7 @@ class GdxFile(MutableSequence, NeedsGamsDir):
                 sym = GdxSymbol(name,data_type,dims=dims,file=self,index=index)
                 self.append(sym)
             except Exception as e:
-                logger.error(f"Unable to initialize GdxSymbol {name!r}, because {e}. SKIPPING.")
+                logger.error(f"Unable to initialize GdxSymbol {name!r}, because {e}. SKIPPING.")            
 
         # read all symbols if not lazy_load
         if not self.lazy_load:
@@ -556,7 +556,10 @@ class GdxSymbol(object):
         self.dims = dims       
         assert self._dataframe is not None
         self._file = file
-        self._index = index        
+        self._index = index       
+
+        # adding this flag to implement ability to load set text instead of boolean values
+        self._fixup_set_vals = True
 
         if self.file is not None:
             # reading from file
@@ -950,7 +953,9 @@ class GdxSymbol(object):
             logger.warning(f"Filling null values in {self} with True. To be "
                 "filled:\n{self._dataframe[self._dataframe[colname].isnull()]}")
             replace_df_column(self._dataframe, colname, self._dataframe[colname].fillna(value=True))
-        replace_df_column(self._dataframe,colname,self._dataframe[colname].apply(lambda x: c_bool(x)))
+        if self._fixup_set_vals:
+            replace_df_column(self._dataframe,colname,self._dataframe[colname].apply(lambda x: c_bool(x)))
+        self._fixup_set_vals = True
         return
 
     @property
@@ -986,9 +991,16 @@ class GdxSymbol(object):
         s += ", loaded" if self.loaded else ", not loaded"
         return s
 
-    def load(self):
+    def load(self, load_set_text=False):
         """
-        Loads this :py:class:`GdxSymbol` from its :py:attr:`file`
+        Loads this :py:class:`GdxSymbol` from its :py:attr:`file`, thereby popluating
+        :py:attr:`dataframe`.
+
+        Parameters
+        ----------
+        load_set_text : bool
+            If True (default is False) and this symbol is a :class:`GamsDataType.Set <GamsDataType>`,
+            loads the GDX Text field into the :py:attr:`dataframe` rather than a `c_bool`.
         """
         if self.loaded:
             logger.info("Nothing to do. Symbol already loaded.")
@@ -1011,8 +1023,13 @@ class GdxSymbol(object):
                 yield gdxcc.gdxDataReadStr(handle)
 
         vc = self.value_cols  # do this for speed in the next line
-        data = [elements + [values[col_ind] for col_name, col_ind in vc] for ret, elements, values, afdim in reader()]
-        # gdxdict called gdxGetElemText here, but I do not currently see value in doing that
+        if load_set_text and (self.data_type == GamsDataType.Set):
+            data = [elements + [gdxcc.gdxGetElemText(self.file.H,int(values[col_ind]))[1] 
+                                for _col_name, col_ind in vc] 
+                    for _ret, elements, values, _afdim in reader()]
+            self._fixup_set_vals = False
+        else:
+            data = [elements + [values[col_ind] for col_name, col_ind in vc] for ret, elements, values, afdim in reader()]
         self.dataframe = data
         if not self.data_type in (GamsDataType.Set, GamsDataType.Alias):
             self.dataframe = special.convert_gdx_to_np_svs(self.dataframe, self.num_dims)

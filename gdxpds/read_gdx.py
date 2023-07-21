@@ -61,16 +61,25 @@ class Translator(object):
     def data_types(self):
         return {symbol.name: symbol.data_type for symbol in self.gdx}
 
-    def dataframe(self, symbol_name):
+    def dataframe(self, symbol_name, load_set_text=False):
         if not symbol_name in self.gdx:
             raise Error("No symbol named '{}' in '{}'.".format(symbol_name, self.gdx_file))
         if not self.gdx[symbol_name].loaded:
-            self.gdx[symbol_name].load()
+            self.gdx[symbol_name].load(load_set_text=load_set_text)
         # This was returning { symbol_name: dataframe }, which seems intuitively off.
         return self.gdx[symbol_name].dataframe.copy()
+    
+    def _get_dataframes(self, load_set_text=False):
+        if self.__dataframes is None:
+            self.__dataframes = OrderedDict()
+            for symbol in self.__gdx:
+                if not symbol.loaded:
+                    symbol.load(load_set_text=load_set_text)
+                self.__dataframes[symbol.name] = symbol.dataframe.copy()
+        return self.__dataframes
+    
 
-
-def to_dataframes(gdx_file,gams_dir=None):
+def to_dataframes(gdx_file,gams_dir=None,load_set_text=False):
     """
     Primary interface for converting a GAMS GDX file to pandas DataFrames.
 
@@ -80,6 +89,9 @@ def to_dataframes(gdx_file,gams_dir=None):
         Path to the GDX file to read
     gams_dir : None or pathlib.Path or str
         optional path to GAMS directory
+    load_set_text : bool
+        If True (default is False) and symbol_name is a Set, loads the GDX Text 
+        field into the dataframe rather than a `c_bool`.
 
     Returns
     -------
@@ -87,6 +99,8 @@ def to_dataframes(gdx_file,gams_dir=None):
         Returns a dict of Pandas DataFrames, one item for each symbol in the GDX
         file, keyed with the symbol name.
     """
+    if load_set_text:
+        return Translator(gdx_file,gams_dir=gams_dir,lazy_load=True)._get_dataframes(load_set_text=load_set_text)
     return Translator(gdx_file,gams_dir=gams_dir).dataframes
 
 
@@ -128,7 +142,8 @@ def get_data_types(gdx_file,gams_dir=None):
     return Translator(gdx_file,gams_dir=gams_dir,lazy_load=True).data_types
 
 
-def to_dataframe(gdx_file,symbol_name,gams_dir=None,old_interface=True):
+
+def to_dataframe(gdx_file,symbol_name,gams_dir=None,old_interface=True,load_set_text=False):
     """
     Interface for getting the data for a single symbol
 
@@ -143,6 +158,9 @@ def to_dataframe(gdx_file,symbol_name,gams_dir=None,old_interface=True):
     old_interface : bool
         Whether to use the old interface and return a dict, or the new interface, 
         and simply return a pd.DataFrame
+    load_set_text : bool
+        If True (default is False) and symbol_name is a Set, loads the GDX Text 
+        field into the dataframe rather than a `c_bool`.
     
     Returns
     -------
@@ -152,5 +170,7 @@ def to_dataframe(gdx_file,symbol_name,gams_dir=None,old_interface=True):
         pd.DataFrame. Otherwise (if not old_interface), returns just the 
         pd.DataFrame.
     """
-    df = Translator(gdx_file,gams_dir=gams_dir,lazy_load=True).dataframe(symbol_name)
+    df = Translator(gdx_file,gams_dir=gams_dir,lazy_load=True).dataframe(
+        symbol_name,
+        load_set_text=load_set_text)
     return {symbol_name: df} if old_interface else df
