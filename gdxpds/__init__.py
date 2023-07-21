@@ -47,5 +47,5 @@ except:
                    "before importing pandas to avoid a library conflict.")
 
 
-from gdxpds.read_gdx import to_dataframes, list_symbols, to_dataframe
+from gdxpds.read_gdx import to_dataframes, list_symbols, to_dataframe, get_data_types
 from gdxpds.write_gdx import to_gdx
