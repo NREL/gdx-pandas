@@ -42,13 +42,13 @@ pip install gdxpds
 or
 
 ```bash
-pip install git+https://github.com/NREL/gdx-pandas.git@v1.2.0
+pip install git+https://github.com/NREL/gdx-pandas.git@v1.4.0
 ```
 
 or
 
 ```bash
-pip install git+https://github.com/NREL/gdx-pandas.git@master
+pip install git+https://github.com/NREL/gdx-pandas.git@main
 ```
 
 

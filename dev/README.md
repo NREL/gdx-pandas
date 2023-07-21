@@ -74,7 +74,7 @@ git push origin --delete gh-pages
 ghp-import -n -b gh-pages -m "Update documentation" ./build/html
 git checkout gh-pages
 git push origin gh-pages
-git checkout master # or whatever branch you were on
+git checkout main # or whatever branch you were on
 ```
 
 ## Release on pypi
